@@ -1,0 +1,57 @@
+{
+    "id": "/index.html",
+    "name": "Generative AI Web Application (Proof-Of-Concept Version)",
+    "short_name": "GenAI WebApp",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "display_override": [
+        "window-controls-overlay",
+        "fullscreen",
+        "minimal-ui"
+    ],
+    "background_color": "#fff",
+    "theme_color": "#0074e0",
+    "description": "Web Application for showcasing conversation between user and genai/llm/rag model",
+    "dir": "ltr",
+    "orientation": "portrait-primary",
+    "lang": "en-US",
+    "related_applications": [
+        {
+            "platform":"",
+            "url":"",
+            "id":""
+        }
+    ],
+    "prefer_related_applications": false,
+    "categories": [
+        "business", "for-demo", "genai-app", "user-model-conversation-bot"
+    ],
+    "scope": "/",
+    "features": [
+        "fast",
+        "simple"
+    ],
+    "icons": [
+        {
+            "src": "assets/images/SmallTile.scale-100.png",
+            "sizes": "71x71"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "assets/screenshots/signin-page.png",
+            "sizes": "1920x933",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "WebSPT - Signin"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Login",
+            "url": "/login",
+            "description": "Login Screen"
+        }
+        
+    ]
+}
