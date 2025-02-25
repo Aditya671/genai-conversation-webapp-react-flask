@@ -13,14 +13,14 @@ export const LayoutContainer = ({
     const [collapsed, setCollapsed] = useState(false)
     return (
     <>
-        <Layout>
-            <Header>{headerChildren}</Header>
+        <Layout style={{height:'100dvh', maxHeight:'100dvh'}}>
+            <Sider trigger={null} collapsible collapsed={collapsed}>{leftSidebarContent}</Sider>
             <Layout>
-                <Sider trigger={null} collapsible collapsed={collapsed}>{leftSidebarContent}</Sider>
-                <Content>{contentChildren}</Content>
-                <Sider>{rightSidebarContent}</Sider>
+                <Header style={{padding:'0 20px', height:'fit-content'}}>{headerChildren}</Header>
+                <Content style={{padding:'10px 20px', height:'fit-content', overflowY:'auto'}}>{contentChildren}</Content>
+                <Footer style={{padding:'10px 20px 20px 20px', maxheight:'10dvh', height:'fit-content'}}>{footerChildren}</Footer>
             </Layout>
-            <Footer>{footerChildren}</Footer>
+
         </Layout>
     </>
   );
