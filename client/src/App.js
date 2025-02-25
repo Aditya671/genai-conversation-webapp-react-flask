@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import { ConfigProvider } from 'antd';
 import enUS from 'antd/es/locale/en_US';
 import {Provider} from 'react-redux';
