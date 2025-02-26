@@ -1,7 +1,8 @@
 import { InputNumber, Input, DatePicker } from "antd"
 import dayjs from 'dayjs'
 
-const getInputField = (inputType = 'text',
+export const GetInputField = (
+    {inputType = 'text',
     selectedValue = null,
     placeholder = 'Input Prompt...',
     row = {},
@@ -9,8 +10,9 @@ const getInputField = (inputType = 'text',
     colomnName = '',
     isDisabled = false,
     onRowUpdate = null,
-    dateFormat = 'MMM-DD-YYYY'
-) => {
+    dateFormat = 'MMM-DD-YYYY',
+    ...rest
+}) => {
     const handleInputValueChange = (value) => {
         if (typeof onRowUpdate === 'function') {
             return onRowUpdate(colomnName, row, rowIndex, value)
@@ -28,6 +30,7 @@ const getInputField = (inputType = 'text',
                 // disabled={isDisabled}
                 status={!!row.isInValid ? 'error' : ''}
                 onChange={(value) => handleInputValueChange(value)}
+                {...rest}
             />)
     }
     if (inputType === 'text') {
@@ -41,6 +44,23 @@ const getInputField = (inputType = 'text',
                 controls={false}
                 disabled={isDisabled}
                 onChange={(e) => handleInputValueChange(e.target.value)}
+                {...rest}
+            />
+        )
+    }
+    if (inputType === 'textarea') {
+        return (
+            <Input.TextArea
+                defaultValue={selectedValue}
+                placeholder={placeholder}
+                className={"text-align-right"}
+                type={"text"}
+                status={!!row.isInValid ? 'error' : ''}
+                controls={false}
+                disabled={isDisabled}
+                onChange={(e) => handleInputValueChange(e.target.value)}
+                styles={{textarea:{maxHeight:'10dvh', maxWidth:'75dvw'}}}
+                {...rest}
             />
         )
     }
@@ -52,8 +72,8 @@ const getInputField = (inputType = 'text',
                 defaultValue={dayjs(selectedValue, dateFormat)}
                 onChange={(value, dateString) => handleInputValueChange(dateString)}
                 format={dateFormat}
+                {...rest}
             />
         )
     }
 }
-export default getInputField;

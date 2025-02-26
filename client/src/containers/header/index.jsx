@@ -1,12 +1,23 @@
-import { Col, Flex, Image, Row } from "antd"
+import { Col, Image, Row } from "antd"
 import chatbotPreviewIcon from '../../chatbot-preview.png'
 import Title from "antd/es/typography/Title"
+import { EditSVG } from "../../assets/svg/EditSVG"
+import { ButtonComponent } from "../../components/Button"
+import { useSelector, useDispatch } from 'react-redux';
+import { setConversationsList, setSelectedConversation } from "../../store/conversations/slice"
 
 export const HeaderComponent = (props) => {
+    const dispatch = useDispatch();
+    const conversationsList = useSelector((state) => state.conversations.conversationsList)
+    const selectedConversation = useSelector((state) => state.conversations.selectedConversation)
+    // setConversationsList
+    // setSelectedConversation
+    const generateNewChat = () => {
+        return 
+    }
     return (
     <>
         <Row>
-        {/* <Flex gap='medium' wrap='wrap' align="center" justify="space-between" > */}
             <Col span={3} >
                 <Image alt="WebApp Logo" width={64} src={chatbotPreviewIcon}/>
                 <Title level={2}
@@ -18,9 +29,13 @@ export const HeaderComponent = (props) => {
                         fontSize: '12px',
                     }} >ConvBot</Title>
             </Col>
-            <Col span={15} ></Col>
+            <Col span={15} style={{display:'flex', alignItems:'center', justifyContent:'flex-end'}}>
+                <ButtonComponent
+                    onClickHandle={generateNewChat}
+                    tooltipText='Send Prompt' themeType='IconButton' icon={<EditSVG/>}
+                />
+            </Col>
             <Col span={6} ></Col>
-        {/* </Flex> */}
         </Row>
     </>
     )

@@ -9,22 +9,22 @@ const initialState = {
 export const conversationSlicer = createSlice({
     name: "conversations",
     initialState,
-    reducers: {
-        setSelectedConversation: (state, action) => state.selectedConversation = action.payload,
-        setConversationsList: (state, action) => state.conversationsList = action.payload,
-        setPinnedConversation: (state, action) => state.pinnedConversations.push(action.payload),
-        // removePinnedConversation: (state, action) => 
-        // state.pinnedConversations = state.pinnedConversations.filter(
-        //     (conversation) => conversation.id !== action.payload.id
-        // )
-        
+    reducers: {setSelectedConversation: (state, action) => {
+        state.selectedConversation = action.payload;
+    },
+      setConversationsList: (state, action) => {
+        state.conversationsList = action.payload;
+    },
+      setPinnedConversation: (state, action) => {
+        state.pinnedConversations = action.payload;
+    },
     },
 });
 
 export const {
     setSelectedConversation,
     setConversationsList,
-    addPinnedConversation
+    setPinnedConversation
 } = conversationSlicer.actions;
 
 export default conversationSlicer.reducer;
