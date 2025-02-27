@@ -3,7 +3,7 @@ import { Checkbox, Select, Divider } from 'antd';
 import { setFilterData } from '../services/base';
 import { useDispatch } from 'react-redux';
 import { isEmpty, isNull } from 'lodash';
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlinedSVG } from '../assets/svg/DownOutlinedSVG';
 
 const SelectDropdown = (props) => {
     const {
@@ -122,7 +122,7 @@ const SelectDropdown = (props) => {
                     width: '100%', maxWidth: '98%', minWidth: '240px'
                 }}
                 onClear={clearFilters}
-                suffixIcon={<DownOutlined />}
+                suffixIcon={<DownOutlinedSVG />}
                 onPopupScroll={handlePopupScroll}
                 value={selectedValue}
                 showSearch={true}

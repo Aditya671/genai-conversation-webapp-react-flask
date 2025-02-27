@@ -1,7 +1,7 @@
 import { Col, Image, Row } from "antd"
 import chatbotPreviewIcon from '../../chatbot-preview.png'
 import Title from "antd/es/typography/Title"
-import { EditSVG } from "../../assets/svg/EditSVG"
+import { EditChatSVG } from "../../assets/svg/EditChatSVG"
 import { ButtonComponent } from "../../components/Button"
 import { useSelector, useDispatch } from 'react-redux';
 import { setConversationsList, setSelectedConversation } from "../../store/conversations/slice"
@@ -34,7 +34,7 @@ export const HeaderComponent = (props) => {
             <Col span={18} style={{display:'flex', alignItems:'center', justifyContent:'flex-end'}}>
                 <ButtonComponent
                     onClickHandle={generateNewChat}
-                    tooltipText='Send Prompt' themeType='IconButton' icon={<EditSVG/>}
+                    tooltipText='Send Prompt' themeType='IconButton' icon={<EditChatSVG/>}
                 />
             </Col>
             <Col span={3} ></Col>

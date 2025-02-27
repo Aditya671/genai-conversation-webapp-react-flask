@@ -1,8 +1,8 @@
 import { InputNumber, Input, DatePicker } from "antd"
 import dayjs from 'dayjs'
 
-export const GetInputField = (
-    {inputType = 'text',
+export const GetInputField = ({
+    inputType = 'text',
     selectedValue = null,
     placeholder = 'Input Prompt...',
     row = {},

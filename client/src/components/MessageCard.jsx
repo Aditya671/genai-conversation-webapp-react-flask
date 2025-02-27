@@ -1,11 +1,9 @@
-import {
-    CopyFilled, CopyOutlined, 
-    EditFilled, EditOutlined,
-    SaveFilled, SaveOutlined
-} from "@ant-design/icons"
 import { Avatar, Card } from "antd"
 import { PageLoadingIndicator } from "./PageLoadingSpinIndicator";
 import { messageAvatarSrcDefault } from "../helper/constants";
+import { CopyFilledSVG } from "../assets/svg/CopyFilledSVG";
+import { EditFilledSVG } from "../assets/svg/EditFilledSVG";
+import { SaveFilledSVG } from "../assets/svg/SaveFilledSCG";
 
 const {Meta} = Card;
 
@@ -29,9 +27,9 @@ export const MessageCard = ({
             messageAdditionalInfo
         }
         actions={[
-            <CopyFilled key="copy" />,
-            <EditFilled key="edit" />,
-            <SaveFilled key="save" />,
+            <CopyFilledSVG key="copy" />,
+            <EditFilledSVG key="edit" />,
+            <SaveFilledSVG key="save" />,
         ]}
     >
         <Meta
