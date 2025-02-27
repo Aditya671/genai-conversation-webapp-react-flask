@@ -5,14 +5,16 @@ import { EditSVG } from "../../assets/svg/EditSVG"
 import { ButtonComponent } from "../../components/Button"
 import { useSelector, useDispatch } from 'react-redux';
 import { setConversationsList, setSelectedConversation } from "../../store/conversations/slice"
+import { cloneDeep } from "lodash"
 
 export const HeaderComponent = (props) => {
     const dispatch = useDispatch();
-    const conversationsList = useSelector((state) => state.conversations.conversationsList)
-    const selectedConversation = useSelector((state) => state.conversations.selectedConversation)
+    const conversationsList = cloneDeep(useSelector((state) => state.conversations.conversationsList))
+    const selectedConversation = cloneDeep(useSelector((state) => state.conversations.selectedConversation))
     // setConversationsList
     // setSelectedConversation
     const generateNewChat = () => {
+        // if Array.isArray(conversationsList) && conversationsList.length
         return 
     }
     return (
@@ -29,13 +31,13 @@ export const HeaderComponent = (props) => {
                         fontSize: '12px',
                     }} >ConvBot</Title>
             </Col>
-            <Col span={15} style={{display:'flex', alignItems:'center', justifyContent:'flex-end'}}>
+            <Col span={18} style={{display:'flex', alignItems:'center', justifyContent:'flex-end'}}>
                 <ButtonComponent
                     onClickHandle={generateNewChat}
                     tooltipText='Send Prompt' themeType='IconButton' icon={<EditSVG/>}
                 />
             </Col>
-            <Col span={6} ></Col>
+            <Col span={3} ></Col>
         </Row>
     </>
     )

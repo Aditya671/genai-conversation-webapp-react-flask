@@ -10,7 +10,12 @@ export const apiNotWorkingMessage = 'Api seems to be not responding, Please Cont
 // Ongoing Month Number (Integer Whole-Number)
 export const currentMonthNumber = Number(new Date().getMonth()) === 0 ? 1 : Number(new Date().getMonth() + 1)
 export const currentYear = Number(new Date().getFullYear())
-
+export const messageTypes = {
+    'user':'User',
+    'bot': 'Bot',
+    'model': 'Model'
+}
+export const messageAvatarSrcDefault = 'https://api.dicebear.com/7.x/miniavs/svg?seed=8'
 export const newConversationObject = () => {
     const dateTime = new Date().toISOString()
     return {
