@@ -16,10 +16,25 @@ export const messageTypes = {
     'model': 'Model'
 }
 export const messageAvatarSrcDefault = 'https://api.dicebear.com/7.x/miniavs/svg?seed=8'
-export const newConversationObject = () => {
-    const dateTime = new Date().toISOString()
+export const messageObject = {
+    messageId: 0,
+    conversationId: 0,
+    messageType:'',
+    messageAvatarSrc: '',
+    messageDescription:'',
+    messageSubDescription:'',
+    messageAdditionalInfo:{
+        tableData:[],
+        chartData:[],
+        extra:{}
+    },
+}
+const dateTime = new Date().toISOString()
+
+export const newConversationObject = (convId = v4(), convTitle = `Conversation-${dateTime}`, isNew = true) => {
     return {
-    conversationId: v4(),
-    convesationTitle: `Conversation-${dateTime}`,
-    dateTimeCreated: dateTime
+    conversationId: convId,
+    convesationTitle: convTitle,
+    dateTimeCreated: dateTime,
+    isNew : isNew
 }}
