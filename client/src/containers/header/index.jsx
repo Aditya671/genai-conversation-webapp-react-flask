@@ -5,7 +5,9 @@ import { EditChatSVG } from "../../assets/svg/EditChatSVG"
 import { ButtonComponent } from "../../components/Button"
 import { useSelector, useDispatch } from 'react-redux';
 import { setConversationsList, setSelectedConversation } from "../../store/conversations/slice"
-import { cloneDeep } from "lodash"
+import { cloneDeep, isArray, size } from "lodash"
+import { newConversationObject } from "../../helper/constants"
+import { v4 } from "uuid"
 
 export const HeaderComponent = (props) => {
     const dispatch = useDispatch();
@@ -14,8 +16,22 @@ export const HeaderComponent = (props) => {
     // setConversationsList
     // setSelectedConversation
     const generateNewChat = () => {
-        // if Array.isArray(conversationsList) && conversationsList.length
-        return 
+        const isConvList = isArray(conversationsList)
+        const convSize = isConvList ? size(conversationsList) : 0
+        
+        if(isConvList && convSize >= 1){
+            let lastConv = conversationsList[convSize - 1]
+            let isConvNew = lastConv['isNew']
+            if(isConvNew){
+                return dispatch(setSelectedConversation(lastConv['conversationId']))
+            }
+        }
+        let conversationId = v4()
+        dispatch(setConversationsList(
+            [...conversationsList, newConversationObject(conversationId, `Conv-${conversationId}`)]
+        ))
+        return dispatch(setSelectedConversation(conversationId))
+        
     }
     return (
     <>
@@ -34,7 +50,7 @@ export const HeaderComponent = (props) => {
             <Col span={18} style={{display:'flex', alignItems:'center', justifyContent:'flex-end'}}>
                 <ButtonComponent
                     onClickHandle={generateNewChat}
-                    tooltipText='Send Prompt' themeType='IconButton' icon={<EditChatSVG/>}
+                    tooltipText='New Conversation' themeType='IconButton' icon={<EditChatSVG/>}
                 />
             </Col>
             <Col span={3} ></Col>

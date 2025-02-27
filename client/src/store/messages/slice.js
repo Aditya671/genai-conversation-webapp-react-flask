@@ -16,54 +16,15 @@ const initialState = {
             extra:{}
         },
     },
-    messagesList: [
-        {
-            messageId: 1,
-            messageType:messageTypes['user'],
-            messageAvatarSrc:messageAvatarSrcDefault,
-            messageDescription:'This is a description',
-            messageSubDescription:'This is a sub description',
-            messageAdditionalInfo:{
-                tableData:[],
-                chartData:[],
-                extra:{}
-            },
-
-        },
-        {
-            messageId: 2,
-            messageType:messageTypes['bot'],
-            messageAvatarSrc:logo,
-            messageDescription:'How are you doing, all well?',
-            messageSubDescription:'This is a sub description',
-            messageAdditionalInfo:{
-                tableData:[],
-                chartData:[],
-                extra:{}
-            },
-
-        },
-        {
-            messageId: 3,
-            messageType:messageTypes['user'],
-            messageAvatarSrc:messageAvatarSrcDefault,
-            messageDescription:'Yes',
-            messageSubDescription:'This is a sub description',
-            messageAdditionalInfo:{
-                tableData:[],
-                chartData:[],
-                extra:{}
-            },
-        }
-    ],
+    messagesList: [],
 }
 
 export const messageSlicer = createSlice({
     name: "messages",
     initialState,
     reducers: {
-        setSelectedMessage: (state, action) => state.selectedMessage = action.payload,
-        setMessagesList: (state, action) => state.messagesList = action.payload,
+        setSelectedMessage: (state, action) => { state.selectedMessage = action.payload },
+        setMessagesList: (state, action) => { state.messagesList = action.payload },
     },
 });
 

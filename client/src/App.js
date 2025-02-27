@@ -25,10 +25,11 @@ function App() {
                                 colorTextDescription:'#ffffff',
                                 colorTextHeading: '#ffffff',
                                 colorBorderSecondary:  '#d9d9d9',
-                                colorBgContainer:'#434343',
+                                // colorBgContainer:'#434343',#434343a6
+                                colorBgContainer:'#434343a6',
                                 actionsLiMargin:'6px 0',
                                 bodyPadding: '12px'
-                            }
+                            },
                         },
                     }}
                 >
