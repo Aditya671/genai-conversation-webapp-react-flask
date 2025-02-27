@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { cloneDeep, isArray} from 'lodash';
+import { cloneDeep, isArray, isEmpty} from 'lodash';
 import { v4 } from "uuid";
 import { Flex } from "antd"
 import { useSelector, useDispatch } from 'react-redux';
@@ -35,18 +35,19 @@ export const FoorterComponent = (props) => {
         newMsgObj['messageId'] = v4()
         newMsgObj['messageAvatarSrc'] = messageAvatarSrcDefault
         let displayMessageContent = null
-        let selectedConvMessagesList = null
-        if(selectedConversation){
+        let selectedConvMessagesList = {}
+        if(selectedConversation && selectedConversation.conversationId){
             let convMessageIndex = originalMessageList.findIndex(msg => msg.conversationId === selectedConversation['conversationId'])
-            selectedConvMessagesList = cloneDeep(originalMessageList.find(msg => msg.conversationId === selectedConversation['conversationId']))
+            selectedConvMessagesList = cloneDeep(originalMessageList.find(msg => msg.conversationId === selectedConversation['conversationId'])) || {}
             delete originalMessageList[convMessageIndex]
 
             newMsgObj['conversationId'] = selectedConversation['conversationId']
 
-            if(Object.keys(selectedConvMessagesList).includes('messages') && isArray(selectedConvMessagesList['messages'])){
+            if(!isEmpty(selectedConvMessagesList) && Object.keys(selectedConvMessagesList).includes('messages') && isArray(selectedConvMessagesList['messages'])){
                 selectedConvMessagesList['messages'].push(newMsgObj)
             }else{
                 selectedConvMessagesList['messages'] = [newMsgObj]
+                selectedConvMessagesList['conversationId'] = selectedConversation['conversationId']
             }
             displayMessageContent = cloneDeep(selectedConvMessagesList['messages'])
             originalMessageList[convMessageIndex] = selectedConvMessagesList

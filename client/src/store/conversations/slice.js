@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    selectedConversation: null,
+    selectedConversation: {conversationId : 0, conversationTitle: ''},
     conversationsList: [],
     pinnedConversations: [],
 }
