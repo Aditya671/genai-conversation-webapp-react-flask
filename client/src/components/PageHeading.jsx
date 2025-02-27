@@ -4,7 +4,7 @@ import {
 } from 'antd';
 
 export const PageHeading = ({
-    headingText = '', headingLevel=3
+    headingText = '', headingLevel=3, ...rest
 }) => {
     return (
         <>
@@ -14,6 +14,7 @@ export const PageHeading = ({
                     color: '#1f1f1f', fontWeight: 700,
                     marginTop: 0, marginBottom: 2
                 }}
+                {...rest}
                 level={headingLevel}>
                 {headingText}
             </Typography.Title>

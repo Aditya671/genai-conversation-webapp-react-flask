@@ -17,6 +17,7 @@ const initialState = {
         },
     },
     messagesList: [],
+    selectedConversationMessages: []
 }
 
 export const messageSlicer = createSlice({
@@ -25,12 +26,14 @@ export const messageSlicer = createSlice({
     reducers: {
         setSelectedMessage: (state, action) => { state.selectedMessage = action.payload },
         setMessagesList: (state, action) => { state.messagesList = action.payload },
+        setSelectedMessagesList: (state, action) => { state.selectedConversationMessages = action.payload },
     },
 });
 
 export const {
     setSelectedMessage,
-    setMessagesList
+    setMessagesList,
+    setSelectedMessagesList
 } = messageSlicer.actions;
 
 export default messageSlicer.reducer;

@@ -8,6 +8,8 @@ import { setConversationsList, setSelectedConversation } from "../../store/conve
 import { cloneDeep, isArray, size } from "lodash"
 import { newConversationObject } from "../../helper/constants"
 import { v4 } from "uuid"
+import { setSelectedMessagesList } from "../../store/messages/slice"
+import { PageHeading } from "../../components/PageHeading"
 
 export const HeaderComponent = (props) => {
     const dispatch = useDispatch();
@@ -23,14 +25,19 @@ export const HeaderComponent = (props) => {
             let lastConv = conversationsList[convSize - 1]
             let isConvNew = lastConv['isNew']
             if(isConvNew){
-                return dispatch(setSelectedConversation(lastConv['conversationId']))
+                return dispatch(setSelectedConversation(
+                    {conversationId: lastConv['conversationId'], conversationTitle: lastConv['conversationTitle']}
+                ))
             }
         }
         let conversationId = v4()
         dispatch(setConversationsList(
             [...conversationsList, newConversationObject(conversationId, `Conv-${conversationId}`)]
         ))
-        return dispatch(setSelectedConversation(conversationId))
+        dispatch(setSelectedMessagesList([]))
+        return dispatch(setSelectedConversation(
+            {conversationId: conversationId, conversationTitle: `Conv-${conversationId}`}
+        ))
         
     }
     return (
@@ -47,7 +54,11 @@ export const HeaderComponent = (props) => {
                         fontSize: '12px',
                     }} >ConvBot</Title>
             </Col>
-            <Col span={18} style={{display:'flex', alignItems:'center', justifyContent:'flex-end'}}>
+            <Col span={18} style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+                <PageHeading
+                    headingLevel={5} headingText={selectedConversation['conversationTitle'] || ''}
+                    style={{color:'#00000073', fontWeight: 500, marginTop: 0, marginBottom: 2}}
+                />
                 <ButtonComponent
                     onClickHandle={generateNewChat}
                     tooltipText='New Conversation' themeType='IconButton' icon={<EditChatSVG/>}

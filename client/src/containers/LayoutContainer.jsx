@@ -4,6 +4,7 @@ import Sider from "antd/es/layout/Sider";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch} from 'react-redux';
 import { size } from 'lodash';
+
 export const LayoutContainer = ({
     headerChildren,
     leftSidebarContent,
@@ -14,8 +15,8 @@ export const LayoutContainer = ({
     const [collapsed, setCollapsed] = useState(false)
     const [siderWidth, setSiderWidth] = useState(280)
     const dispatch = useDispatch()
-    const conversationsList = useSelector((state) => state.conversations.conversationsList)
-    const contentCSS = size(conversationsList) === 0 ?
+    const selectedConversationMessages = (useSelector((state) => state.messages.selectedConversationMessages))
+    const contentCSS = size(selectedConversationMessages) === 0 ?
         {display:'flex', alignItems:'center', justifyContent:'center'} : {padding:'10px 20px', height:'fit-content', overflowY:'auto'}
    
     return (
