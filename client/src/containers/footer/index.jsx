@@ -37,20 +37,25 @@ export const FoorterComponent = (props) => {
         let displayMessageContent = null
         let selectedConvMessagesList = {}
         if(selectedConversation && selectedConversation.conversationId){
-            let convMessageIndex = originalMessageList.findIndex(msg => msg.conversationId === selectedConversation['conversationId'])
-            selectedConvMessagesList = cloneDeep(originalMessageList.find(msg => msg.conversationId === selectedConversation['conversationId'])) || {}
-            delete originalMessageList[convMessageIndex]
-
             newMsgObj['conversationId'] = selectedConversation['conversationId']
-
+            
+            selectedConvMessagesList = cloneDeep(originalMessageList.find(msg => msg.conversationId === selectedConversation['conversationId'])) || {}
             if(!isEmpty(selectedConvMessagesList) && Object.keys(selectedConvMessagesList).includes('messages') && isArray(selectedConvMessagesList['messages'])){
                 selectedConvMessagesList['messages'].push(newMsgObj)
             }else{
-                selectedConvMessagesList['messages'] = [newMsgObj]
                 selectedConvMessagesList['conversationId'] = selectedConversation['conversationId']
+                selectedConvMessagesList['messages'] = [newMsgObj]
             }
             displayMessageContent = cloneDeep(selectedConvMessagesList['messages'])
-            originalMessageList[convMessageIndex] = selectedConvMessagesList
+
+            let convMessageIndex = originalMessageList.findIndex(msg => msg.conversationId === selectedConversation['conversationId'])
+            if (convMessageIndex >= 0){ 
+                delete originalMessageList[convMessageIndex]
+                originalMessageList[convMessageIndex] = selectedConvMessagesList
+            }else{
+                originalMessageList.push(selectedConvMessagesList)
+            }
+
         }
         if(Array.isArray(conversationsList) && conversationsList.length < 1){
             let conversationId = v4()
