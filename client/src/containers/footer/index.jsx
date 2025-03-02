@@ -55,7 +55,19 @@ export const FoorterComponent = (props) => {
             }else{
                 originalMessageList.push(selectedConvMessagesList)
             }
-
+            let convIndexToUpdate = conversationsList.findIndex(conv => conv.conversationId === selectedConversation['conversationId'])
+            if(
+                convIndexToUpdate >= 0 &&
+                Object.keys(conversationsList[convIndexToUpdate]).includes('isNew') && 
+                conversationsList[convIndexToUpdate]['isNew'] === true
+            ){
+                let originalConvCloned = cloneDeep(conversationsList)
+                let convCloned = cloneDeep(originalConvCloned[convIndexToUpdate])
+                delete originalConvCloned[convIndexToUpdate]
+                convCloned['isNew'] = false
+                originalConvCloned[convIndexToUpdate] = convCloned
+                dispatch(setConversationsList(originalConvCloned))
+            }
         }
         if(Array.isArray(conversationsList) && conversationsList.length < 1){
             let conversationId = v4()
@@ -71,7 +83,6 @@ export const FoorterComponent = (props) => {
             originalMessageList = [{conversationId: conversationId, messages:[newMsgObj]}]
             displayMessageContent = [newMsgObj]
         }
-        
         dispatch(setMessagesList([...originalMessageList]))
         dispatch(setSelectedMessagesList(displayMessageContent))
         return true
