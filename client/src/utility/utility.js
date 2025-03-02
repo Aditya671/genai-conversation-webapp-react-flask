@@ -1,4 +1,6 @@
 import { cloneDeep, isNaN, uniqueId } from "lodash";
+import moment from 'moment';
+
 // import { infoModal, successModal } from "../components/MessageModal";
 
 export const toObjectPayload = (key, value) => {
@@ -220,4 +222,31 @@ export function isKeyInObject(obj, key) {
     } else {
         return false;
     }
+}
+
+export function displayDateTimeMessage() {
+    const date = new Date();
+    const year = moment().year();
+    const month = moment(moment().get("M")).format('MMM');
+    const day = ("0" + date.getDate()).slice(-2);
+    const hours = date.getHours();
+
+    let timeOfDay;
+    let message;
+    if (hours < 12) {
+        timeOfDay = "Morning Time";
+        message = "How are you doing today?";
+    } else if (hours < 17) {
+        timeOfDay = "Afternoon Time";
+        message = "Hope you're having a productive day!";
+    } else if (hours < 20) {
+        timeOfDay = "Evening Time";
+        message = "Good evening! How was your day?";
+    } else {
+        timeOfDay = "Night Time";
+        message = "Hey Lad, please have some sleep.";
+    }
+
+    const formattedDate = `${month} ${day}, ${year}, ${timeOfDay} - ${message}`;
+    return formattedDate;
 }

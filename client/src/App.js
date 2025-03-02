@@ -6,6 +6,7 @@ import { LayoutContainer } from "./containers/LayoutContainer";
 import { FoorterComponent } from "./containers/footer";
 import { HeaderComponent } from "./containers/header";
 import { ContentComponent } from "./containers/content";
+import { SidebarComponent } from "./containers/sidebar";
 function App() {
     return (
         <>
@@ -34,6 +35,7 @@ function App() {
                     }}
                 >
                     <LayoutContainer
+                        leftSidebarContent={<SidebarComponent/>}
                         headerChildren={<HeaderComponent />}
                         contentChildren={<ContentComponent />}
                         footerChildren={<FoorterComponent />}
