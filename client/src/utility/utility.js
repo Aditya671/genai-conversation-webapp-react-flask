@@ -16,6 +16,7 @@ export const createDataClone = (data) => {
         dataSet['isAdded'] = false
         dataSet['isDeleted'] = false
         dataSet.uid = uniqueId()
+        return dataSet
     })
     return dataCopy
 };
@@ -240,8 +241,8 @@ export function displayDateTimeMessage() {
         timeOfDay = "Afternoon Time";
         message = "Hope you're having a productive day!";
     } else if (hours < 20) {
-        timeOfDay = "Evening Time";
-        message = "Good evening! How was your day?";
+        timeOfDay = "";
+        message = "Good Evening! How was your day?";
     } else {
         timeOfDay = "Night Time";
         message = "Hey Lad, please have some sleep.";

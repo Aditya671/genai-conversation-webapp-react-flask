@@ -34,7 +34,7 @@ const dateTime = new Date().toISOString()
 export const newConversationObject = (convId = v4(), convTitle = `Conversation-${dateTime}`, isNew = true) => {
     return {
     conversationId: convId,
-    convesationTitle: convTitle,
+    conversationTitle: convTitle,
     dateTimeCreated: dateTime,
     isNew : isNew
 }}
