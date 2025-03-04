@@ -17,9 +17,9 @@
     "lang": "en-US",
     "related_applications": [
         {
-            "platform":"",
-            "url":"",
-            "id":""
+            "platform":"windows",
+            "url":"#",
+            "id":"/index.html"
         }
     ],
     "prefer_related_applications": false,
@@ -137,18 +137,18 @@
     ],
     "screenshots": [
         {
-            "src": "assets/screenshots/signin-page.png",
-            "sizes": "1920x933",
+            "src": "assets/layout.png",
+            "sizes": "1562x912",
             "type": "image/png",
             "form_factor": "wide",
-            "label": "WebApp - Signin"
+            "label": "WebApp - layout"
         }
     ],
     "shortcuts": [
         {
-            "name": "Login",
-            "url": "/login",
-            "description": "Login Screen"
+            "name": "Conversation WebApp",
+            "url": "/",
+            "description": "Conversation Screen"
         }
         
     ]
