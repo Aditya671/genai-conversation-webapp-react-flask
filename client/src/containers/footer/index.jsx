@@ -87,10 +87,19 @@ export const FoorterComponent = (props) => {
         dispatch(setSelectedMessagesList(displayMessageContent))
         return true
     }
+    const handleKeyDown = (event) => {
+        if ((event.shiftKey && event.key === "Enter") || (event.ctrlKey && event.key === "Enter")) {
+            event.preventDefault(); // Prevent the default behavior of adding a new line
+            return handleSendPromptClick(); // Trigger your button click event
+        }
+    };
+
     return (
         <>
             <Flex>
-            <GetInputField maxLength={12000} inputType="textarea" colomnName="UserPrompt" onRowUpdate={handleUserPrompt}/>
+            <GetInputField maxLength={12000} inputType="textarea" colomnName="UserPrompt"
+                onRowUpdate={handleUserPrompt}
+                onKeyDown={handleKeyDown}/>
             <ButtonComponent tooltipText='Send Prompt' themeType='IconButton' icon={<SendOutlinedSVG />}
                 onClickHandle={handleSendPromptClick}
             />
