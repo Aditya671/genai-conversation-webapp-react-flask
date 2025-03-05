@@ -1,0 +1,13 @@
+.ant-list-item-action{
+    width:10%;
+    margin-inline-start:0px!important;
+}
+.history-textwrapper{
+    text-overflow: ellipsis!important;
+    overflow-x: hidden!important;
+    white-space: nowrap!important;
+    width: 90%!important;
+}
+.history-textwrapper .ant-list-item-meta-title{
+    color: #f1f1f1!important;
+}

@@ -33,7 +33,7 @@ export const SidebarComponent = ({
                 gap={8}
                 style={{margin:'8px 0', padding:'0 12px'}}
             >
-                <HistoryCardList conversations={conversationsList}/>
+                <HistoryCardList selectedConversation={selectedConversation} conversations={conversationsList}/>
             </Flex>
         </Content>
         </>
