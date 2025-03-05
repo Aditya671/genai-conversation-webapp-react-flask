@@ -2,10 +2,11 @@ import { Content } from "antd/es/layout/layout"
 import { PageHeading } from "../../components/PageHeading"
 import { displayDateTimeMessage } from "../../utility/utility"
 import { useDispatch, useSelector } from "react-redux"
-import { isArray, isNull, isUndefined, size } from "lodash"
-import { Flex, Typography } from "antd"
+import { isNull, isUndefined, size } from "lodash"
+import { Flex } from "antd"
 import { setSelectedConversation } from "../../store/conversations/slice"
 import { setSelectedMessagesList } from "../../store/messages/slice"
+import HistoryCardList from "../../components/HistoryCardList"
 
 export const SidebarComponent = ({
 
@@ -32,16 +33,7 @@ export const SidebarComponent = ({
                 gap={8}
                 style={{margin:'8px 0', padding:'0 12px'}}
             >
-            {isArray(conversationsList) && size(conversationsList) > 0 &&
-            conversationsList.map(conv => (
-                <Typography.Text
-                    type={selectedConversation.conversationId === conv.conversationId ? 'secondary' : '#000000e0'}
-                    onClick={() => handleConversationNameClick(conv)}
-                    key={conv.conversationId}
-                >
-                    {conv.conversationTitle}
-                </Typography.Text>
-            ))}
+                <HistoryCardList conversations={conversationsList}/>
             </Flex>
         </Content>
         </>

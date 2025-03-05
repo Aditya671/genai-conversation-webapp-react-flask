@@ -20,7 +20,7 @@ function App() {
                                 headerBg: "#d9d9d9",
                                 bodyBg: "#d9d9d9",
                                 footerBg: "#d9d9d9",
-                                siderBg: "#f759ab",
+                                siderBg: "#1f1f1f",
                             },
                             Card:{
                                 colorTextDescription:'#ffffff',

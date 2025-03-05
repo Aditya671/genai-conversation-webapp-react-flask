@@ -9,7 +9,7 @@ export const ButtonComponent = (props) => {
         color: '#fff',
         fontSize: '16px',
         padding: '6px 8px',
-        minWidth: 130
+        minWidth: 130,
     } : {
         backgroundColor: 'transparent', color: '#fff', fontSize: '14px',
         padding: '6px 8px', border: 'none', minWidth: 20,
