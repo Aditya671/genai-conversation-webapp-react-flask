@@ -3,11 +3,13 @@ import { messageAvatarSrcDefault } from "../helper/constants";
 import { CopyFilledSVG } from "../assets/svg/CopyFilledSVG";
 import { EditFilledSVG } from "../assets/svg/EditFilledSVG";
 import { SaveFilledSVG } from "../assets/svg/SaveFilledSVG";
+import { ButtonComponent } from "./Button";
 
 const {Meta} = Card;
 
 export const MessageCard = ({
     styleWidth=300,
+    messageActions = [],
     messageAvatarSrc = messageAvatarSrcDefault,
     messageDescription = "This is a description",
     messageSubDescription = "This is a sub-description",
@@ -19,19 +21,17 @@ export const MessageCard = ({
     // <PageLoadingIndicator/>
         loading={false}
         style={{
-            width: styleWidth,
+            minWidth: styleWidth,
+            maxWidth:600
         }}
         size="small"
         cover={
             messageAdditionalInfo
         }
-        actions={[
-            <CopyFilledSVG key="copy" />,
-            <EditFilledSVG key="edit" />,
-            <SaveFilledSVG key="save" />,
-        ]}
+        actions={messageActions}
     >
         <Meta
+            // style={{fontSize:12,}}
             avatar={<Avatar src={messageAvatarSrc} />}
             title={messageDescription}
             description={messageSubDescription}

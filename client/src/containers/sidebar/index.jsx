@@ -24,8 +24,9 @@ export const SidebarComponent = ({
     }
     return (
         <>
-        <Content style={{maxHeight:'100%', padding:'20px 6px'}} >
+        <Content style={{height:'100%', padding:'20px 6px'}} >
             <PageHeading headingLevel={3} headingText={displayDateTimeMessage()} />
+            <br/>
             <Flex
                 wrap='wrap'
                 justify={'center'}

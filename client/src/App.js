@@ -25,12 +25,18 @@ function App() {
                             Card:{
                                 colorTextDescription:'#ffffff',
                                 colorTextHeading: '#ffffff',
-                                colorBorderSecondary:  '#d9d9d9',
+                                // colorBorderSecondary:  '#d9d9d9',
                                 // colorBgContainer:'#434343',#434343a6
-                                colorBgContainer:'#434343a6',
+                                colorBgContainer:'#008080',
                                 actionsLiMargin:'6px 0',
                                 bodyPadding: '12px'
                             },
+                            Button:{
+                                defaultBg:'#f1f1f1',
+                                defaultColor:'#1f1f1f',
+                                borderRadius:'3.5px',
+                                padding: '6px 8px'
+                            }
                         },
                     }}
                 >

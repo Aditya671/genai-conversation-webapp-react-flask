@@ -11,8 +11,9 @@ export const PageHeading = ({
             <Typography.Title
                 className='theme-heading-font'
                 style={{
-                    color: '#1f1f1f', fontWeight: 700,
-                    marginTop: 0, marginBottom: 2
+                    color: '#f1f1f1', fontWeight: 700,
+                    marginTop: 0, marginBottom: 2,
+                    padding:'0 10px'
                 }}
                 {...rest}
                 level={headingLevel}>

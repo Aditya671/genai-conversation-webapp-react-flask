@@ -142,6 +142,13 @@
             "type": "image/png",
             "form_factor": "wide",
             "label": "WebApp - layout"
+        },
+        {
+            "src": "assets/layout-ongoing-conversation.png",
+            "sizes": "1912x923",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "WebApp - layout-ongoing-conversation"
         }
     ],
     "shortcuts": [

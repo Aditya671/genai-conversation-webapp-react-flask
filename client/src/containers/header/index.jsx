@@ -10,6 +10,7 @@ import { newConversationObject } from "../../helper/constants"
 import { v4 } from "uuid"
 import { setSelectedMessagesList } from "../../store/messages/slice"
 import { PageHeading } from "../../components/PageHeading"
+import { DotMenuSVG } from "../../assets/svg/DotMenuSVG"
 
 export const HeaderComponent = (props) => {
     const dispatch = useDispatch();
@@ -32,18 +33,18 @@ export const HeaderComponent = (props) => {
         }
         let conversationId = v4()
         dispatch(setConversationsList(
-            [...conversationsList, newConversationObject(conversationId, `Conv-${conversationId}`)]
+            [...conversationsList, newConversationObject(conversationId, `Conversation-${new Date().toISOString()}`)]
         ))
         dispatch(setSelectedMessagesList([]))
         return dispatch(setSelectedConversation(
-            {conversationId: conversationId, conversationTitle: `Conv-${conversationId}`}
+            {conversationId: conversationId, conversationTitle: `Conversation-${new Date().toISOString()}`}
         ))
         
     }
     return (
     <>
         <Row>
-            <Col span={3} >
+            <Col span={2} >
                 <Image alt="WebApp Logo" width={64} src={chatbotPreviewIcon}/>
                 <Title level={2}
                     className='theme-heading-font'
@@ -59,12 +60,19 @@ export const HeaderComponent = (props) => {
                     headingLevel={5} headingText={selectedConversation['conversationTitle'] || ''}
                     style={{color:'#00000073', fontWeight: 500, marginTop: 0, marginBottom: 2}}
                 />
+                
+            </Col>
+            <Col span={3} style={{alignItems:'center', justifyContent:'flex-end', display:'flex'}}>
                 <ButtonComponent
                     onClickHandle={generateNewChat}
+                    style={{background:'transparent', border:'none'}}
                     tooltipText='New Conversation' themeType='IconButton' icon={<EditChatSVG/>}
                 />
+                <ButtonComponent
+                    icon={<DotMenuSVG/>} themeType='IconButton'
+                    style={{background:'transparent', border:'none'}}
+                    />
             </Col>
-            <Col span={3} ></Col>
         </Row>
     </>
     )

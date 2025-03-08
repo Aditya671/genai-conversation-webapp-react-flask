@@ -11,8 +11,6 @@ import { messageAvatarSrcDefault, messageObject, messageTypes, newConversationOb
 import { setMessagesList, setSelectedMessagesList } from "../../store/messages/slice";
 import { setConversationsList, setSelectedConversation } from "../../store/conversations/slice";
 
-
-
 export const FoorterComponent = (props) => {
     const [userInput, setUserInput] = useState('')
     const messagesList = cloneDeep(useSelector((state) => state.messages.messagesList))
@@ -31,6 +29,7 @@ export const FoorterComponent = (props) => {
         let originalMessageList = cloneDeep(messagesList)
         const newMsgObj = cloneDeep(messageObject)
         newMsgObj['messageDescription'] = userInput
+        newMsgObj['messageSubDescription'] = String(new Date().toUTCString())
         newMsgObj['messageType'] = messageTypes['user']
         newMsgObj['messageId'] = v4()
         newMsgObj['messageAvatarSrc'] = messageAvatarSrcDefault
@@ -72,11 +71,11 @@ export const FoorterComponent = (props) => {
         if(Array.isArray(conversationsList) && conversationsList.length < 1){
             let conversationId = v4()
             const convCloned = cloneDeep(
-                [...conversationsList, newConversationObject(conversationId, `Conv-${conversationId}`, false)]
+                [...conversationsList, newConversationObject(conversationId, `Conversation-${new Date().toISOString()}`, false)]
             )
             dispatch(setConversationsList(convCloned))
             dispatch(setSelectedConversation(
-                {conversationId: conversationId, conversationTitle:`Conv-${conversationId}`}
+                {conversationId: conversationId, conversationTitle:`Convesation-${new Date().toISOString()}`}
             ))
 
             newMsgObj['conversationId'] = conversationId
@@ -96,12 +95,14 @@ export const FoorterComponent = (props) => {
 
     return (
         <>
-            <Flex>
+            <Flex style={{background:'#fff', borderRight:'3.5px'}}>
             <GetInputField maxLength={12000} inputType="textarea" colomnName="UserPrompt"
                 onRowUpdate={handleUserPrompt}
+                style={{background:'transparent', border:'none'}}
                 onKeyDown={handleKeyDown}/>
             <ButtonComponent tooltipText='Send Prompt' themeType='IconButton' icon={<SendOutlinedSVG />}
                 onClickHandle={handleSendPromptClick}
+                style={{background:'transparent', border:'none'}}
             />
             </Flex>
         </>
