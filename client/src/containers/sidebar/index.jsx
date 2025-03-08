@@ -8,9 +8,7 @@ import { setSelectedConversation } from "../../store/conversations/slice"
 import { setSelectedMessagesList } from "../../store/messages/slice"
 import HistoryCardList from "../../components/HistoryCardList"
 
-export const SidebarComponent = ({
-
-}) => {
+export const SidebarComponent = (props) => {
     const dispatch = useDispatch();
     const conversationsList = useSelector((state) => state.conversations.conversationsList)
     const messagesList = useSelector((state) => state.messages.messagesList)
@@ -34,7 +32,9 @@ export const SidebarComponent = ({
                 gap={8}
                 style={{margin:'8px 0', padding:'0 12px'}}
             >
-                <HistoryCardList selectedConversation={selectedConversation} conversations={conversationsList}/>
+                <HistoryCardList 
+                    selectedConversation={selectedConversation} conversations={conversationsList}
+                    onConvNameClick={handleConversationNameClick} />
             </Flex>
         </Content>
         </>

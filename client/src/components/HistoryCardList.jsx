@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, Dropdown, Button, Empty, List, Tooltip, Divider } from "antd";
+import { Card, Dropdown, Button, Empty, List, Tooltip } from "antd";
 import { ButtonComponent } from "./Button";
 import './HistoryCardList.css'
 import { PageHeading } from "./PageHeading";
@@ -8,7 +8,9 @@ import { EditFilledSVG } from "../assets/svg/EditFilledSVG";
 import { DeleteOutlinedSVG } from "../assets/svg/DeleteOutlinedSVG";
 import { DownloadOutlinedSVG } from "../assets/svg/DownloadOutlinedSVG";
 import { EllipsisOutlinedSVG } from "../assets/svg/EllipseOutlinedSVG";
-const HistoryCardList = ({ selectedConversation ,conversations }) => {
+
+
+const HistoryCardList = ({ selectedConversation , conversations, onConvNameClick }) => {
     const [convToRenameUsingId, setConvToRenameUsingId] = useState('');
     const handleRenameConversationTitle = (convId) => {
         return setConvToRenameUsingId(convId)
@@ -22,6 +24,7 @@ const HistoryCardList = ({ selectedConversation ,conversations }) => {
     const handleConvTitleChange = (colName, convId, convIndex, convTitle) => {
         console.log(convTitle)
     }
+    
     const menuOptions = (convId) => ([
         {label:(
             <ButtonComponent
@@ -95,7 +98,7 @@ const HistoryCardList = ({ selectedConversation ,conversations }) => {
                             ) : (
                                 <Tooltip title={item.conversationTitle} placement="right">
                                 <List.Item.Meta className="history-textwrapper"
-                                    title={item.conversationTitle} />
+                                    title={item.conversationTitle} onClick={() => onConvNameClick(item)} />
                                 </Tooltip>
                             )}
 
