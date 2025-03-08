@@ -116,6 +116,7 @@ GenAI/
 └── README.md
 ```
 ![No Conversation Window](./client/public/assets/layout.png)
+
 ![Conversation Window](./client/public/assets/layout-ongoing-conversation.png)
 
 #
