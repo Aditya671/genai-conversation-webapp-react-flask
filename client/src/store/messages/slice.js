@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { messageAvatarSrcDefault, messageTypes } from "../../helper/constants";
+import { messageTypes } from "../../helper/constants";
 import logo from '../../chatbot-preview.png';
 
 const initialState = {

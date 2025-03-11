@@ -31,10 +31,15 @@ export const messageObject = {
 }
 const dateTime = new Date().toISOString()
 
-export const newConversationObject = (convId = v4(), convTitle = `Conversation-${dateTime}`, isNew = true) => {
+export const newConversationObject = (
+    convId = v4(), convTitle = `Conversation-${dateTime}`, isNew = true, userId = 0) => {
     return {
     conversationId: convId,
     conversationTitle: convTitle,
     dateTimeCreated: dateTime,
-    isNew : isNew
+    isNew : isNew,
+    isActive: true,
+    isPinned: false,
+    dateTimePinned: '',
+    userId: userId,
 }}

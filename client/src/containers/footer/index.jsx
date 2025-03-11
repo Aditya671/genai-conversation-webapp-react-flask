@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { cloneDeep, isArray, isEmpty} from 'lodash';
 import { v4 } from "uuid";
 import { Flex } from "antd"
@@ -12,7 +11,7 @@ import { setMessagesList, setSelectedMessagesList, setUserMessagesPrompt } from 
 import { setConversationsList, setSelectedConversation } from "../../store/conversations/slice";
 
 export const FoorterComponent = (props) => {
-    // const [userInput, setUserInput] = useState('')
+    
     const messagesList = cloneDeep(useSelector((state) => state.messages.messagesList))
     const userPrompt = cloneDeep(useSelector((state) => state.messages.userPrompt))
     const conversationsList = useSelector((state) => state.conversations.conversationsList)
@@ -71,8 +70,9 @@ export const FoorterComponent = (props) => {
         }
         if(Array.isArray(conversationsList) && conversationsList.length < 1){
             let conversationId = v4()
+            const convObj = newConversationObject(conversationId, `Conversation-${new Date().toISOString()}`, false)
             const convCloned = cloneDeep(
-                [...conversationsList, newConversationObject(conversationId, `Conversation-${new Date().toISOString()}`, false)]
+                [...conversationsList, convObj]
             )
             dispatch(setConversationsList(convCloned))
             dispatch(setSelectedConversation(

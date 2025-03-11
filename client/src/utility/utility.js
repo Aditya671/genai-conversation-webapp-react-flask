@@ -161,6 +161,7 @@ const changeObjValue = (
                 }
             }
             obj.push(a);
+            return o
         });
     }
     return obj;
