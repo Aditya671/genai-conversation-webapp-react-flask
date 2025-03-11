@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 export const GetInputField = ({
     inputType = 'text',
     selectedValue = null,
+    userValue = null,
     placeholder = 'Input Prompt...',
     row = {},
     rowIndex = 0,
@@ -22,7 +23,7 @@ export const GetInputField = ({
         return (
             <InputNumber style={{ width: "100%" }}
                 defaultValue={selectedValue}
-                value={selectedValue}
+                value={userValue}
                 className={"text-align-right"}
                 min={0}
                 type={"number"}
@@ -37,6 +38,7 @@ export const GetInputField = ({
         return (
             <Input
                 defaultValue={selectedValue}
+                value={userValue}
                 placeholder={placeholder}
                 className={"text-align-right"}
                 type={"text"}
@@ -52,6 +54,7 @@ export const GetInputField = ({
         return (
             <Input.TextArea
                 defaultValue={selectedValue}
+                value={userValue}
                 placeholder={placeholder}
                 className={"text-align-right"}
                 type={"text"}

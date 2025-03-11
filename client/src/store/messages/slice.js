@@ -16,7 +16,8 @@ const initialState = {
         },
     },
     messagesList: [],
-    selectedConversationMessages: []
+    selectedConversationMessages: [],
+    userPrompt: null
 }
 
 export const messageSlicer = createSlice({
@@ -25,12 +26,14 @@ export const messageSlicer = createSlice({
     reducers: {
         setMessagesList: (state, action) => { state.messagesList = action.payload },
         setSelectedMessagesList: (state, action) => { state.selectedConversationMessages = action.payload },
+        setUserMessagesPrompt: (state, action) => { state.userPrompt = action.payload },
     },
 });
 
 export const {
     setMessagesList,
-    setSelectedMessagesList
+    setSelectedMessagesList,
+    setUserMessagesPrompt
 } = messageSlicer.actions;
 
 export default messageSlicer.reducer;

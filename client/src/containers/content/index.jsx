@@ -1,6 +1,6 @@
 
 import { Flex, Space } from "antd"
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { MessageCard } from "../../components/MessageCard"
 import { useEffect, useState } from "react"
 import { cloneDeep, isArray, size } from "lodash";
@@ -10,9 +10,11 @@ import { ButtonComponent } from "../../components/Button";
 import { CopyFilledSVG } from "../../assets/svg/CopyFilledSVG";
 import { EditFilledSVG } from "../../assets/svg/EditFilledSVG";
 import { SaveFilledSVG } from "../../assets/svg/SaveFilledSVG";
+import { setUserMessagesPrompt } from "../../store/messages/slice";
 
 
 export const ContentComponent = () => {
+    const dispatch = useDispatch();
     const selectedConversationMessages = cloneDeep(useSelector((state) => state.messages.selectedConversationMessages))
     const [isMessageListEmpty, setIsMessageListEmpty] = useState(true);
 
@@ -23,10 +25,11 @@ export const ContentComponent = () => {
             setIsMessageListEmpty(false);
         }
     }, [selectedConversationMessages])
-    const handleCopySelectedPrompt = () => {
-
+    const handleCopySelectedPrompt = (msg) => {
+        navigator.clipboard.writeText(msg)
+        dispatch(setUserMessagesPrompt(msg))
     }
-    const handleEditSelectedPrompt = () => {
+    const handleEditSelectedPrompt = (msgId, convId) => {
 
     }
     const handleSaveSelectedPrompt = () => {
@@ -64,12 +67,12 @@ export const ContentComponent = () => {
                         messageActions={[
                             <ButtonComponent
                                 tooltipText='Copy Prompt' themeType='IconButton' icon={<CopyFilledSVG key="copy" />}
-                                onClickHandle={() => handleCopySelectedPrompt(msg.messageId)}
+                                onClickHandle={() => handleCopySelectedPrompt(msg.messageDescription)}
                                 style={{background:'transparent', border:'none'}}
                             />,
                             <ButtonComponent
                                 tooltipText='Edit Prompt' themeType='IconButton' icon={<EditFilledSVG key="edit" />}
-                                onClickHandle={() => handleEditSelectedPrompt(msg.messageId)}
+                                onClickHandle={() => handleEditSelectedPrompt(msg.messageId, msg.conversationId)}
                                 style={{background:'transparent', border:'none'}}
                             />,
                             <ButtonComponent

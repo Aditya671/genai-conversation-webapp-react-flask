@@ -8,27 +8,28 @@ import { ButtonComponent } from "../../components/Button";
 import { SendOutlinedSVG } from "../../assets/svg/SendOutlinedSVG";
 import { errorModal } from "../../components/MessageModal";
 import { messageAvatarSrcDefault, messageObject, messageTypes, newConversationObject } from "../../helper/constants";
-import { setMessagesList, setSelectedMessagesList } from "../../store/messages/slice";
+import { setMessagesList, setSelectedMessagesList, setUserMessagesPrompt } from "../../store/messages/slice";
 import { setConversationsList, setSelectedConversation } from "../../store/conversations/slice";
 
 export const FoorterComponent = (props) => {
-    const [userInput, setUserInput] = useState('')
+    // const [userInput, setUserInput] = useState('')
     const messagesList = cloneDeep(useSelector((state) => state.messages.messagesList))
+    const userPrompt = cloneDeep(useSelector((state) => state.messages.userPrompt))
     const conversationsList = useSelector((state) => state.conversations.conversationsList)
     const selectedConversation = useSelector((state) => state.conversations.selectedConversation)
     const dispatch = useDispatch();
     const handleUserPrompt = (colomnName, row, rowIndex, promptMessage) => {
-        setUserInput(promptMessage)
+        dispatch(setUserMessagesPrompt(promptMessage))
     }
 
     const handleSendPromptClick = () => {
-        if(!userInput){
+        if(!userPrompt){
             return errorModal('User Prompt', 'Please enter prompt message')
         }
         
         let originalMessageList = cloneDeep(messagesList)
         const newMsgObj = cloneDeep(messageObject)
-        newMsgObj['messageDescription'] = userInput
+        newMsgObj['messageDescription'] = userPrompt
         newMsgObj['messageSubDescription'] = String(new Date().toUTCString())
         newMsgObj['messageType'] = messageTypes['user']
         newMsgObj['messageId'] = v4()
@@ -84,6 +85,7 @@ export const FoorterComponent = (props) => {
         }
         dispatch(setMessagesList([...originalMessageList]))
         dispatch(setSelectedMessagesList(displayMessageContent))
+        dispatch(setUserMessagesPrompt(''))
         return true
     }
     const handleKeyDown = (event) => {
@@ -98,6 +100,7 @@ export const FoorterComponent = (props) => {
             <Flex style={{background:'#fff', borderRight:'3.5px'}}>
             <GetInputField maxLength={12000} inputType="textarea" colomnName="UserPrompt"
                 onRowUpdate={handleUserPrompt}
+                userValue={userPrompt}
                 style={{background:'transparent', border:'none'}}
                 onKeyDown={handleKeyDown}/>
             <ButtonComponent tooltipText='Send Prompt' themeType='IconButton' icon={<SendOutlinedSVG />}
