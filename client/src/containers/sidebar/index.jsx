@@ -34,7 +34,8 @@ export const SidebarComponent = (props) => {
             >
                 <HistoryCardList 
                     selectedConversation={selectedConversation} conversations={conversationsList}
-                    onConvNameClick={handleConversationNameClick} />
+                    onConversationClick={handleConversationNameClick}
+                />
             </Flex>
         </Content>
         </>

@@ -11,13 +11,21 @@ import { v4 } from "uuid"
 import { setSelectedMessagesList } from "../../store/messages/slice"
 import { PageHeading } from "../../components/PageHeading"
 import { DotMenuSVG } from "../../assets/svg/DotMenuSVG"
+import { useEffect, useState } from "react"
 
 export const HeaderComponent = (props) => {
     const dispatch = useDispatch();
     const conversationsList = cloneDeep(useSelector((state) => state.conversations.conversationsList))
     const selectedConversation = cloneDeep(useSelector((state) => state.conversations.selectedConversation))
+    const [displayedConvName, setDisplayedConversationName] = useState(selectedConversation['conversationTitle'])
     // setConversationsList
     // setSelectedConversation
+    useEffect(() => {
+        if(selectedConversation){
+            setDisplayedConversationName(selectedConversation['conversationTitle'])
+        }
+    }, [selectedConversation])
+
     const generateNewChat = () => {
         const isConvList = isArray(conversationsList)
         const convSize = isConvList ? size(conversationsList) : 0
@@ -57,7 +65,7 @@ export const HeaderComponent = (props) => {
             </Col>
             <Col span={18} style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
                 <PageHeading
-                    headingLevel={5} headingText={selectedConversation['conversationTitle'] || ''}
+                    headingLevel={5} headingText={displayedConvName || ''}
                     style={{color:'#00000073', fontWeight: 500, marginTop: 0, marginBottom: 2}}
                 />
                 

@@ -13,8 +13,8 @@ export const LayoutContainer = ({
     footerChildren,
 }) => {
     const [collapsed, setCollapsed] = useState(false)
-    const [siderWidth, setSiderWidth] = useState(280)
-    const dispatch = useDispatch()
+    const [siderWidth, setSiderWidth] = useState(320)
+    const dispatch = useDispatch();
     const selectedConversationMessages = (useSelector((state) => state.messages.selectedConversationMessages))
     const contentCSS = size(selectedConversationMessages) === 0 ?
         {display:'flex', alignItems:'center', justifyContent:'center'} : {padding:'10px 20px', height:'fit-content', overflowY:'auto'}
@@ -22,7 +22,7 @@ export const LayoutContainer = ({
     return (
     <>
         <Layout style={{height:'100dvh', maxHeight:'100dvh'}} hasSider={true}>
-            <Sider width={siderWidth} breakpoint="sm" onBreakpoint={(broken) => broken ? setSiderWidth(180) : setSiderWidth(280)}
+            <Sider width={siderWidth} breakpoint="md" onBreakpoint={(broken) => broken ? setSiderWidth(200) : setSiderWidth(320)}
             trigger={null} collapsible collapsed={collapsed}>{leftSidebarContent}</Sider>
             <Layout>
                 <Header style={{padding:'0 20px', height:'fit-content'}}>{headerChildren}</Header>
