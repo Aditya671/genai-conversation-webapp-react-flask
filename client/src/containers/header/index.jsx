@@ -39,13 +39,13 @@ export const HeaderComponent = (props) => {
                 ))
             }
         }
-        let conversationId = v4()
+        const convObj = newConversationObject(v4(), `Conversation-${new Date().toISOString()}`)
         dispatch(setConversationsList(
-            [...conversationsList, newConversationObject(conversationId, `Conversation-${new Date().toISOString()}`)]
+            [...conversationsList, convObj]
         ))
         dispatch(setSelectedMessagesList([]))
         return dispatch(setSelectedConversation(
-            {conversationId: conversationId, conversationTitle: `Conversation-${new Date().toISOString()}`}
+            {conversationId: convObj.conversationId, conversationTitle: convObj.conversationTitle}
         ))
         
     }

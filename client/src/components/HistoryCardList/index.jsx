@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 import { Card, Dropdown, Button, Empty, List, Tooltip, Space } from "antd";
-import { ButtonComponent } from "./Button";
-import './HistoryCardList.css'
-import { PageHeading } from "./PageHeading";
-import { GetInputField } from "./InputField";
-import { EditFilledSVG } from "../assets/svg/EditFilledSVG";
-import { DeleteOutlinedSVG } from "../assets/svg/DeleteOutlinedSVG";
-import { DownloadOutlinedSVG } from "../assets/svg/DownloadOutlinedSVG";
-import { EllipsisOutlinedSVG } from "../assets/svg/EllipseOutlinedSVG";
-import { setConversationsList, setSelectedConversation } from "../store/conversations/slice";
 import { cloneDeep } from "lodash";
 import { useDispatch } from "react-redux";
-import { TickSVG } from "../assets/svg/TickSVG";
-import { PushpinFilledSVG } from "../assets/svg/PushpinFilledSVG";
-
+import { ButtonComponent } from "../Button";
+import './HistoryCardList.css'
+import { PageHeading } from "../PageHeading";
+import { GetInputField } from "../InputField";
+import { setConversationsList, setSelectedConversation } from "../../store/conversations/slice";
+import { TickSVG } from "../../assets/svg/TickSVG";
+import { PushpinFilledSVG } from "../../assets/svg/PushpinFilledSVG";
+import { EditFilledSVG } from "../../assets/svg/EditFilledSVG";
+import { DeleteOutlinedSVG } from "../../assets/svg/DeleteOutlinedSVG";
+import { DownloadOutlinedSVG } from "../../assets/svg/DownloadOutlinedSVG";
+import { EllipsisOutlinedSVG } from "../../assets/svg/EllipseOutlinedSVG";
 
 const HistoryCardList = ({ selectedConversation , conversations, onConversationClick }) => {
     const dispatch = useDispatch();
@@ -102,14 +101,13 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                     // grid={{column:1}}
                     size="small"
                     bordered
-                    header={<>
+                    header={
                         <PageHeading
                             style={{color:'#008080', marginTop: 0, marginBottom: 2}}
                             headingText={`History${conversations.length > 0 ? ` (${conversations.length})` : ""}`}
                             headingLevel={3}
                         />
-                        
-                    </>}
+                    }
                     dataSource={conversations}
                     // style={{ite}}
                     renderItem={(item, index) => (
@@ -137,6 +135,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                                         row={item}
                                         rowIndex={index}
                                         selectedValue={item.conversationTitle}
+                                        userValue={convNewTitle}
                                         allowClear
                                         onClear={() => setConvToRenameUsingId('')}
                                     />

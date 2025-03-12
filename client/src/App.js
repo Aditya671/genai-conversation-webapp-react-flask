@@ -3,7 +3,7 @@ import enUS from "antd/es/locale/en_US";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { LayoutContainer } from "./containers/LayoutContainer";
-import { FoorterComponent } from "./containers/footer";
+import { FooterComponent } from "./containers/footer";
 import { HeaderComponent } from "./containers/header";
 import { ContentComponent } from "./containers/content";
 import { SidebarComponent } from "./containers/sidebar";
@@ -44,7 +44,7 @@ function App() {
                         leftSidebarContent={<SidebarComponent/>}
                         headerChildren={<HeaderComponent />}
                         contentChildren={<ContentComponent />}
-                        footerChildren={<FoorterComponent />}
+                        footerChildren={<FooterComponent />}
                     />
                 </ConfigProvider>
             </Provider>

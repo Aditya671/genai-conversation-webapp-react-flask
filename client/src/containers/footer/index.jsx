@@ -6,12 +6,11 @@ import { GetInputField } from "../../components/InputField"
 import { ButtonComponent } from "../../components/Button";
 import { SendOutlinedSVG } from "../../assets/svg/SendOutlinedSVG";
 import { errorModal } from "../../components/MessageModal";
-import { messageAvatarSrcDefault, messageObject, messageTypes, newConversationObject } from "../../helper/constants";
+import { createNewMessage, newConversationObject } from "../../helper/constants";
 import { setMessagesList, setSelectedMessagesList, setUserMessagesPrompt } from "../../store/messages/slice";
 import { setConversationsList, setSelectedConversation } from "../../store/conversations/slice";
 
-export const FoorterComponent = (props) => {
-    
+export const FooterComponent = (props) => {    
     const messagesList = cloneDeep(useSelector((state) => state.messages.messagesList))
     const userPrompt = cloneDeep(useSelector((state) => state.messages.userPrompt))
     const conversationsList = useSelector((state) => state.conversations.conversationsList)
@@ -27,14 +26,10 @@ export const FoorterComponent = (props) => {
         }
         
         let originalMessageList = cloneDeep(messagesList)
-        const newMsgObj = cloneDeep(messageObject)
-        newMsgObj['messageDescription'] = userPrompt
-        newMsgObj['messageSubDescription'] = String(new Date().toUTCString())
-        newMsgObj['messageType'] = messageTypes['user']
-        newMsgObj['messageId'] = v4()
-        newMsgObj['messageAvatarSrc'] = messageAvatarSrcDefault
+        const newMsgObj = createNewMessage(userPrompt)
         let displayMessageContent = null
         let selectedConvMessagesList = {}
+        
         if(selectedConversation && selectedConversation.conversationId){
             newMsgObj['conversationId'] = selectedConversation['conversationId']
             
@@ -69,18 +64,16 @@ export const FoorterComponent = (props) => {
             }
         }
         if(Array.isArray(conversationsList) && conversationsList.length < 1){
-            let conversationId = v4()
-            const convObj = newConversationObject(conversationId, `Conversation-${new Date().toISOString()}`, false)
+            const convObj = newConversationObject(v4(), `Conversation-${new Date().toISOString()}`, false)
             const convCloned = cloneDeep(
                 [...conversationsList, convObj]
             )
             dispatch(setConversationsList(convCloned))
             dispatch(setSelectedConversation(
-                {conversationId: conversationId, conversationTitle:`Convesation-${new Date().toISOString()}`}
+                {conversationId: convObj.conversationId, conversationTitle:convObj.conversationTitle}
             ))
-
-            newMsgObj['conversationId'] = conversationId
-            originalMessageList = [{conversationId: conversationId, messages:[newMsgObj]}]
+            newMsgObj['conversationId'] = convObj.conversationId
+            originalMessageList = [{conversationId: convObj.conversationId, messages:[newMsgObj]}]
             displayMessageContent = [newMsgObj]
         }
         dispatch(setMessagesList([...originalMessageList]))
@@ -90,8 +83,8 @@ export const FoorterComponent = (props) => {
     }
     const handleKeyDown = (event) => {
         if ((event.shiftKey && event.key === "Enter") || (event.ctrlKey && event.key === "Enter")) {
-            event.preventDefault(); // Prevent the default behavior of adding a new line
-            return handleSendPromptClick(); // Trigger your button click event
+            event.preventDefault();
+            return handleSendPromptClick();
         }
     };
 

@@ -32,14 +32,33 @@ export const messageObject = {
 const dateTime = new Date().toISOString()
 
 export const newConversationObject = (
-    convId = v4(), convTitle = `Conversation-${dateTime}`, isNew = true, userId = 0) => {
+    convId = v4(), convTitle = `Conversation-${dateTime}`, isNew = true, userId = 0
+) => {
     return {
-    conversationId: convId,
-    conversationTitle: convTitle,
-    dateTimeCreated: dateTime,
-    isNew : isNew,
-    isActive: true,
-    isPinned: false,
-    dateTimePinned: '',
-    userId: userId,
-}}
+        conversationId: convId,
+        conversationTitle: convTitle,
+        dateTimeCreated: dateTime,
+        isNew : isNew,
+        isActive: true,
+        isPinned: false,
+        dateTimePinned: '',
+        userId: userId,
+    }
+}
+
+export const createNewMessage = (prompt, convId) => {
+    return {
+        ...messageObject,
+        conversationId: convId,
+        messageDescription: prompt,
+        messageSubDescription: String(new Date().toUTCString()),
+        messageType: messageTypes.user,
+        messageId: v4(),
+        messageAvatarSrc: messageAvatarSrcDefault,
+        messageAdditionalInfo:{
+            tableData:[],
+            chartData:[],
+            extra:{}
+        }
+    };
+};
