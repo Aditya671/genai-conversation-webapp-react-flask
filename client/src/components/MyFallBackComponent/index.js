@@ -1,7 +1,7 @@
-import { Col, Layout, Row, Typography } from 'antd'
-import { errorMessage } from './../../utilities/constants'
+import { Col, Image, Layout, Row, Typography } from 'antd'
+import { errorMessage } from '../../helper/constants'
 import { ButtonComponent } from './../../components/Button'
-import image from "./../../assets/Images/philips-white-logo.svg";
+import chatbotPreviewIcon from '../../chatbot-preview.png'
 import { Content, Header, Footer } from 'antd/es/layout/layout';
 import moment from 'moment';
 
@@ -19,17 +19,17 @@ export const MyFallbackComponent = ({ error, resetErrorBoundary }) => {
                 }}
             >
                 <Row align='middle' justify='space-between' style={{ width: '100%', padding: '8px 16px'}}>
-                <Col span={24} style={{ display: 'flex', alignItems: 'center', justifyContent:'flex-start' }}>
-                    <img src={image} alt="Philips logo" style={{ width: 'auto', height: '3.5em', margin: 0 }} />
-                    <Title level={2}
-                        className='theme-heading-font'
-                        style={{
-                            color: '#fff',
-                            fontWeight: 'bold',
-                            margin: '0 0 0 8px',
-                            fontSize: '1.8em',
-                        }} >Planning Tool</Title>
-                </Col>
+                <Col span={2} >
+                <Image alt="WebApp Logo" width={64} src={chatbotPreviewIcon}/>
+                <Title level={2}
+                    className='theme-heading-font'
+                    style={{
+                        color: '#1f1f1f',
+                        fontWeight: 'bold',
+                        margin: '0 0 0 8px',
+                        fontSize: '12px',
+                    }} >ConvBot</Title>
+            </Col>
                 </Row>
             </Header>
             <Content
@@ -56,7 +56,7 @@ export const MyFallbackComponent = ({ error, resetErrorBoundary }) => {
                     minHeight: '62px'
                 }}
             >
-                <Title level={4} style={{color:'#fff', margin:0}}>Philips © {moment().year()}</Title>
+                <Title level={4} style={{color:'#fff', margin:0}}>ConvBot © {moment().year()}</Title>
             </Footer>
         </Layout>
     )

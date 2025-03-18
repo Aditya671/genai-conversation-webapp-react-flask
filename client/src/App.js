@@ -7,9 +7,11 @@ import { FooterComponent } from "./containers/footer";
 import { HeaderComponent } from "./containers/header";
 import { ContentComponent } from "./containers/content";
 import { SidebarComponent } from "./containers/sidebar";
+import { ErrorBoundaryGlobal } from "./components/MyFallBackComponent/ErrorBoundaryGlobal";
 function App() {
     return (
         <>
+        <ErrorBoundaryGlobal children={
             <Provider store={store}>
                 <ConfigProvider
                     locale={process.env.REACT_APP_LOCAL_LANGUAGE || enUS}
@@ -48,6 +50,7 @@ function App() {
                     />
                 </ConfigProvider>
             </Provider>
+        } />
         </>
     );
 }

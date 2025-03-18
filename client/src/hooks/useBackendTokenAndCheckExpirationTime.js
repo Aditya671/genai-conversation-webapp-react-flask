@@ -38,6 +38,7 @@ export const useBackendTokenAndCheckExpirationTime = (instance, accounts) => {
         interval.current = setInterval(checkTokenExpiry, TOKEN_CHECK_INTERVAL);
         checkTokenExpiry(); // Check token expiry immediately after mounting     
         return () => clearInterval(interval.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return null; // You might not need to return anything from this hook
 

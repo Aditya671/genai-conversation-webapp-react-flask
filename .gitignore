@@ -25,3 +25,4 @@ yarn-error.log*
 */.env
 *__pycache__
 */genai_env/
+client/src/App_old.js
