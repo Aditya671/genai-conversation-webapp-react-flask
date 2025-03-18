@@ -9,6 +9,7 @@ import { errorModal } from "../../components/MessageModal";
 import { createNewMessage, newConversationObject } from "../../helper/constants";
 import { setMessagesList, setSelectedMessagesList, setUserMessagesPrompt } from "../../store/messages/slice";
 import { setConversationsList, setSelectedConversation } from "../../store/conversations/slice";
+import { setUserPromptFieldActiveState } from '../../store/base/slice';
 
 export const FooterComponent = (props) => {    
     const messagesList = cloneDeep(useSelector((state) => state.messages.messagesList))
@@ -18,6 +19,10 @@ export const FooterComponent = (props) => {
     const dispatch = useDispatch();
     const handleUserPrompt = (colomnName, row, rowIndex, promptMessage) => {
         dispatch(setUserMessagesPrompt(promptMessage))
+        if(!promptMessage){
+            return dispatch(setUserPromptFieldActiveState(false))
+        }
+        return dispatch(setUserPromptFieldActiveState(true))
     }
 
     const handleSendPromptClick = () => {

@@ -1,13 +1,13 @@
 import axios from "axios";
 import { v4 } from 'uuid';
-import { errorModal } from "../components/MessageModal";
+// import { errorModal } from "../components/MessageModal";
 import { isNull, isUndefined } from "lodash";
 
 
 let numberOfAjaxCAllPending = 0;
-axios.defaults.baseURL = process.env.REACT_APP_AZURE_API_URI;
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 let accessOrigin = !isNull( String(process.env.REACT_APP_AZURE_REDIRECT_URI) ) && !isUndefined( String(process.env.REACT_APP_AZURE_REDIRECT_URI) ) ? 
-	String(process.env.REACT_APP_AZURE_REDIRECT_URI) : 'https://localhost:3000';
+	String(process.env.REACT_APP_AZURE_REDIRECT_URI) : 'http://localhost:3000';
 
 // Add a request interceptor
 axios.interceptors.request.use(
@@ -42,17 +42,17 @@ async function CustomAxios(url, method, body,
 		'Strict-Transport-Security':'max-age=31536000, includeSubDomains',
 		'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS' }) {
 	const generatedId = v4()
-	const token = await localStorage.getItem('AccessToken') || '';
-	if (!token) {
-		return errorModal('Unauthorized User', 'Seems like you don\'t have access to use this application')
-	}
+	// const token = await localStorage.getItem('AccessToken') || '';
+	// if (!token) {
+	// 	return errorModal('Unauthorized User', 'Seems like you don\'t have access to use this application')
+	// }
 	return await axios({
 		url,
 		method,
 		data: body,
 		headers: {
-			Authorization: `Bearer ${token}`,
-			'Webapp-Id': generatedId,
+			// Authorization: `Bearer ${token}`,
+			// 'Webapp-Id': generatedId,
 			...headers
 		},
 	});

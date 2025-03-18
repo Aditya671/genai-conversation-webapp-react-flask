@@ -3,7 +3,8 @@ import { Content, Footer, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch} from 'react-redux';
-import { size } from 'lodash';
+import { isArray, size } from 'lodash';
+import { getConversationsList } from "../service/conversation-list";
 
 export const LayoutContainer = ({
     headerChildren,
@@ -14,11 +15,19 @@ export const LayoutContainer = ({
 }) => {
     const [collapsed, setCollapsed] = useState(false)
     const [siderWidth, setSiderWidth] = useState(320)
+    
     const dispatch = useDispatch();
     const selectedConversationMessages = (useSelector((state) => state.messages.selectedConversationMessages))
     const contentCSS = size(selectedConversationMessages) === 0 ?
         {display:'flex', alignItems:'center', justifyContent:'center'} : {padding:'10px 20px', height:'fit-content', overflowY:'auto'}
-   
+    
+    const conversationsList = (useSelector((state) => state.conversations.conversationsList))
+    useEffect(() => {
+        if(isArray(conversationsList) && size(conversationsList) === 0) {
+            dispatch(getConversationsList())
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [conversationsList])
     return (
     <>
         <Layout style={{height:'100dvh', maxHeight:'100dvh'}} hasSider={true}>

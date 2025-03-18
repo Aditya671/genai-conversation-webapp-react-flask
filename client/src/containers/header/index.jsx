@@ -1,4 +1,4 @@
-import { Col, Image, Row } from "antd"
+import { Col, Image, message, Row } from "antd"
 import chatbotPreviewIcon from '../../chatbot-preview.png'
 import Title from "antd/es/typography/Title"
 import { EditChatSVG } from "../../assets/svg/EditChatSVG"
@@ -12,13 +12,17 @@ import { setSelectedMessagesList } from "../../store/messages/slice"
 import { PageHeading } from "../../components/PageHeading"
 import { DotMenuSVG } from "../../assets/svg/DotMenuSVG"
 import { useEffect, useState } from "react"
+import { warningMessage } from "../../components/MessageModal"
 
 export const HeaderComponent = (props) => {
     const dispatch = useDispatch();
+    const [messageApi, contextHolder] = message.useMessage();
+
     const conversationsList = cloneDeep(useSelector((state) => state.conversations.conversationsList))
     const selectedConversation = cloneDeep(useSelector((state) => state.conversations.selectedConversation))
     const [displayedConvName, setDisplayedConversationName] = useState(selectedConversation['conversationTitle'])
-    // setConversationsList
+    const isUserPromptFieldActiveState = useSelector((state) => state.base.isUserPromptFieldActiveState)
+
     // setSelectedConversation
     useEffect(() => {
         if(selectedConversation){
@@ -27,6 +31,9 @@ export const HeaderComponent = (props) => {
     }, [selectedConversation])
 
     const generateNewChat = () => {
+        if(isUserPromptFieldActiveState){
+            return warningMessage(messageApi, 'Please save/send the prompt message before selecting another conversation')
+        }
         const isConvList = isArray(conversationsList)
         const convSize = isConvList ? size(conversationsList) : 0
         
@@ -51,6 +58,7 @@ export const HeaderComponent = (props) => {
     }
     return (
     <>
+        {contextHolder}
         <Row>
             <Col span={2} >
                 <Image alt="WebApp Logo" width={64} src={chatbotPreviewIcon}/>

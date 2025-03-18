@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, Dropdown, Button, Empty, List, Tooltip, Space } from "antd";
+import { Card, Dropdown, Empty, List, Tooltip, Space } from "antd";
 import { cloneDeep } from "lodash";
 import { useDispatch } from "react-redux";
 import { ButtonComponent } from "../Button";
@@ -13,6 +13,7 @@ import { EditFilledSVG } from "../../assets/svg/EditFilledSVG";
 import { DeleteOutlinedSVG } from "../../assets/svg/DeleteOutlinedSVG";
 import { DownloadOutlinedSVG } from "../../assets/svg/DownloadOutlinedSVG";
 import { EllipsisOutlinedSVG } from "../../assets/svg/EllipseOutlinedSVG";
+import { updateConversationTitle } from "../../service/conversation-list";
 
 const HistoryCardList = ({ selectedConversation , conversations, onConversationClick }) => {
     const dispatch = useDispatch();
@@ -45,6 +46,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
         const convObj = convClone.find(c => c.conversationId === convToRenameUsingId);
         const convObjId = convClone.findIndex(c => c.conversationId === convToRenameUsingId);
         if (convObjId > -1){
+            dispatch(updateConversationTitle(convToRenameUsingId, convNewTitle))
             delete convClone[convObjId]
             const updatedConvObj = cloneDeep(convObj)
             updatedConvObj['conversationTitle'] = convNewTitle
@@ -53,7 +55,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
         }
         setConvToRenameUsingId('')
     }
-    const menuOptions = (convId) => ([
+    const menuOptions = (convId, convTitle) => ([
         {label: (
             <ButtonComponent
                 title='Pin'
@@ -70,7 +72,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                 type="Button"
                 icon={<EditFilledSVG/>}
                 style={{border:'none', boxShadow:'none', minWidth:120}}
-                onClickHandle={() => setConvToRenameUsingId(convId)}
+                onClickHandle={() => {setConvToRenameUsingId(convId); setConvNewTitle(convTitle)}}
             />
         ), key: 2},
         {label:(
@@ -115,7 +117,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                             key={item.conversationId} style={{color:'#f1f1f1'}}
                             styles={{actions:{display:'flex'}}}
                             actions={[                                
-                                <Dropdown menu={{items: menuOptions(item.conversationId)}} >
+                                <Dropdown menu={{items: menuOptions(item.conversationId, item.conversationTitle)}} >
                                     <ButtonComponent
                                     style={{background:'transparent', border:'none', color:"#fff"}}
                                     icon={<EllipsisOutlinedSVG style={{color:"#fff"}}/>} type="text" />

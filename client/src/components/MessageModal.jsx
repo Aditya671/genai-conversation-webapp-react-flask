@@ -35,3 +35,25 @@ export const warningModal = (modalTitle, modalContent) => {
         content: modalContent,
     });
 };
+
+export const successMessage = (messageApi, content) => {
+    messageApi.open({
+        type: 'success',
+        content: content,
+        duration: 3,
+    });
+};
+export const errorMessage = (messageApi, content) => {
+    messageApi.open({
+        type: 'error',
+        content: content,
+        duration: 3,
+    });
+};
+export const warningMessage = (messageApi, content) => {
+    messageApi.open({
+        type: 'warning',
+        content: content,
+        duration:3,
+    });
+}
