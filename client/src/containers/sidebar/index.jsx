@@ -42,7 +42,7 @@ export const SidebarComponent = (props) => {
                 gap={8}
                 style={{margin:'8px 0', padding:'0 12px'}}
             >
-                <HistoryCardList 
+                <HistoryCardList
                     selectedConversation={selectedConversation} conversations={conversationsList}
                     onConversationClick={handleConversationNameClick}
                 />

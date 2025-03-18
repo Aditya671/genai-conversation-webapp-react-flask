@@ -30,3 +30,27 @@ export const getSelectedConvMessages =
         return true
     })
 }
+
+export const postUserPrompt =
+    () => (dispatch, getState) =>
+{
+    const userId = getState().users.userId
+    const messagesList = cloneDeep(getState().messages.selectedConversationMessages);
+    const conversationId = getState().conversations.selectedConversation.conversationId; 
+    if(messagesList.length === 0) {
+        return 'No messages to send'
+    }
+    const postMessage =  messagesList.map((msg) => msg.messageDescription)
+    CustomAxios(
+        Endpoints.postUserPrompt
+            .replace(/userId/, userId)
+            .replace(/conversationId/, conversationId),
+        'POST', postMessage
+    ).then((response) => {
+        return response.data
+    }).catch((error) => {
+        return console.log(error)
+    }).finally(() => {
+        return true
+    })
+}

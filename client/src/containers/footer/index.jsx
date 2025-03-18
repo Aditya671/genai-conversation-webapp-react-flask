@@ -10,6 +10,7 @@ import { createNewMessage, newConversationObject } from "../../helper/constants"
 import { setMessagesList, setSelectedMessagesList, setUserMessagesPrompt } from "../../store/messages/slice";
 import { setConversationsList, setSelectedConversation } from "../../store/conversations/slice";
 import { setUserPromptFieldActiveState } from '../../store/base/slice';
+import { postUserPrompt } from '../../service/messages-list';
 
 export const FooterComponent = (props) => {    
     const messagesList = cloneDeep(useSelector((state) => state.messages.messagesList))
@@ -81,6 +82,7 @@ export const FooterComponent = (props) => {
             originalMessageList = [{conversationId: convObj.conversationId, messages:[newMsgObj]}]
             displayMessageContent = [newMsgObj]
         }
+        // dispatch(postUserPrompt())
         dispatch(setMessagesList([...originalMessageList]))
         dispatch(setSelectedMessagesList(displayMessageContent))
         dispatch(setUserMessagesPrompt(''))

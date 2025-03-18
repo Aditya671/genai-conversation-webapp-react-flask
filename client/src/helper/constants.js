@@ -62,3 +62,11 @@ export const createNewMessage = (prompt, convId) => {
         }
     };
 };
+
+export const conversationObjectUpdateTypes = {
+    'TITLE': 'TITLE',
+    'EXPORT': 'EXPORT',
+    'PIN': 'PIN',
+    'DELETE': 'DELETE',
+    'DEFAULT': 'DEFAULT'
+}

@@ -1,12 +1,15 @@
+import { conversationObjectUpdateTypes } from "../helper/constants"
 import { Endpoints } from "../helper/endPoints"
 import { setConversationsList } from "../store/conversations/slice"
 import CustomAxios from "./axios-service"
 
 
 export const getConversationsList =
-    (userId = '67d1c4e768fd6d29d3043c98') => (dispatch, getState)=>
+    (userId = '') => (dispatch, getState)=>
 {
-    // const userId = getState().users.userId
+    if(!userId){
+        return 'Unauthorized User';
+    }
     CustomAxios(
         Endpoints.getConversations.replace(/userId/, userId), 'GET'
     ).then((response) => {
@@ -19,13 +22,20 @@ export const getConversationsList =
     })
 }
 
-export const updateConversationTitle =
-    (convId, convTitle) => (dispatch, getState) =>
+export const updateConversationObject =
+    (convId, convTitle, updateType = conversationObjectUpdateTypes['DEFAULT']) => (dispatch, getState) =>
 {
     const userId = getState().users.userId
+    let apiBody = { conversationTitle: convTitle }
+    if(updateType === conversationObjectUpdateTypes['PIN']){
+        apiBody = {isPinned: true}
+    }
+    if(updateType === conversationObjectUpdateTypes['DELETE']){
+        apiBody = {isActive: false}
+    }
     CustomAxios(
         Endpoints.conversations.replace(/userId/, userId).replace(/conversationId/, convId), 
-        'PATCH', { conversationTitle: convTitle }
+        'PATCH', apiBody
     ).then((response) => {
         return true
     }

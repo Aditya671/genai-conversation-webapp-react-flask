@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, Dropdown, Empty, List, Tooltip, Space } from "antd";
 import { cloneDeep } from "lodash";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ButtonComponent } from "../Button";
 import './HistoryCardList.css'
 import { PageHeading } from "../PageHeading";
@@ -13,55 +13,64 @@ import { EditFilledSVG } from "../../assets/svg/EditFilledSVG";
 import { DeleteOutlinedSVG } from "../../assets/svg/DeleteOutlinedSVG";
 import { DownloadOutlinedSVG } from "../../assets/svg/DownloadOutlinedSVG";
 import { EllipsisOutlinedSVG } from "../../assets/svg/EllipseOutlinedSVG";
-import { updateConversationTitle } from "../../service/conversation-list";
+import { getConversationsList, updateConversationObject } from "../../service/conversation-list";
+import { conversationObjectUpdateTypes } from "../../helper/constants";
 
 const HistoryCardList = ({ selectedConversation , conversations, onConversationClick }) => {
     const dispatch = useDispatch();
     const [convToRenameUsingId, setConvToRenameUsingId] = useState('');
     const [convNewTitle, setConvNewTitle] = useState('');
+    const userId  = useSelector((state) => state.users.userId);
     
-    
-    const handleDeleteConversation = (convId) => {
-        const convClone = cloneDeep(conversations);
-        const convObj = convClone.filter(c => c.conversationId !== convId);
-        dispatch(setConversationsList(convObj))
-        if(convObj){
-            const latestConversation = conversations.reduce((latest, current) => 
-                new Date(current.dateTimeCreated) > new Date(latest.dateTimeCreated) ? current : latest
-            )
-            dispatch(
-                setSelectedConversation({
-                    conversationId: latestConversation['conversationId'],
-                    conversationTitle : latestConversation['conversationTitle']
-                })
-            )
+    const handleMenuItemClick = async (convId, convTitle, action) => {
+        if(action === conversationObjectUpdateTypes['PIN']){
+            await dispatch(updateConversationObject(convId, '', conversationObjectUpdateTypes['PIN']))
         }
+        if(action === conversationObjectUpdateTypes['DELETE']){
+            await dispatch(updateConversationObject(convId, '', conversationObjectUpdateTypes['DELETE']))
+            // const convClone = cloneDeep(conversations);
+            // const convObj = convClone.filter(c => c.conversationId !== convId);
+            // dispatch(setConversationsList(convObj))
+            // if(convObj){
+            //     const latestConversation = conversations.reduce((latest, current) => 
+            //         new Date(current.dateTimeCreated) > new Date(latest.dateTimeCreated) ? current : latest
+            //     )
+            //     dispatch(
+            //         setSelectedConversation({
+            //             conversationId: latestConversation['conversationId'],
+            //             conversationTitle : latestConversation['conversationTitle']
+            //         })
+            //     )
+            // }
+        }
+        if(action === conversationObjectUpdateTypes['TITLE']){
+            const convClone = cloneDeep(conversations);
+            const convObj = convClone.find(c => c.conversationId === convId);
+            const convObjId = convClone.findIndex(c => c.conversationId === convId);
+            if (convObjId > -1){
+                await dispatch(updateConversationObject(convId, convTitle, conversationObjectUpdateTypes['TITLE']))
+                // delete convClone[convObjId]
+                // const updatedConvObj = cloneDeep(convObj)
+                // updatedConvObj['conversationTitle'] = convNewTitle
+                // convClone[convObjId] = updatedConvObj
+                // dispatch(setConversationsList(convClone))
+            }
+            setConvToRenameUsingId('')
+        }
+        if(action === conversationObjectUpdateTypes['EXPORT']){
+            
+        }
+        await dispatch(getConversationsList(userId))
+        return true
     }
-    const handleExportConversation = (convId) => {
 
-    }
-    
-    const handleChangeConvTitle = () => {
-        const convClone = cloneDeep(conversations);
-        const convObj = convClone.find(c => c.conversationId === convToRenameUsingId);
-        const convObjId = convClone.findIndex(c => c.conversationId === convToRenameUsingId);
-        if (convObjId > -1){
-            dispatch(updateConversationTitle(convToRenameUsingId, convNewTitle))
-            delete convClone[convObjId]
-            const updatedConvObj = cloneDeep(convObj)
-            updatedConvObj['conversationTitle'] = convNewTitle
-            convClone[convObjId] = updatedConvObj
-            dispatch(setConversationsList(convClone))
-        }
-        setConvToRenameUsingId('')
-    }
     const menuOptions = (convId, convTitle) => ([
         {label: (
             <ButtonComponent
                 title='Pin'
                 type="Button"
                 icon={<PushpinFilledSVG/>} 
-                onClickHandle={() => () => true}
+                onClickHandle={() => handleMenuItemClick(convId, convTitle, conversationObjectUpdateTypes['PIN'])}
                 style={{border:'none', boxShadow:'none', minWidth:120}}
             />
         ), key:1},
@@ -81,7 +90,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                 type="Button"
                 icon={<DeleteOutlinedSVG/>}
                 style={{border:'none', boxShadow:'none', minWidth:120}}
-                onClickHandle={() => handleDeleteConversation(convId)}
+                onClickHandle={() => handleMenuItemClick(convId, '', conversationObjectUpdateTypes['DELETE'])}
             />
         ), key:3},
         {label:(
@@ -90,7 +99,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                 type="Button"
                 icon={<DownloadOutlinedSVG />}
                 style={{border:'none', boxShadow:'none', minWidth:120}}
-                onClickHandle={() => handleExportConversation(convId)}
+                onClickHandle={() => handleMenuItemClick(convId, '', conversationObjectUpdateTypes['EXPORT'])}
             />
         ), key:4},
     ]);
@@ -141,8 +150,8 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                                         allowClear
                                         onClear={() => setConvToRenameUsingId('')}
                                     />
-                                    <ButtonComponent icon={<TickSVG/>} 
-                                        onClickHandle={handleChangeConvTitle}
+                                    <ButtonComponent icon={<TickSVG/>}
+                                        onClickHandle={() => handleMenuItemClick(convToRenameUsingId, convNewTitle, conversationObjectUpdateTypes['TITLE'])}
                                         style={{background:'transparent', border:'none', color:"#fff"}}
                                         themeType='IconButton' />
                                     </Space.Compact>
