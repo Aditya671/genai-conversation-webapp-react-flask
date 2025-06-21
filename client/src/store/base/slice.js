@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    isUserPromptFieldActiveState: false
+    isUserPromptFieldInActiveState: false
 }
 
 export const baseSlicer = createSlice({
@@ -9,7 +9,7 @@ export const baseSlicer = createSlice({
     initialState,
     reducers: {
         setUserPromptFieldActiveState: (state, action) => {
-            state.isUserPromptFieldActiveState = action.payload;
+            state.isUserPromptFieldInActiveState = action.payload;
         }
     },
 });

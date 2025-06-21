@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { Checkbox, Select, Divider } from 'antd';
-import { setFilterData } from '../services/base';
 import { useDispatch } from 'react-redux';
 import { isEmpty, isNull } from 'lodash';
 import { DownOutlinedSVG } from '../assets/svg/DownOutlinedSVG';
 
 const SelectDropdown = (props) => {
     const {
-        componentName = 'select-button', filterOptions = [], sortOptions = true, defaultValue = null, onChange = null, selectionType = 'multiple',
+        componentName = 'select-button', filterOptions = [], sortOptions = true,
+        defaultValue = null, onChange = null, selectionType = 'multiple',
         onBeforeChange = null, onClearFilter = null, filterLabel = null, showSelectAllOption = true,
-        includeParentFilters = null, pageName = '', form = null, onScroll = null, ...rest
+        includeParentFilters = null, pageName = '', form = null, onScroll = null,
+        handleSelectDataToParentComponent = null, ...rest
     } = props;
 
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, SetSelectedValue] = useState([])
     const [options, setOptions] = useState([]);
     const dispatch = useDispatch();
+
 
     useEffect(() => {
         setOptions(
@@ -30,6 +32,7 @@ const SelectDropdown = (props) => {
                 }))
     }, [filterOptions])
 
+
     useEffect(() => {
         if (!isNull(defaultValue) && !isEmpty(defaultValue) && !isEmpty(filterOptions)) {
             const preSelectedValuesForDropdown = []
@@ -39,7 +42,9 @@ const SelectDropdown = (props) => {
         if (Array.isArray(defaultValue) && isEmpty(defaultValue) && selectionType === 'multiple') {
             SetSelectedValue([])
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterOptions])
+
 
     const handleBeforeChange = (open) => {
         if (typeof (onBeforeChange) === 'function' && open === true) {
@@ -49,6 +54,8 @@ const SelectDropdown = (props) => {
             setIsOpen(open);
         }
     }
+
+
     const handlePopupScroll = (e) => {
         if (typeof (onScroll) === 'function') {
             onScroll(e);
@@ -56,15 +63,12 @@ const SelectDropdown = (props) => {
     }
 
 
+    
     const handleChange = (userSelectedValue, userSelectedComponentName) => {
         SetSelectedValue(userSelectedValue)
         if (includeParentFilters) {
             dispatch(
-                setFilterData(
-                    pageName, userSelectedComponentName,
-                    (userSelectedComponentName.includes('Id') && Array.isArray(userSelectedValue)) ?
-                        userSelectedValue.map(val => typeof val === 'string' ? val : parseInt(val)) : userSelectedValue
-                )
+                handleSelectDataToParentComponent(pageName, userSelectedComponentName, userSelectedValue)
             )
         }
         if (typeof (onChange) === "function") {
@@ -77,6 +81,7 @@ const SelectDropdown = (props) => {
         }
     }
 
+    
     const clearFilters = () => {
         if (typeof (onClearFilter) === "function") {
             onClearFilter(() => {
@@ -85,6 +90,7 @@ const SelectDropdown = (props) => {
         }
     }
 
+    
     const handleSearch = (searchTerm) => {
         setOptions(
             Array.isArray(filterOptions) && filterOptions?.length > 0 &&
@@ -104,11 +110,10 @@ const SelectDropdown = (props) => {
     return (
         <>
             {filterLabel === null ? <></> : <p style={{ margin: '8px 0' }}>{filterLabel}</p>}
-
             <Select
                 name={componentName}
                 mode={selectionType}
-                size={'medium'}
+                size={'middle'}                
                 placeholder="Select"
                 maxTagCount="responsive"
                 popupMatchSelectWidth={false}
@@ -119,7 +124,7 @@ const SelectDropdown = (props) => {
                 onDropdownVisibleChange={handleBeforeChange}
                 onChange={(values) => handleChange(values, componentName)}
                 style={{
-                    width: '100%', maxWidth: '98%', minWidth: '240px'
+                    width: '240px', minWidth: '200px'
                 }}
                 onClear={clearFilters}
                 suffixIcon={<DownOutlinedSVG />}

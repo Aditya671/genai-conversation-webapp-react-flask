@@ -25,6 +25,9 @@ export const getConversationsList =
 export const updateConversationObject =
     (convId, convTitle, updateType = conversationObjectUpdateTypes['DEFAULT']) => (dispatch, getState) =>
 {
+    if (updateType === conversationObjectUpdateTypes['DEFAULT']){
+        return console.log('No update type provided')
+    }
     const userId = getState().users.userId
     let apiBody = { conversationTitle: convTitle }
     if(updateType === conversationObjectUpdateTypes['PIN']){
@@ -33,9 +36,10 @@ export const updateConversationObject =
     if(updateType === conversationObjectUpdateTypes['DELETE']){
         apiBody = {isActive: false}
     }
+    
     CustomAxios(
         Endpoints.conversations.replace(/userId/, userId).replace(/conversationId/, convId), 
-        'PATCH', apiBody
+        'POST', apiBody
     ).then((response) => {
         return true
     }

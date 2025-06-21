@@ -11,7 +11,8 @@ import { CopyFilledSVG } from "../../assets/svg/CopyFilledSVG";
 import { EditFilledSVG } from "../../assets/svg/EditFilledSVG";
 import { SaveFilledSVG } from "../../assets/svg/SaveFilledSVG";
 import { setUserMessagesPrompt } from "../../store/messages/slice";
-
+import TextToSpeech from "../../components/TextToSpeech";
+import React from "react";
 
 export const ContentComponent = () => {
     const dispatch = useDispatch();
@@ -57,13 +58,28 @@ export const ContentComponent = () => {
                 <Flex key={msg.messageId}
                 justify={msg.messageType === messageTypes['bot'] ? "flex-start" : 'flex-end'}
                 align="center"
-                style={{margin:'20px 0'}}
+                style={{margin:'20px 0', position:'relative'}}
                 >
                     <MessageCard
                         styleWidth={300}
                         messageAvatarSrc={msg.messageAvatarSrc}
-                        messageDescription={msg.messageDescription}
-                        messageSubDescription={msg.messageSubDescription}
+                        messageDescription={
+                        <React.Fragment>{
+                        <TextToSpeech
+                            text={msg.messageDescription}
+                            style={msg.messageType && messageTypes['bot'] === "flex-start" ? {
+                                position: 'absolute',top: '-8px', right: '-12px', background: 'transparent',
+                                zIndex: 1, border:'none', textAlign: 'center', padding: '2px',
+                                } : {
+                                position: 'absolute',top: '-8px', right: '-12px', background: 'transparent',
+                                zIndex: 1, border:'none', textAlign: 'center', padding: '2px'
+                                }
+                            }
+                        />}
+                        <span>{msg.messageDescription}</span>
+                        </React.Fragment>
+                        }
+                        messageSubDescription={msg.messageDateTimeCreated}
                         messageActions={[
                             <ButtonComponent
                                 tooltipText='Copy Prompt' themeType='IconButton' icon={<CopyFilledSVG key="copy" />}

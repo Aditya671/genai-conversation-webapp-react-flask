@@ -21,9 +21,9 @@ export const FooterComponent = (props) => {
     const handleUserPrompt = (colomnName, row, rowIndex, promptMessage) => {
         dispatch(setUserMessagesPrompt(promptMessage))
         if(!promptMessage){
-            return dispatch(setUserPromptFieldActiveState(false))
+            return dispatch(setUserPromptFieldActiveState(true))
         }
-        return dispatch(setUserPromptFieldActiveState(true))
+        return dispatch(setUserPromptFieldActiveState(false))
     }
 
     const handleSendPromptClick = () => {
@@ -82,7 +82,7 @@ export const FooterComponent = (props) => {
             originalMessageList = [{conversationId: convObj.conversationId, messages:[newMsgObj]}]
             displayMessageContent = [newMsgObj]
         }
-        // dispatch(postUserPrompt())
+        dispatch(postUserPrompt())
         dispatch(setMessagesList([...originalMessageList]))
         dispatch(setSelectedMessagesList(displayMessageContent))
         dispatch(setUserMessagesPrompt(''))
@@ -97,7 +97,7 @@ export const FooterComponent = (props) => {
 
     return (
         <>
-            <Flex style={{background:'#fff', borderRight:'3.5px'}}>
+            <Flex style={{background:'#fff', borderRight:'3.5px', boxShadow: '4px 6px 8px rgba(139, 137, 137, 0.9)', border: 'rgba(139, 137, 137, 0.9)'}}>
             <GetInputField maxLength={12000} inputType="textarea" colomnName="UserPrompt"
                 onRowUpdate={handleUserPrompt}
                 userValue={userPrompt}

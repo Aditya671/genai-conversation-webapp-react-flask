@@ -28,20 +28,6 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
         }
         if(action === conversationObjectUpdateTypes['DELETE']){
             await dispatch(updateConversationObject(convId, '', conversationObjectUpdateTypes['DELETE']))
-            // const convClone = cloneDeep(conversations);
-            // const convObj = convClone.filter(c => c.conversationId !== convId);
-            // dispatch(setConversationsList(convObj))
-            // if(convObj){
-            //     const latestConversation = conversations.reduce((latest, current) => 
-            //         new Date(current.dateTimeCreated) > new Date(latest.dateTimeCreated) ? current : latest
-            //     )
-            //     dispatch(
-            //         setSelectedConversation({
-            //             conversationId: latestConversation['conversationId'],
-            //             conversationTitle : latestConversation['conversationTitle']
-            //         })
-            //     )
-            // }
         }
         if(action === conversationObjectUpdateTypes['TITLE']){
             const convClone = cloneDeep(conversations);
@@ -49,11 +35,6 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
             const convObjId = convClone.findIndex(c => c.conversationId === convId);
             if (convObjId > -1){
                 await dispatch(updateConversationObject(convId, convTitle, conversationObjectUpdateTypes['TITLE']))
-                // delete convClone[convObjId]
-                // const updatedConvObj = cloneDeep(convObj)
-                // updatedConvObj['conversationTitle'] = convNewTitle
-                // convClone[convObjId] = updatedConvObj
-                // dispatch(setConversationsList(convClone))
             }
             setConvToRenameUsingId('')
         }
@@ -108,10 +89,12 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
         <>
             {conversations.length > 0 ? (
                 <List
-                    style={{width:'100%'}}
-                    // grid={{column:1}}
+                    rowKey={(item) => item.conversationId}
+                    style={{width:'100%', overflowY:'auto', overflowX:'hidden', height:'500px'}}
+                    loading={false}
+                    bordered={true}
                     size="small"
-                    bordered
+                    // bordered
                     header={
                         <PageHeading
                             style={{color:'#008080', marginTop: 0, marginBottom: 2}}
@@ -166,7 +149,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                     )} />
             ) : (
                 <Card>
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "150px" }}>
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "350px" }}>
                         <Empty description="No History" />
                     </div>
                 </Card>

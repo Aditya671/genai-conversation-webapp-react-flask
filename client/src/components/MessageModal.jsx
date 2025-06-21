@@ -36,22 +36,22 @@ export const warningModal = (modalTitle, modalContent) => {
     });
 };
 
-export const successMessage = (messageApi, content) => {
-    messageApi.open({
+export const successMessage = (warningModalApiComponent, content) => {
+    warningModalApiComponent.open({
         type: 'success',
         content: content,
         duration: 3,
     });
 };
-export const errorMessage = (messageApi, content) => {
-    messageApi.open({
+export const errorMessage = (warningModalApiComponent, content) => {
+    warningModalApiComponent.open({
         type: 'error',
         content: content,
         duration: 3,
     });
 };
-export const warningMessage = (messageApi, content) => {
-    messageApi.open({
+export const warningMessage = (warningModalApiComponent, content) => {
+    warningModalApiComponent.open({
         type: 'warning',
         content: content,
         duration:3,

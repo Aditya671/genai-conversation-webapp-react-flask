@@ -16,12 +16,12 @@ import { warningMessage } from "../../components/MessageModal"
 
 export const HeaderComponent = (props) => {
     const dispatch = useDispatch();
-    const [messageApi, contextHolder] = message.useMessage();
+    const [warningModalApiComponent, contextHolder] = message.useMessage();
 
     const conversationsList = cloneDeep(useSelector((state) => state.conversations.conversationsList))
     const selectedConversation = cloneDeep(useSelector((state) => state.conversations.selectedConversation))
     const [displayedConvName, setDisplayedConversationName] = useState(selectedConversation['conversationTitle'])
-    const isUserPromptFieldActiveState = useSelector((state) => state.base.isUserPromptFieldActiveState)
+    const isUserPromptFieldInActiveState = useSelector((state) => state.base.isUserPromptFieldInActiveState)
 
     // setSelectedConversation
     useEffect(() => {
@@ -31,8 +31,8 @@ export const HeaderComponent = (props) => {
     }, [selectedConversation])
 
     const generateNewChat = () => {
-        if(isUserPromptFieldActiveState){
-            return warningMessage(messageApi, 'Please save/send the prompt message before selecting another conversation')
+        if(isUserPromptFieldInActiveState){
+            return warningMessage(warningModalApiComponent, 'Please save/send the prompt message before selecting another conversation')
         }
         const isConvList = isArray(conversationsList)
         const convSize = isConvList ? size(conversationsList) : 0
@@ -60,25 +60,14 @@ export const HeaderComponent = (props) => {
     <>
         {contextHolder}
         <Row>
-            <Col span={2} >
-                <Image alt="WebApp Logo" width={64} src={chatbotPreviewIcon}/>
-                <Title level={2}
-                    className='theme-heading-font'
-                    style={{
-                        color: '#1f1f1f',
-                        fontWeight: 'bold',
-                        margin: '0 0 0 8px',
-                        fontSize: '12px',
-                    }} >ConvBot</Title>
-            </Col>
-            <Col span={18} style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+            <Col span={22} style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
                 <PageHeading
                     headingLevel={5} headingText={displayedConvName || ''}
                     style={{color:'#00000073', fontWeight: 500, marginTop: 0, marginBottom: 2}}
                 />
                 
             </Col>
-            <Col span={3} style={{alignItems:'center', justifyContent:'flex-end', display:'flex'}}>
+            <Col span={2} style={{alignItems:'center', justifyContent:'flex-end', display:'flex'}}>
                 <ButtonComponent
                     onClickHandle={generateNewChat}
                     style={{background:'transparent', border:'none'}}

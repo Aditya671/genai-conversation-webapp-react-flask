@@ -25,3 +25,6 @@ code {
     right: -10px;
     font-style: italic;
 }
+.message-card-meta-white-space span{
+    white-space: normal!important;
+}

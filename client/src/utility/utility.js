@@ -236,16 +236,16 @@ export function displayDateTimeMessage() {
     let timeOfDay;
     let message;
     if (hours < 12) {
-        timeOfDay = "Morning Time";
+        timeOfDay = "Happy Morning";
         message = "How are you doing today?";
     } else if (hours < 17) {
-        timeOfDay = "Afternoon Time";
+        timeOfDay = "Happy Afternoon";
         message = "Hope you're having a productive day!";
     } else if (hours < 20) {
         timeOfDay = "";
         message = "Good Evening! How was your day?";
     } else {
-        timeOfDay = "Night Time";
+        timeOfDay = "Night Time It Is";
         message = "Hey Lad, please have some sleep.";
     }
 

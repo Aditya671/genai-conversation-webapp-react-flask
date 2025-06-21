@@ -16,7 +16,7 @@ from backend.src.config import constants
 app.add_middleware(
     CORSMiddleware,
     allow_origins=constants.allowed_origins,
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=constants.allowed_methods,
     allow_headers=["*"],
     max_age=constants.allowed_max_age
@@ -86,6 +86,7 @@ app.include_router(conv_router, prefix="/api/{user_id}/conversations", tags=["co
 
 from backend.src.routers.messages import message_router
 app.include_router(message_router, prefix="/api/{user_id}/{conversation_id}", tags=["messages"])
+
 from uvicorn import run
 if __name__ == "__main__":
     run(app)

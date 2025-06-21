@@ -27,7 +27,7 @@ export const MessageCard = ({
         actions={messageActions}
     >
         <Meta
-            // style={{fontSize:12,}}
+            className="message-card-meta-white-space"
             avatar={<Avatar src={messageAvatarSrc} />}
             title={messageDescription}
             description={messageSubDescription}
