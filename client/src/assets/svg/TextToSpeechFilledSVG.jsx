@@ -25,9 +25,9 @@ export const TextToSpeechFilledSVG = () => (
         <line x1="5" y1="16" x2="17" y2="16" stroke="#000" stroke-width="1.2"/>
         <line x1="5" y1="20" x2="13" y2="20" stroke="#000" stroke-width="1.2"/>
         <polygon points="20,14 20,22 25,18" fill="black"/>
-        <path class="wave" d="M26 13 C28 18, 28 18, 26 23" />
-        <path class="wave wave2" d="M27.5 12 C30.5 18, 30.5 18, 27.5 24" />
-        <path class="wave wave3" d="M29 11 C33 18, 33 18, 29 25" />
+        <path className="wave" d="M26 13 C28 18, 28 18, 26 23" />
+        <path className="wave wave2" d="M27.5 12 C30.5 18, 30.5 18, 27.5 24" />
+        <path className="wave wave3" d="M29 11 C33 18, 33 18, 29 25" />
     </svg>
 
 )

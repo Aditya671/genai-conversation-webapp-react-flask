@@ -1,6 +1,7 @@
 import { Avatar, Card } from "antd"
 import { messageAvatarSrcDefault } from "../helper/constants";
-
+import Markdown from 'react-markdown'
+import { Fragment } from "react";
 const {Meta} = Card;
 
 export const MessageCard = ({
@@ -14,7 +15,6 @@ export const MessageCard = ({
     return (
     <>
     <Card
-    // <PageLoadingIndicator/>
         loading={false}
         style={{
             minWidth: styleWidth,
@@ -29,7 +29,10 @@ export const MessageCard = ({
         <Meta
             className="message-card-meta-white-space"
             avatar={<Avatar src={messageAvatarSrc} />}
-            title={messageDescription}
+            title={<Fragment>
+                {messageDescription.element}
+                 <Markdown>{messageDescription.desc}</Markdown>
+                </Fragment>}
             description={messageSubDescription}
         />
     </Card>

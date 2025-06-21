@@ -25,6 +25,21 @@ code {
     right: -10px;
     font-style: italic;
 }
-.message-card-meta-white-space span{
+.message-card-meta-white-space *,
+.ant-card-meta-title,
+.ant-card-meta-title *
+/* .message-card-meta-white-space span p,
+.message-card-meta-white-space span h1,
+.message-card-meta-white-space span h2,
+.message-card-meta-white-space span h3,
+.message-card-meta-white-space span h4,
+.message-card-meta-white-space span h5,
+.message-card-meta-white-space span h6 
+.message-card-meta-white-space span div,
+.message-card-meta-white-space span pre ,
+.message-card-meta-white-space span code,
+.message-card-meta-white-space span li,
+.message-card-meta-white-space span p * */
+{
     white-space: normal!important;
 }

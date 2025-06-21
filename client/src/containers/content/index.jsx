@@ -13,6 +13,7 @@ import { SaveFilledSVG } from "../../assets/svg/SaveFilledSVG";
 import { setUserMessagesPrompt } from "../../store/messages/slice";
 import TextToSpeech from "../../components/TextToSpeech";
 import React from "react";
+import markdownToTxt from 'markdown-to-txt';
 
 export const ContentComponent = () => {
     const dispatch = useDispatch();
@@ -64,9 +65,9 @@ export const ContentComponent = () => {
                         styleWidth={300}
                         messageAvatarSrc={msg.messageAvatarSrc}
                         messageDescription={
-                        <React.Fragment>{
+                        {element:<React.Fragment>
                         <TextToSpeech
-                            text={msg.messageDescription}
+                            text={markdownToTxt(msg.messageDescription)}
                             style={msg.messageType && messageTypes['bot'] === "flex-start" ? {
                                 position: 'absolute',top: '-8px', right: '-12px', background: 'transparent',
                                 zIndex: 1, border:'none', textAlign: 'center', padding: '2px',
@@ -75,9 +76,10 @@ export const ContentComponent = () => {
                                 zIndex: 1, border:'none', textAlign: 'center', padding: '2px'
                                 }
                             }
-                        />}
-                        <span>{msg.messageDescription}</span>
-                        </React.Fragment>
+                        />
+                        </React.Fragment>,
+                        desc:msg.messageDescription
+                        }
                         }
                         messageSubDescription={msg.messageDateTimeCreated}
                         messageActions={[

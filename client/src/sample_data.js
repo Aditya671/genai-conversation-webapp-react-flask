@@ -1038,4 +1038,234 @@ export const messagesList2SampleData = [
       },
     ],
   },
-];
+  {
+  "conversationId": "febc3d2e-f382-432f-905c-1df111239121",
+  "messages": [
+    {
+      "messageId": "601",
+      "messageType": "User",
+      "messageAvatarSrc": "logo",
+      "messageDescription": "How has India transformed in terms of infrastructure, education, and technology in the past two decades? I'm particularly curious about rural development and digital penetration in Tier 2/3 cities.",
+      "messageDateTimeCreated": "2025-06-21T13:12:00Z",
+      "isEdited": false,
+      "referenceMessageId": null,
+      "messageSubDescription": "User asked about India's progress",
+      "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+    },
+    {
+      "messageId": "602",
+      "messageType": "Bot",
+      "messageAvatarSrc": "logo",
+      "messageDescription": "Over the last 20 years, India has undergone a phenomenal transformation across several critical sectors. From the launch of Digital India to aggressive rural electrification and the development of smart cities, change has rippled through every layer of society. Broadband penetration has brought small-town economies online, empowering millions of first-generation internet users to access banking, learning, and e-commerce. In parallel, India's education sector has embraced online learning platforms, while technical skilling centers have mushroomed across the country through initiatives like Skill India. Rural infrastructure—including roads, sanitation, and affordable housing—has seen massive central investments, closing the accessibility gap. Even agricultural communities now access crop data and subsidies digitally, dramatically improving yield and income certainty.",
+      "messageDateTimeCreated": "2025-06-21T13:12:15Z",
+      "isEdited": false,
+      "referenceMessageId": null,
+      "messageSubDescription": "Bot gave high-level analysis of India's growth",
+      "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+    },
+    {
+      "messageId": "603",
+      "messageType": "User",
+      "messageAvatarSrc": "logo",
+      "messageDescription": "How is this change visible in the lives of ordinary citizens?",
+      "messageDateTimeCreated": "2025-06-21T13:12:30Z",
+      "isEdited": false,
+      "referenceMessageId": null,
+      "messageSubDescription": "User asked about on-ground impact",
+      "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+    },
+    {
+      "messageId": "604",
+      "messageType": "Bot",
+      "messageAvatarSrc": "logo",
+      "messageDescription": "From a villager paying bills using a mobile wallet to students in rural Tamil Nadu accessing coding classes via YouTube, the impact is measurable and emotional. Small business owners in remote parts of Uttar Pradesh now receive digital payments, manage online inventories, and market their goods through social media. Telemedicine has made quality health consultations possible for patients hundreds of kilometers away from urban hospitals. Women-led Self-Help Groups (SHGs) use WhatsApp to coordinate microcredit and scale community entrepreneurship. For many, the digital leap has not just improved convenience—it has created dignity and agency.",
+      "messageDateTimeCreated": "2025-06-21T13:12:48Z",
+      "isEdited": false,
+      "referenceMessageId": null,
+      "messageSubDescription": "Bot described grassroots transformation",
+      "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+    },
+    {
+      "messageId": "605",
+      "messageType": "User",
+      "messageAvatarSrc": "logo",
+      "messageDescription": "That’s powerful. What about India's performance in global innovation or digital public infrastructure?",
+      "messageDateTimeCreated": "2025-06-21T13:13:05Z",
+      "isEdited": false,
+      "referenceMessageId": null,
+      "messageSubDescription": "User inquired about global position",
+      "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+    },
+    {
+      "messageId": "606",
+      "messageType": "Bot",
+      "messageAvatarSrc": "logo",
+      "messageDescription": "India now ranks among the top 40 nations in the Global Innovation Index. Its pioneering open digital public goods—like UPI, Aadhaar, and DigiLocker—have become global case studies. Countries in Africa and Southeast Asia are actively studying these frameworks to replicate their success. Startups like Zerodha, Byju's, and Ola have paved the way for a confident, product-first ecosystem. Backed by vibrant policy support, India’s innovation is now decentralized—coming equally from small towns and metros alike.",
+      "messageDateTimeCreated": "2025-06-21T13:13:20Z",
+      "isEdited": false,
+      "referenceMessageId": null,
+      "messageSubDescription": "Bot responded with global innovation commentary",
+      "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+    },
+    {
+      "messageId": "607",
+      "messageType": "User",
+      "messageAvatarSrc": "logo",
+      "messageDescription": "That decentralization sounds really exciting. Are there risks or challenges still being faced?",
+      "messageDateTimeCreated": "2025-06-21T13:13:35Z",
+      "isEdited": false,
+      "referenceMessageId": null,
+      "messageSubDescription": "User asking about ongoing bottlenecks",
+      "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+    },
+    {
+      "messageId": "608",
+      "messageType": "Bot",
+      "messageAvatarSrc": "logo",
+      "messageDescription": "Indeed. While progress is undeniable, challenges persist. Digital inequality is real—many regions still suffer from patchy internet or language barriers. There's also the issue of skilling keeping pace with automation. Even with high digital literacy, gaps remain in critical thinking and employability. Regulatory bottlenecks, fragmented policy execution, and environmental degradation in the race for urbanization are also part of the tightrope India walks.",
+      "messageDateTimeCreated": "2025-06-21T13:13:50Z",
+      "isEdited": false,
+      "referenceMessageId": null,
+      "messageSubDescription": "Bot balanced optimism with realities",
+      "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+    },
+    {
+      "messageId": "609",
+      "messageType": "User",
+      "messageAvatarSrc": "logo",
+      "messageDescription": "Fascinating insights. Thanks for articulating this so clearly.",
+      "messageDateTimeCreated": "2025-06-21T13:14:04Z",
+      "isEdited": false,
+      "referenceMessageId": null,
+      "messageSubDescription": "User expressed gratitude",
+      "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+    },
+    {
+      "messageId": "610",
+      "messageType": "Bot",
+      "messageAvatarSrc": "logo",
+      "messageDescription": "Always a pleasure, Aditya. India's journey is one of ambition, contradictions, and deep resilience. Let’s keep exploring.",
+      "messageDateTimeCreated": "2025-06-21T13:14:15Z",
+      "isEdited": false,
+      "referenceMessageId": null,
+      "messageSubDescription": "Bot wraps up with poetic reflection",
+      "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+    }
+  ]
+  },
+  {
+    "conversationId": "af12accc-88b6-4af1-b3b0-7c43219312a2",
+    "messages": [
+      {
+        "messageId": "701",
+        "messageType": "User",
+        "messageAvatarSrc": "logo",
+        "messageDescription": "Can you give me a detailed overview of where AI stands in 2025—its maturity, applications, risks, and upcoming trends?",
+        "messageDateTimeCreated": "2025-06-21T13:20:00Z",
+        "isEdited": false,
+        "referenceMessageId": null,
+        "messageSubDescription": "User requested AI overview",
+        "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+      },
+      {
+        "messageId": "702",
+        "messageType": "Bot",
+        "messageAvatarSrc": "logo",
+        "messageDescription": "\n# 🌐 Artificial Intelligence in 2025\n\n## 📊 Global Adoption Status\nAI has matured into a foundational layer across multiple industries:\n\n### Top Domains by Adoption Rate (2025)\n| Sector              | AI Penetration | Example Application            |\n|---------------------|----------------|-------------------------------|\n| Healthcare          | 83%            | Predictive diagnostics         |\n| Finance             | 79%            | Fraud detection and modeling  |\n| Retail & E-commerce | 72%            | Personalization engines       |\n| Education           | 65%            | Adaptive learning platforms   |\n\n---\n\n## 🧠 Current Capabilities\n1. **Multimodal AI**: Seamlessly processes voice, image, and text inputs.\n2. **Agentic AI systems**: Models that complete tasks over time, with memory.\n3. **Explainable AI**: Interpretability embedded into outputs.\n\n---\n\n## ⚠️ Key Risks and Challenges\n- Bias amplification in decision-making\n- Hallucinations and misalignment\n- Over-dependence without robust regulation\n\n> *“AI will be more collaborative than replacement-driven.”* — [WEF Report, 2025](https://www.weforum.org/reports/)\n\n---\n\n## 🔮 Trends to Watch\n1. **Edge AI deployment**: Processing data locally for real-time inference.\n2. **Sovereign AI**: Nations building localized foundational models.\n3. **AI code agents**: Models writing and testing entire backend modules.\n\n---\n\n💡 **Fun Stat**: By mid-2025, AI is responsible for:\n- Writing ~23% of new software modules\n- Generating 38% of marketing visuals\n- Responding to over 50% of L1 customer queries\n\n---\n\n📚 Sources:\n- Stanford AI Index 2025: [aiindex.stanford.edu](https://aiindex.stanford.edu/)\n- World Economic Forum 2025 Insights\n\n",
+        "messageDateTimeCreated": "2025-06-21T13:20:20Z",
+        "isEdited": false,
+        "referenceMessageId": null,
+        "messageSubDescription": "Comprehensive markdown response",
+        "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+      },
+      {
+        "messageId": "703",
+        "messageType": "User",
+        "messageAvatarSrc": "logo",
+        "messageDescription": "Amazing. What about the role of open-source models?",
+        "messageDateTimeCreated": "2025-06-21T13:20:40Z",
+        "isEdited": false,
+        "referenceMessageId": null,
+        "messageSubDescription": "Question about open-source ecosystem",
+        "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+      },
+      {
+        "messageId": "704",
+        "messageType": "Bot",
+        "messageAvatarSrc": "logo",
+        "messageDescription": "\n## 🛠️ Open-Source LLM Ecosystem in 2025\n\nOpen-source has become critical for AI democratization. The most prominent models include:\n\n1. **Mistral and Mixtral (France)**\n2. **LLaMA-3 (Meta)**\n3. **Gemma (Google)**\n4. **Qwen-2 and InternLM (China)**\n\nThese models are widely used in fine-tuning enterprise assistants, hobby projects, and academic tools.\n\n> Over **47%** of startups in AI tooling now build on open weights.\n",
+        "messageDateTimeCreated": "2025-06-21T13:21:00Z",
+        "isEdited": false,
+        "referenceMessageId": null,
+        "messageSubDescription": "Markdown answer about LLMs",
+        "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+      },
+      {
+        "messageId": "705",
+        "messageType": "User",
+        "messageAvatarSrc": "logo",
+        "messageDescription": "And alignment progress? Are we closer to safety guarantees?",
+        "messageDateTimeCreated": "2025-06-21T13:21:15Z",
+        "isEdited": false,
+        "referenceMessageId": null,
+        "messageSubDescription": "Follow-up on alignment & safety",
+        "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+      },
+      {
+        "messageId": "706",
+        "messageType": "Bot",
+        "messageAvatarSrc": "logo",
+        "messageDescription": "\n## ✅ Safety & Alignment in 2025\n\n### Major Developments:\n- **RLHF v2** now includes ethical gradient optimization.\n- **Simulated AI Societies** used for stress testing multi-agent scenarios.\n- **AI watchdogs** mandated in EU and Japan under digital sovereignty laws.\n\nStill, *perfect alignment* is elusive. Major labs publish transparency reports quarterly.\n",
+        "messageDateTimeCreated": "2025-06-21T13:21:35Z",
+        "isEdited": false,
+        "referenceMessageId": null,
+        "messageSubDescription": "Safety protocols described",
+        "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+      },
+      {
+        "messageId": "707",
+        "messageType": "User",
+        "messageAvatarSrc": "logo",
+        "messageDescription": "Has India launched any domestic LLMs?",
+        "messageDateTimeCreated": "2025-06-21T13:21:50Z",
+        "isEdited": false,
+        "referenceMessageId": null,
+        "messageSubDescription": "Asking about India's contribution",
+        "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+      },
+      {
+        "messageId": "708",
+        "messageType": "Bot",
+        "messageAvatarSrc": "logo",
+        "messageDescription": "\n🇮🇳 **India’s Indigenous AI Efforts**\n\nIndia recently introduced:\n- **BharatGPT** by AI4Bharat (multilingual, low-resource optimized)\n- **Vaani** by IIT-Bombay for code and law domain tasks\n\nThey’ve focused on:\n- Inclusivity (11+ Indic languages)\n- Legal comprehension (Indian Penal Code corpus)\n- Support for low-bandwidth inference\n",
+        "messageDateTimeCreated": "2025-06-21T13:22:10Z",
+        "isEdited": false,
+        "referenceMessageId": null,
+        "messageSubDescription": "Bot celebrates India's AI entry",
+        "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+      },
+      {
+        "messageId": "709",
+        "messageType": "User",
+        "messageAvatarSrc": "logo",
+        "messageDescription": "That’s encouraging. Is there still room for solo developers to contribute meaningfully?",
+        "messageDateTimeCreated": "2025-06-21T13:22:30Z",
+        "isEdited": false,
+        "referenceMessageId": null,
+        "messageSubDescription": "User asking about indie contributors",
+        "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+      },
+      {
+      "messageId": "710",
+      "messageType": "Bot",
+      "messageAvatarSrc": "logo",
+      "messageDescription": "\n## 🧑‍💻 Indie Developer Impact in AI (2025)\n\nDespite the dominance of large labs, solo developers are thriving in the AI ecosystem:\n\n### 🚀 Contributions:\n1. **Model Adapters**: Over 45% of LoRA-style adapters on Hugging Face are authored by indie developers.\n2. **Tooling Frameworks**: Libraries like `langchain`, `llama-cpp`, and `autoeval` have community-driven forks improving flexibility.\n3. **Inference UX**: Lightweight runners like `Ollama`, `Exllama`, and `GPT4All` are community-crafted.\n\n---\n\n### 🌐 Collaboration Platforms\n- **[Hugging Face](https://huggingface.co)** for model sharing & fine-tuning\n- **[Weights & Biases](https://wandb.ai)** for experiment tracking\n- **[Kaggle](https://kaggle.com)** for competitions and data hacks\n\n> The rise of open weights has blurred the line between hobbyist and practitioner.\n\n🎯 Whether it's building assistants, AI art, or dataset refinement, individual creators now have the tools to match enterprise-level ambitions.\n",
+      "messageDateTimeCreated": "2025-06-21T13:22:55Z",
+      "isEdited": false,
+      "referenceMessageId": null,
+      "messageSubDescription": "Bot explains how solo devs are shaping the AI landscape",
+      "messageAdditionalInfo": { "tableData": [], "chartData": [], "extra": {} }
+      }
+    ]
+  }
+]

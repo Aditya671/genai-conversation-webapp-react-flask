@@ -22,11 +22,11 @@ export const VoiceTypingFilledSVG = () => (
             }
         `}
         </style>
-        <rect class="bar bar1" x="20" y="35" rx="8" ry="8" width="10" height="20" fill="#cacaca" />
-        <rect class="bar bar2" x="35" y="25" rx="8" ry="8" width="10" height="40" fill="#cacaca" />
-        <rect class="bar bar3" x="50" y="15" rx="8" ry="8" width="10" height="60" fill="#cacaca" />
-        <rect class="bar bar4" x="65" y="25" rx="8" ry="8" width="10" height="40" fill="#cacaca" />
-        <rect class="bar bar5" x="80" y="35" rx="8" ry="8" width="10" height="20" fill="#cacaca" />
+        <rect className="bar bar1" x="20" y="35" rx="8" ry="8" width="10" height="20" fill="#cacaca" />
+        <rect className="bar bar2" x="35" y="25" rx="8" ry="8" width="10" height="40" fill="#cacaca" />
+        <rect className="bar bar3" x="50" y="15" rx="8" ry="8" width="10" height="60" fill="#cacaca" />
+        <rect className="bar bar4" x="65" y="25" rx="8" ry="8" width="10" height="40" fill="#cacaca" />
+        <rect className="bar bar5" x="80" y="35" rx="8" ry="8" width="10" height="20" fill="#cacaca" />
     </svg>
 
 )
