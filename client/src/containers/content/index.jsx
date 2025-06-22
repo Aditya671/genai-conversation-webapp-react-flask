@@ -84,16 +84,19 @@ export const ContentComponent = () => {
                         messageSubDescription={msg.messageDateTimeCreated}
                         messageActions={[
                             <ButtonComponent
+                                id={`copy-prompt-${msg.messageId}`}
                                 tooltipText='Copy Prompt' themeType='IconButton' icon={<CopyFilledSVG key="copy" />}
                                 onClickHandle={() => handleCopySelectedPrompt(msg.messageDescription)}
                                 style={{background:'transparent', border:'none'}}
                             />,
                             <ButtonComponent
+                                id={`edit-prompt-${msg.messageId}`}
                                 tooltipText='Edit Prompt' themeType='IconButton' icon={<EditFilledSVG key="edit" />}
                                 onClickHandle={() => handleEditSelectedPrompt(msg.messageId, msg.conversationId)}
                                 style={{background:'transparent', border:'none'}}
                             />,
                             <ButtonComponent
+                                id={`save-prompt-${msg.messageId}`}
                                 tooltipText='Save Prompt' themeType='IconButton' icon={<SaveFilledSVG key="save" />}
                                 onClickHandle={() => handleSaveSelectedPrompt(msg.messageId)}
                                 style={{background:'transparent', border:'none'}}

@@ -45,8 +45,11 @@ export const MyFallbackComponent = ({ error, resetErrorBoundary }) => {
                     <Col span={24} style={{ display: 'flex', flexDirection:'column', alignItems: 'center', justifyContent: 'center', margin: '8px 4px' }}>
                         <Title level={2}>Uh-oh!</Title>
                         <Title level={4}>{errorMessage}</Title>
-                        <ButtonComponent onClick={resetErrorBoundary} title={'Try Again'} loading={null}
-                            style={{ background: '#0066a1' }} themeType="nav" />
+                        <ButtonComponent
+                            id='try-again' onClick={resetErrorBoundary}
+                            title={'Try Again'} loading={null}
+                            style={{ background: '#0066a1' }} themeType="nav"
+                        />
                     </Col>
                 </Row>
             </Content>

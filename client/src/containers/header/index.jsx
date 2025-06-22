@@ -69,11 +69,13 @@ export const HeaderComponent = (props) => {
             </Col>
             <Col span={2} style={{alignItems:'center', justifyContent:'flex-end', display:'flex'}}>
                 <ButtonComponent
+                    id='new-chat-button'
                     onClickHandle={generateNewChat}
                     style={{background:'transparent', border:'none'}}
                     tooltipText='New Conversation' themeType='IconButton' icon={<EditChatSVG/>}
                 />
                 <ButtonComponent
+                    id='header-menu-button'
                     icon={<DotMenuSVG/>} themeType='IconButton'
                     style={{background:'transparent', border:'none'}}
                     />

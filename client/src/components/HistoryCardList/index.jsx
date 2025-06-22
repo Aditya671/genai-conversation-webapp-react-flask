@@ -45,9 +45,10 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
         return true
     }
 
-    const menuOptions = (convId, convTitle) => ([
+    const menuOptions = (convId = '', convTitle = '') => ([
         {label: (
             <ButtonComponent
+                id={`pin-${convId}`}
                 title='Pin'
                 type="Button"
                 icon={<PushpinFilledSVG/>} 
@@ -58,6 +59,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
         {
             label:(
             <ButtonComponent
+                id={`rename-${convId}`}
                 title='Rename'
                 type="Button"
                 icon={<EditFilledSVG/>}
@@ -67,6 +69,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
         ), key: 2},
         {label:(
             <ButtonComponent
+                id={`delete-${convId}`}
                 title='Delete'
                 type="Button"
                 icon={<DeleteOutlinedSVG/>}
@@ -76,6 +79,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
         ), key:3},
         {label:(
             <ButtonComponent
+                id={`export-${convId}`}
                 title='Export'
                 type="Button"
                 icon={<DownloadOutlinedSVG />}
@@ -89,6 +93,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
         <>
             {conversations.length > 0 ? (
                 <List
+                    id="history-card-list"
                     rowKey={(item) => item.conversationId}
                     style={{width:'100%', overflowY:'auto', overflowX:'hidden', height:'500px'}}
                     loading={false}
@@ -106,6 +111,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                     // style={{ite}}
                     renderItem={(item, index) => (
                         <List.Item
+                            id={`history-card-list-item-s${item.conversationId}`}
                             key={item.conversationId} style={{color:'#f1f1f1'}}
                             styles={{actions:{display:'flex'}}}
                             actions={[                                
@@ -121,6 +127,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                                     onConversationClick
                                     style={{background:'#fff', borderRadius:'3.5px'}}>
                                     <GetInputField
+                                        id={`rename-conversation-${item.conversationId}`}
                                         placeholder="New Title"
                                         colomnName=""
                                         onRowUpdate={(colName, row, convIndex, convTitle) => setConvNewTitle(convTitle)}
@@ -133,14 +140,20 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                                         allowClear
                                         onClear={() => setConvToRenameUsingId('')}
                                     />
-                                    <ButtonComponent icon={<TickSVG/>}
+                                    <ButtonComponent
+                                        id={`rename-conversation-button-${item.conversationId}`}
+                                        icon={<TickSVG/>}
                                         onClickHandle={() => handleMenuItemClick(convToRenameUsingId, convNewTitle, conversationObjectUpdateTypes['TITLE'])}
                                         style={{background:'transparent', border:'none', color:"#fff"}}
                                         themeType='IconButton' />
                                     </Space.Compact>
                             ) : (
-                                <Tooltip title={item.conversationTitle} placement="bottom">
-                                <List.Item.Meta className="history-textwrapper"
+                                <Tooltip
+                                    id={`history-card-list-item-tooltip-${item.conversationId}`}
+                                    title={item.conversationTitle} placement="bottom">
+                                <List.Item.Meta
+                                    id={`history-card-list-item-meta-${item.conversationId}`}
+                                    className="history-textwrapper"
                                     title={item.conversationTitle} onClick={() => onConversationClick(item)} />
                                 </Tooltip>
                             )}
@@ -149,7 +162,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                     )} />
             ) : (
                 <Card>
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "350px" }}>
+                    <div id="history-card-list-empty" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "350px" }}>
                         <Empty description="No History" />
                     </div>
                 </Card>

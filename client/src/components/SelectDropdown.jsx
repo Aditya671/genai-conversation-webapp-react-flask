@@ -4,9 +4,35 @@ import { useDispatch } from 'react-redux';
 import { isEmpty, isNull } from 'lodash';
 import { DownOutlinedSVG } from '../assets/svg/DownOutlinedSVG';
 
+/**
+ * SelectDropdown
+ *
+ * A highly customizable Ant Design dropdown component supporting multi-select,
+ * search, async handling, "select all", and parent-state propagation.
+ *
+ * @param {string} componentName - Unique identifier for the dropdown.
+ * @param {Array} filterOptions - List of options, each with `{ key, label }`.
+ * @param {boolean} sortOptions - Whether to sort options alphabetically by label.
+ * @param {Array|null} defaultValue - Array of default selected option values.
+ * @param {function|null} onChange - Callback fired when selection changes.
+ * @param {string} selectionType - AntD selection mode (`'multiple'` or `'tags'`).
+ * @param {function|null} onBeforeChange - Callback before dropdown opens.
+ * @param {function|null} onClearFilter - Callback when dropdown is cleared.
+ * @param {string|null} filterLabel - Optional label for the dropdown field.
+ * @param {boolean} showSelectAllOption - Whether to include a "Select All" checkbox.
+ * @param {function|null} includeParentFilters - Flag or function to include parent filters in callback.
+ * @param {string} pageName - Used for dispatching Redux actions to parent.
+ * @param {object|null} form - Optional form reference passed to onChange.
+ * @param {function|null} onScroll - Callback for scroll events within the dropdown.
+ * @param {function|null} handleSelectDataToParentComponent - Redux or callback function to handle selected data externally.
+ * @param {object} rest - Additional props passed to Ant Design's `<Select />` component.
+ *
+ * @returns {JSX.Element} A customizable searchable select dropdown with optional "select all".
+ */
+
 const SelectDropdown = (props) => {
     const {
-        componentName = 'select-button', filterOptions = [], sortOptions = true,
+        componentName = 'dropdown-button', filterOptions = [], sortOptions = true,
         defaultValue = null, onChange = null, selectionType = 'multiple',
         onBeforeChange = null, onClearFilter = null, filterLabel = null, showSelectAllOption = true,
         includeParentFilters = null, pageName = '', form = null, onScroll = null,
@@ -111,8 +137,19 @@ const SelectDropdown = (props) => {
         <>
             {filterLabel === null ? <></> : <p style={{ margin: '8px 0' }}>{filterLabel}</p>}
             <Select
+                id={componentName}
                 name={componentName}
                 mode={selectionType}
+                autoComplete="off"
+                aria-label={filterLabel || 'Dropdown selection'} // descriptive label for screen readers
+                aria-labelledby={filterLabel ? `${componentName}-label` : undefined}
+                aria-describedby={filterLabel ? `${componentName}-description` : undefined}
+                aria-haspopup="listbox"
+                aria-expanded={isOpen} // dynamic instead of hardcoded
+                aria-controls={`${componentName}-listbox`} // make sure this points to the dropdown
+                aria-autocomplete="list"
+                aria-owns={componentName}
+                role="combobox"
                 size={'middle'}                
                 placeholder="Select"
                 maxTagCount="responsive"
