@@ -11,6 +11,8 @@ import HistoryCardList from "../../components/HistoryCardList"
 import { warningMessage } from "../../components/MessageModal"
 import SelectDropdown from "../../components/SelectDropdown"
 import { conversationsListSampleData } from "../../sample_data"
+import { DropdownMenuFilledSVG } from "../../assets/svg/DropdownMenuFilledSVG.jsx"
+import { HistoryFilledSVG } from "../../assets/svg/HistoryFilledSVG.jsx"
 
 const { Title } = Typography;
 const { Content} = Layout;
@@ -44,9 +46,9 @@ export const SidebarComponent = (props) => {
     return (
         <>
         {contextHolder}
-        <Content style={{height:'100%'}} >
-            <Row span={2} >
-                <Image alt="WebApp Logo" width={isSidebarCollapsed ? 32 : 64} src={chatbotPreviewIcon}/>
+        <Content>
+            <Row span={2}  align='middle' justify='center' >
+                <Image alt="WebApp Logo" width={isSidebarCollapsed ? 48 : 64} src={chatbotPreviewIcon}/>
                 {!isSidebarCollapsed && <Title level={2}
                     className='theme-heading-font'
                     style={{
@@ -61,29 +63,39 @@ export const SidebarComponent = (props) => {
                 justify={'center'}
                 align="center"
                 gap={20}
-                style={{margin:'8px 0', padding:'0 12px'}}
+                style={ !isSidebarCollapsed ? {margin:'8px 0', padding:'0 12px'} : {marginTop:'20px'} }
             >
-                <SelectDropdown
-                    componentName={'modalSelector'}
-                    placeholder={'Select Modal'}
-                    filterOptions={[]}
-                    sortOptions={true}
-                    defaultValue={null}
-                    onChange={handalModalSelectorChange}
-                    selectionType={'multiple'}
-                    onBeforeChange={null}
-                    showSelectAllOption={false}
-                    includeParentFilters={null}
-                    pageName={''}
-                    form={null}
-                    onScroll={null}
-                />
-                <HistoryCardList
-                    selectedConversation={selectedConversation} conversations={conversationsList}
-                    onConversationClick={handleConversationNameClick}
-                />
+                {!isSidebarCollapsed ? (
+                    <>
+                    <SelectDropdown
+                        componentName={'modalSelector'}
+                        placeholder={'Select Modal'}
+                        filterOptions={[]}
+                        sortOptions={true}
+                        defaultValue={null}
+                        onChange={handalModalSelectorChange}
+                        selectionType={'multiple'}
+                        onBeforeChange={null}
+                        showSelectAllOption={false}
+                        includeParentFilters={null}
+                        pageName={''}
+                        form={null}
+                        onScroll={null}
+                    />
+                    <HistoryCardList
+                        selectedConversation={selectedConversation} conversations={conversationsList}
+                        onConversationClick={handleConversationNameClick}
+                    />
+                    <PageHeading headingLevel={5} headingText={displayDateTimeMessage()} />
+                    </>
+                    ) : (
+                    <>
+                        <DropdownMenuFilledSVG/> 
+                        <HistoryFilledSVG/>
+                    </>
+                    )
+                }
             </Flex>
-            <PageHeading headingLevel={5} headingText={displayDateTimeMessage()} />
 
         </Content>
         </>

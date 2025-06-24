@@ -87,7 +87,7 @@ export const LayoutContainer = ({
             `}
         </style> */}
         <Layout style={layoutCss.containerLayout} hasSider={true}>
-            <Sider width={siderWidth} style={layoutCss.siderLayout}
+            <Sider width={siderWidth} style={isSidebarCollapsed ? null:  layoutCss.siderLayout}
                 breakpoint="md" onBreakpoint={(broken) => broken ? setSiderWidth(200) : setSiderWidth(320)}
                 trigger={null} collapsible collapsed={isSidebarCollapsed} >
                     <ButtonComponent
@@ -96,7 +96,7 @@ export const LayoutContainer = ({
                         icon={isSidebarCollapsed ? <LeftOutlinedSVG /> : <RightOutlinedSVG />}
                         tooltipText='Collapse Sidebar'
                         themeType='IconButton'
-                        onClickHandle={() => setSidebarCollapsedState(!isSidebarCollapsed)} />
+                        onClickHandle={() => dispatch(setSidebarCollapsedState(!isSidebarCollapsed))} />
                         {leftSidebarContent}
             </Sider>
             <Layout>
