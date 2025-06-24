@@ -85,7 +85,7 @@ export const GetInputField = ({
                 controls={false}
                 disabled={isDisabled}
                 onChange={(e) => handleInputValueChange(e.target.value)}
-                styles={{ textarea: { maxHeight: '10dvh', maxWidth: '75dvw' } }}
+                styles={{ textarea: { maxHeight: '10dvh', maxWidth: '80dvw' } }}
                 {...rest}
             />
         )

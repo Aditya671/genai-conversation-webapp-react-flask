@@ -1,5 +1,5 @@
 export const VoiceTypingFilledSVG = ({ isClicked = false }) => (
-    <svg width="50" height="50" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <svg width="auto" height="auto" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         {/* <circle cx="60" cy="60" r="55" stroke="black" stroke-width="3" fill="none"/> */}
         <style>
             {`

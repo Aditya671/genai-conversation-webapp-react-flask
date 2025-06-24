@@ -141,7 +141,7 @@ export const FooterComponent = (props) => {
                     themeType='IconButton'
                     icon={<VoiceTypingFilledSVG isClicked={isClicked}/>}
                     onClickHandle={handleSpeechRecognitionClick}
-                    style={{ background: 'transparent', border: 'none' }}
+                    style={{ background: 'transparent', border: 'none', alignItems: 'center' }}
                 />
 
                 <ButtonComponent
