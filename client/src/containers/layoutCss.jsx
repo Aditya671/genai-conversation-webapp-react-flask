@@ -20,5 +20,8 @@ export const layoutCss = {
         maxheight: '10dvh',
         height: 'fit-content',
         width: '100%'
+    },
+    siderLayout:{
+        padding: '0 10px 10px 10px',
     }
 }

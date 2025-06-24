@@ -1,5 +1,5 @@
-import { PageHeading } from "../../components/PageHeading"
-import { displayDateTimeMessage } from "../../utility/utility"
+import { PageHeading } from "../../components/PageHeading.jsx"
+import { displayDateTimeMessage } from "../../utility/utility.js"
 import { useDispatch, useSelector } from "react-redux"
 import chatbotPreviewIcon from '../../chatbot-preview.png'
 import { cloneDeep, isNull, isUndefined, size } from "lodash"
@@ -23,6 +23,7 @@ export const SidebarComponent = (props) => {
     const selectedConversation = useSelector((state) => state.conversations.selectedConversation ? state.conversations.selectedConversation.conversationId : '')
     const isUserPromptFieldInActiveState = useSelector((state) => state.base.isUserPromptFieldInActiveState ? state.base.isUserPromptFieldInActiveState : false)    
     const messagesList = useSelector((state) => state.messages.messagesList)
+    const isSidebarCollapsed = useSelector((state) => state.base.isSidebarCollapsed ? state.base.isSidebarCollapsed : false)
 
     const handleConversationNameClick = (convObject) => {
         if(isUserPromptFieldInActiveState){
@@ -43,20 +44,18 @@ export const SidebarComponent = (props) => {
     return (
         <>
         {contextHolder}
-        <Content style={{height:'100%', padding:'10px 20px 20px 10px'}} >
+        <Content style={{height:'100%'}} >
             <Row span={2} >
-                <Image alt="WebApp Logo" width={64} src={chatbotPreviewIcon}/>
-                <Title level={2}
+                <Image alt="WebApp Logo" width={isSidebarCollapsed ? 32 : 64} src={chatbotPreviewIcon}/>
+                {!isSidebarCollapsed && <Title level={2}
                     className='theme-heading-font'
                     style={{
                         color: '#ffffff',
                         fontWeight: 'bold',
                         margin: 'auto 18px',
                         fontSize: '18px',
-                    }} >ConvBot</Title>
+                    }} >ConvBot</Title>}
             </Row>
-            <br/>
-            
             <Flex
                 wrap='wrap'
                 justify={'center'}

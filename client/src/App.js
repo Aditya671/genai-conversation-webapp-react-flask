@@ -27,7 +27,7 @@ function App() {
                             Card:{
                                 colorTextDescription:'#ffffff',
                                 colorTextHeading: '#ffffff',
-                                // colorBorderSecondary:  '#d9d9d9', '#008080',
+                                // colorBorderSecondary:  '#d9d9d9', '#008080', #002140
                                 // colorBgContainer:'#434343',#434343a6
                                 colorBgContainer:'#3e3e3ee0',
                                 actionsLiMargin:'6px 0',

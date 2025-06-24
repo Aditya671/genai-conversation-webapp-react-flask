@@ -25,7 +25,7 @@ export const ButtonComponent = (props) => {
         <Space wrap={true}>
             <Tooltip title={tooltipText} placement="bottom">
                 <Button
-                    id={`button-component-${id}}`}
+                    id={`button-component-${id}`}
                     aria-label={title}
                     role='button'
                     aria-describedby={title ? `button-desc-${id}` : undefined} // Optional, if you include a description below

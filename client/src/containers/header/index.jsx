@@ -1,6 +1,4 @@
-import { Col, Image, message, Row } from "antd"
-import chatbotPreviewIcon from '../../chatbot-preview.png'
-import Title from "antd/es/typography/Title"
+import { Col, message, Row } from "antd"
 import { EditChatSVG } from "../../assets/svg/EditChatSVG"
 import { ButtonComponent } from "../../components/Button"
 import { useSelector, useDispatch } from 'react-redux';

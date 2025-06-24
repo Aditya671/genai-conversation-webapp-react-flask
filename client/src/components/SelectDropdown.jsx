@@ -184,7 +184,7 @@ const SelectDropdown = (props) => {
                                 >
                                     <Checkbox
                                         indeterminate={Array.isArray(filterOptions)
-                                            && filterOptions.length > 0 && filterOptions.length != selectedValue.length}
+                                            && filterOptions.length > 0 && filterOptions.length !== selectedValue.length}
                                         checked={Array.isArray(filterOptions)
                                             && filterOptions.length > 0 && filterOptions.length === selectedValue.length}
                                         onChange={(e) => {
