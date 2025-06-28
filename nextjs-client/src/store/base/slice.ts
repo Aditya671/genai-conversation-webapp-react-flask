@@ -1,17 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export type CollapsedDataContainerType = 'llm-selector' | 'items-list-selector' | 'pin-items-list-selector' | '' ;
+
 export interface BaseState {
     isUserPromptFieldInActiveState: boolean;
     isSidebarCollapsed: boolean;
     isVoiceRecordingActive: boolean; // Optional field for voice recording state,
     isConversationTitleEditingActive: {isEditing:boolean, conversationId: string}; // Optional field for conversation title editing state
+    showCollapsedData: CollapsedDataContainerType; // Restrict to CollapsedDataContainerType
 }
 
 const initialState: BaseState = {
     isUserPromptFieldInActiveState: false,
     isSidebarCollapsed: false,
     isVoiceRecordingActive: false,
-    isConversationTitleEditingActive: {isEditing: false, conversationId: ''} // Default state for conversation title editing
+    isConversationTitleEditingActive: {isEditing: false, conversationId: ''}, // Default state for conversation title editing
+    showCollapsedData: '', // Default value
 };
 
 export const baseSlicer = createSlice({
@@ -29,6 +33,9 @@ export const baseSlicer = createSlice({
         },
         setConversationTitleEditingActiveState: (state, action: PayloadAction<{isEditing:boolean, conversationId: string}>) => {
             state.isConversationTitleEditingActive = action.payload;
+        },
+        setShowCollapsedData: (state, action: PayloadAction<CollapsedDataContainerType>) => {
+            state.showCollapsedData = action.payload;
         }
     },
 });
@@ -37,7 +44,8 @@ export const {
     setUserPromptFieldActiveState,
     setSidebarCollapsedState,
     setVoiceRecordingActiveState,
-    setConversationTitleEditingActiveState
+    setConversationTitleEditingActiveState,
+    setShowCollapsedData
 } = baseSlicer.actions;
 
 export default baseSlicer.reducer;

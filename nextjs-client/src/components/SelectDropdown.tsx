@@ -41,7 +41,7 @@ interface SelectDropdownProps {
     sortOptions?: boolean;
     defaultValue?: string[] | null | string;
     onChange?: (value: string[] | string, componentName: string, form?: FormProps) => void;
-    selectionType?: 'multiple' | 'tags' | undefined;
+    selectionType?: 'multiple' | 'tags' | undefined | '';
     onBeforeChange?: () => void;
     onClearFilter?: () => void;
     filterLabel?: string | null;
@@ -57,7 +57,7 @@ interface SelectDropdownProps {
 const SelectDropdown : React.FC<SelectDropdownProps>= (props) => {
     const {
         componentName = 'dropdown-button', filterOptions = [], sortOptions = true,
-        defaultValue = null, onChange = null, selectionType = 'multiple',
+        defaultValue = null, onChange = null, selectionType = '',
         onBeforeChange = null, onClearFilter = null, filterLabel = null, showSelectAllOption = true,
         includeParentFilters = null, pageName = '', form = null, onScroll = null,
         sendDataToParent = null, ...rest
