@@ -1,0 +1,8 @@
+.page-loading-indicator {
+    padding: 0 10px;
+    min-height: calc(90dvh - 72px);
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
