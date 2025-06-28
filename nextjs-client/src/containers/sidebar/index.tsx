@@ -8,7 +8,7 @@ import { MessagesState, MessageWithConvId, setSelectedMessagesList } from "../..
 import HistoryCardList from "../../components/HistoryCardList";
 import { warningMessage } from "../../components/MessageModal";
 import SelectDropdown from "../../components/SelectDropdown";
-import { conversationsListSampleData } from "../../sample_data";
+import { conversationsListSampleData } from "./../../sample_data";
 import { BaseState } from "@/store/base/slice";
 import DropdownMenuFilledSVG from '../../assets/svg/DropdownMenuFilledSVG';
 import HistoryFilledSVG from '../../assets/svg/HistoryFilledSVG';
