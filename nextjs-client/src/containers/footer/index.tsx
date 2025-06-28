@@ -71,15 +71,16 @@ export const FooterComponent: React.FC = () => {
                 dispatch(setMessagesList(globalConvMessagesWithNewConv));
             }
         }
-        const convIndexToUpdate = conversationsList.findIndex((conv: Conversation) => conv.conversationId === selectedConversation['conversationId']);
+        const conversationObjClone = cloneDeep(conversationsList);
+        const convIndexToUpdate = conversationObjClone.findIndex((conv: Conversation) => conv.conversationId === selectedConversation['conversationId']);
         if (convIndexToUpdate >= 0) {
-            const convObj = cloneDeep(conversationsList[convIndexToUpdate]);
+            const convObj = cloneDeep(conversationObjClone[convIndexToUpdate]);
             convObj['isNew'] = false;
-            conversationsList[convIndexToUpdate] = convObj;
-            dispatch(setConversationsList(cloneDeep(conversationsList)));
+            conversationObjClone[convIndexToUpdate] = convObj;
+            dispatch(setConversationsList(cloneDeep(conversationObjClone)));
         } else{
             const newConvObj = newConversationObject(uuidv4(), `Conversation-${new Date().toISOString()}`, false);
-            const convListClone = cloneDeep([...conversationsList, newConvObj]);
+            const convListClone = cloneDeep([...conversationObjClone, newConvObj]);
             dispatch(setConversationsList(convListClone));
             dispatch(setSelectedConversation(newConvObj));
         }

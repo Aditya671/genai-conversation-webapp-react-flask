@@ -35,6 +35,8 @@ export const SidebarComponent: React.FC = () => {
         const convMessage = messagesList.find((msg: MessageWithConvId) => msg.conversationId === convObject.conversationId);
         if (convObject && (size(messagesList) > 0) && (!isUndefined(convMessage) && !isNull(convMessage))) {
             dispatch(setSelectedMessagesList(convMessage['messages']));
+        }else {
+            dispatch(setSelectedMessagesList([]))
         }
     };
     const handalModalSelectorChange = (selectedModal: string[] | string) => {
