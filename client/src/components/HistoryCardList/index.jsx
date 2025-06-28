@@ -152,7 +152,7 @@ const HistoryCardList = ({ selectedConversation , conversations, onConversationC
                                     id={`history-card-list-item-tooltip-${item.conversationId}`}
                                     title={item.conversationTitle} placement="bottom">
                                 <List.Item.Meta
-                                    id={`history-card-list-item-meta-${item.conversationId}`}
+                                    key={`history-card-list-item-meta-${item.conversationId}`}
                                     className="history-textwrapper"
                                     title={item.conversationTitle} onClick={() => onConversationClick(item)} />
                                 </Tooltip>
