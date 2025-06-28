@@ -15,7 +15,7 @@ export const conversationsListSampleData = [
     selectedModal: "gpt-o3",
     dateTimeCreated: "2025-06-20T11:22:47Z",
     userId: "aditya.gupta@gmail.com",
-    isActive: false,
+    isActive: true,
     isPinned: false,
     isArchieved: true,
   },

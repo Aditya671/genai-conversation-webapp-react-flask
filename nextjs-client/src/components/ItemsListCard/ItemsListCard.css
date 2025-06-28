@@ -1,0 +1,58 @@
+.items-list-container{
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 250px!important;
+}
+.items-list-container .ant-list-header{
+    padding: 6px 3px!important;
+    border-bottom: 1px solid #f1f1f1!important;
+    background-color: #2e2e2e;
+    position: sticky;
+    top: 0;
+    height: 40px;
+    z-index: 1;
+}
+.items-list-container li{
+    padding: 4px 6px 0 6px!important;
+}
+.items-list-container .ant-list-item-action{
+    margin-inline-start:0px!important ;
+}
+.items-list-container .theme-heading-font{
+    color: #008080!important;
+    margin-top: 0;
+    margin-bottom: 2;
+}
+
+.items-list-item-textwrapper, .items-list-item-textwrapper h5{
+    text-overflow: ellipsis!important;
+    overflow-x: hidden!important;
+    white-space: nowrap!important;
+    width: 97%!important;
+}
+.items-list-item-textwrapper .ant-list-item-meta-title{
+    color: #f1f1f1!important;
+    padding: 4px 6px!important;
+}
+
+.items-list-item-textwrapper.selected{
+    color: #002140!important;
+}
+
+/* Custom scrollbar styles */
+.items-list-container::-webkit-scrollbar {
+  width: 8px;
+  background: #ffffff;
+  border-radius: 4px;
+}
+.items-list-container::-webkit-scrollbar-thumb {
+  background: #008080;
+  border-radius: 4px;
+}
+/* Firefox */
+@supports (scrollbar-width: thin) {
+  .items-list-container {
+    scrollbar-width: thin;
+  }
+}

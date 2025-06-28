@@ -3,12 +3,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface BaseState {
     isUserPromptFieldInActiveState: boolean;
     isSidebarCollapsed: boolean;
-    isVoiceRecordingActive?: boolean; // Optional field for voice recording state
+    isVoiceRecordingActive: boolean; // Optional field for voice recording state,
+    isConversationTitleEditingActive: {isEditing:boolean, conversationId: string}; // Optional field for conversation title editing state
 }
 
 const initialState: BaseState = {
     isUserPromptFieldInActiveState: false,
     isSidebarCollapsed: false,
+    isVoiceRecordingActive: false,
+    isConversationTitleEditingActive: {isEditing: false, conversationId: ''} // Default state for conversation title editing
 };
 
 export const baseSlicer = createSlice({
@@ -23,6 +26,9 @@ export const baseSlicer = createSlice({
         },
         setVoiceRecordingActiveState: (state, action: PayloadAction<boolean>) => {
             state.isVoiceRecordingActive = action.payload;
+        },
+        setConversationTitleEditingActiveState: (state, action: PayloadAction<{isEditing:boolean, conversationId: string}>) => {
+            state.isConversationTitleEditingActive = action.payload;
         }
     },
 });
@@ -30,7 +36,8 @@ export const baseSlicer = createSlice({
 export const {
     setUserPromptFieldActiveState,
     setSidebarCollapsedState,
-    setVoiceRecordingActiveState
+    setVoiceRecordingActiveState,
+    setConversationTitleEditingActiveState
 } = baseSlicer.actions;
 
 export default baseSlicer.reducer;

@@ -5,7 +5,7 @@ import { cloneDeep, isNull, isUndefined, size } from "lodash";
 import { Flex, Layout, message, Row, Typography } from "antd";
 import { Conversation, ConversationsState, setSelectedConversation } from "../../store/conversations/slice";
 import { MessagesState, MessageWithConvId, setSelectedMessagesList } from "../../store/messages/slice";
-import HistoryCardList from "../../components/HistoryCardList";
+import ItemsListCard from "../../components/ItemsListCard";
 import { warningMessage } from "../../components/MessageModal";
 import SelectDropdown from "../../components/SelectDropdown";
 import { conversationsListSampleData } from "./../../sample_data";
@@ -83,9 +83,16 @@ export const SidebarComponent: React.FC = () => {
                                 form={null}
                                 onScroll={undefined}
                             />
-                            <HistoryCardList
+                            <ItemsListCard
+                                cardTitle="Conversations List"
                                 selectedConversationId={String(selectedConversationId) || ''}
-                                conversations={conversationsList}
+                                conversations={conversationsList.filter((conv: Conversation) => conv.isActive && !conv.isPinned)}
+                                onConversationClick={handleConversationNameClick}
+                            />
+                            <ItemsListCard
+                                cardTitle='Pinned Conversations'
+                                selectedConversationId={String(selectedConversationId) || ''}
+                                conversations={conversationsList.filter((conv: Conversation) => conv.isPinned && conv.isActive)}
                                 onConversationClick={handleConversationNameClick}
                             />
                             <PageHeading headingLevel={5} headingText={displayDateTimeMessage()} />

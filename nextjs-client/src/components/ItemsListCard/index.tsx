@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Card, Dropdown, Empty, List, Tooltip, Space, Flex } from "antd";
 import { cloneDeep } from "lodash";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ButtonComponent } from "../Button";
-import './HistoryCardList.css';
+import './ItemsListCard.css';
 import { PageHeading } from "../PageHeading";
 import { GetInputField } from "../InputField";
 import { Conversation } from "../../store/conversations/slice";
@@ -18,30 +18,33 @@ import DownloadOutlinedSVG from '../../assets/svg/DownloadOutlinedSVG';
 import EllipsisOutlinedSVG from '../../assets/svg/EllipseOutlinedSVG';
 import TickSVG from '../../assets/svg/TickSVG';
 import { UsersState } from "@/store/users/slice";
+import { BaseState, setConversationTitleEditingActiveState } from "@/store/base/slice";
 
-interface HistoryCardListProps {
+interface ItemsListCardProps {
+    cardTitle?: string;
     selectedConversationId: string;
     conversations: Conversation[];
     onConversationClick: (item: Conversation) => void;
 }
 
-const HistoryCardList: React.FC<HistoryCardListProps> = (
-    { selectedConversationId, conversations, onConversationClick }
+const ItemsListCard: React.FC<ItemsListCardProps> = (
+    { cardTitle, selectedConversationId, conversations, onConversationClick }
 ) => {
-    const [convToRenameUsingId, setConvToRenameUsingId] = useState('');
+    const dispatch = useDispatch();
     const [convNewTitle, setConvNewTitle] = useState('');
     const userId = useSelector((state: UsersState) => state.userId);
+    const isConversationTitleEditingActive = useSelector((state: {base: BaseState}) => state.base.isConversationTitleEditingActive);
 
     const handleMenuItemClick = async (convId: string, convTitle: string, action: string) => {
         const userAction = action || conversationObjectUpdateTypes['DEFAULT'];
-        updateConversationObject( convId, '', userAction );
+        // updateConversationObject( convId, '', userAction );
         if (action === conversationObjectUpdateTypes['TITLE']) {
             const convClone = cloneDeep(conversations);
             const convObjId = convClone.findIndex((c: Conversation) => c.conversationId === convId);
             if (convObjId > -1) {
-                updateConversationObject(convId, convTitle, conversationObjectUpdateTypes['TITLE']);
+                dispatch(updateConversationObject(convId, convTitle, userAction))
             }
-            setConvToRenameUsingId('');
+            return dispatch(setConversationTitleEditingActiveState({isEditing:false, conversationId: ''}))
         }
         if (action === conversationObjectUpdateTypes['EXPORT']) {
             // Export logic here
@@ -71,7 +74,10 @@ const HistoryCardList: React.FC<HistoryCardListProps> = (
                     type="Button"
                     icon={<EditFilledSVG />}
                     style={{ border: 'none', boxShadow: 'none', minWidth: 120 }}
-                    onClickHandle={() => { setConvToRenameUsingId(String(convId)); setConvNewTitle(convTitle); }}
+                    onClickHandle={() => {
+                        dispatch(setConversationTitleEditingActiveState({isEditing:true, conversationId: String(convId)}));
+                        setConvNewTitle(convTitle);
+                    }}
                 />
             ), key: 2
         },
@@ -105,23 +111,22 @@ const HistoryCardList: React.FC<HistoryCardListProps> = (
         <>
             {conversations.length > 0 ? (
                 <List
-                    id="history-card-list"
+                    id="items-list"
+                    className="items-list-container"
                     rowKey={(item) => item.conversationId}
-                    style={{ width: '100%', overflowY: 'auto', overflowX: 'hidden', height: '500px' }}
                     loading={false}
                     bordered={true}
                     size="small"
                     header={
                         <PageHeading
-                            style={{ color: '#008080', marginTop: 0, marginBottom: 2 }}
-                            headingText={`History${conversations.length > 0 ? ` (${conversations.length})` : ""}`}
-                            headingLevel={3}
+                            headingText={`${cardTitle}${conversations.length > 0 ? ` (${conversations.length})` : ""}`}
+                            headingLevel={5}
                         />
                     }
                     dataSource={conversations}
                     renderItem={(item: Conversation, index: number) => (
                         <List.Item
-                            id={`history-card-list-item-s${item.conversationId}`}
+                            id={`items-list-item-${item.conversationId}`}
                             key={item.conversationId} style={{ color: '#f1f1f1' }}
                             styles={{ actions: { display: 'flex' } }}
                             actions={[
@@ -134,7 +139,7 @@ const HistoryCardList: React.FC<HistoryCardListProps> = (
                                 </Dropdown>
                             ]}
                         >
-                            {convToRenameUsingId === item.conversationId ? (
+                            {isConversationTitleEditingActive.conversationId === item.conversationId ? (
                                 <Space.Compact
                                     style={{ background: '#fff', borderRadius: '3.5px' }}>
                                     <GetInputField
@@ -149,24 +154,24 @@ const HistoryCardList: React.FC<HistoryCardListProps> = (
                                         selectedValue={item.conversationTitle}
                                         userValue={convNewTitle}
                                         allowClear
-                                        onClear={() => setConvToRenameUsingId('')}
+                                        onClear={() => dispatch(setConversationTitleEditingActiveState({isEditing: false, conversationId: ''}))}
                                     />
                                     <ButtonComponent
                                         id={`rename-conversation-button-${item.conversationId}`}
                                         icon={<TickSVG />}
-                                        onClickHandle={() => handleMenuItemClick(convToRenameUsingId, convNewTitle, conversationObjectUpdateTypes['TITLE'])}
+                                        onClickHandle={() => handleMenuItemClick(String(item.conversationId), convNewTitle, conversationObjectUpdateTypes['TITLE'])}
                                         style={{ background: 'transparent', border: 'none', color: "#fff" }}
                                         themeType='IconButton' />
                                 </Space.Compact>
                             ) : (
                                 <Tooltip
                                     // style={{ width: '100%' }}
-                                    id={`history-card-list-item-tooltip-${item.conversationId}`}
+                                    id={`items-list-item-tooltip-${item.conversationId}`}
                                     title={item.conversationTitle} placement="bottom">
                                     <span style={{width:'100%'}} onClick={() => onConversationClick(item)}>
                                     <List.Item.Meta
-                                        key={`history-card-list-item-meta-${item.conversationId}`}
-                                        className={`history-textwrapper ${selectedConversationId === item.conversationId ? 'selected' : ''}`}
+                                        key={`items-list-item-meta-${item.conversationId}`}
+                                        className={`items-list-item-textwrapper ${selectedConversationId === item.conversationId ? 'selected' : ''}`}
                                         title={item.conversationTitle}
                                         description={null}
                                     />
@@ -178,7 +183,7 @@ const HistoryCardList: React.FC<HistoryCardListProps> = (
             ) : (
                 <Card>
                     <Flex
-                        id="history-card-list-empty" style={{height: "350px" }}
+                        id="items-list-empty" style={{height: "350px" }}
                         align="center" justify="center" 
                     >
                         <Empty description="No History" />
@@ -189,4 +194,4 @@ const HistoryCardList: React.FC<HistoryCardListProps> = (
     );
 };
 
-export default HistoryCardList;
+export default ItemsListCard;
