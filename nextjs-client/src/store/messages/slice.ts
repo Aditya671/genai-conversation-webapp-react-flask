@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { messageTypes, messageAvatarSrcDefault } from '../../helper/constants';
+import type { UploadProps } from "antd";
 
 export interface TableDataItem {
     [key: string]: unknown;
@@ -22,6 +23,7 @@ export interface Message {
     messageSubDescription: string;
     messageAdditionalInfo: MessageAdditionalInfo;
     messageDateTimeCreated: string;
+    uploadedFiles?: UploadProps[] | null;
     isEdited: boolean;
     referenceMessageId: string | null;
 }

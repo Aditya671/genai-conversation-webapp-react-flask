@@ -48,7 +48,8 @@ export const messageObject : Message = {
         chartData:[],
         extra:{}
     },
-    messageDateTimeCreated: new Date().toISOString(), 
+    messageDateTimeCreated: new Date().toISOString(),
+    uploadedFiles: [],
     isEdited : false,
     referenceMessageId: null
 }

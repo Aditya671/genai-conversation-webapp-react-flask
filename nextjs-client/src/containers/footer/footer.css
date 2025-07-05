@@ -1,0 +1,7 @@
+.uploaded-files-collapse-header .ant-collapse-header{
+    position:sticky!important;
+    background: rgb(46 46 46) !important;
+    border-radius: 8px 8px 0 0 !important;
+    top:0;
+    z-index: 1;
+}

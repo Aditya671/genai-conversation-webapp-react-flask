@@ -27,4 +27,4 @@ yarn-error.log*
 *__pycache__
 */genai_env/
 client/src/App_old.js
-.vscode/launch.json
+.vscode/

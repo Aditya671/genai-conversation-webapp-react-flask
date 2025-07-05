@@ -13,9 +13,9 @@ import { UsersState } from "@/store/users/slice";
 //   return response.data;
 // };
 
-export const getConversationsList = (userId : string = "") =>
-    async (dispatch: Dispatch) =>
-{
+export const getConversationsList = (
+    userId : string = ""
+) => async (dispatch: Dispatch) => {
     if (!userId) {
         return "Unauthorized User";
     }
@@ -36,8 +36,7 @@ export const updateConversationObject = (
     convId: string,
     convTitle: string,
     updateType: string = conversationObjectUpdateTypes["DEFAULT"]
-) => async (dispatch: Dispatch, getState: () => UsersState) => 
-{
+) => async (getState: () => UsersState) => {
     if (updateType === conversationObjectUpdateTypes["DEFAULT"]) {
         console.log("No update type provided");
         return;
@@ -59,7 +58,7 @@ export const updateConversationObject = (
             method: "post",
             body: apiBody,
         });
-        return true;
+        return getConversationsList(String(userId))
     } catch (error) {
         console.log(error);
         return false;

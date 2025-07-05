@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Checkbox, Select, Divider, FormProps } from 'antd';
 import { isEmpty, isNull } from 'lodash';
 import DownOutlinedSVG from '../assets/svg/DownOutlinedSVG';
+import { PageHeading } from './PageHeading';
 
 /**
  * SelectDropdown
@@ -166,7 +167,9 @@ const SelectDropdown : React.FC<SelectDropdownProps>= (props) => {
 
     return (
         <>
-            {filterLabel === null ? <></> : <p style={{ margin: '8px 0' }}>{filterLabel}</p>}
+            {filterLabel &&
+                <PageHeading headingLevel={5} style={{ margin: '8px 0' }} headingText={filterLabel}/>
+            }
             <Select
                 id={componentName}
                 mode={selectionType}
@@ -241,6 +244,7 @@ const SelectDropdown : React.FC<SelectDropdownProps>= (props) => {
                 }}
             >
             </Select>
+            
         </>
     )
 }

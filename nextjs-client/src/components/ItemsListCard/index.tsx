@@ -42,7 +42,7 @@ const ItemsListCard: React.FC<ItemsListCardProps> = (
             const convClone = cloneDeep(conversations);
             const convObjId = convClone.findIndex((c: Conversation) => c.conversationId === convId);
             if (convObjId > -1) {
-                dispatch(updateConversationObject(convId, convTitle, userAction))
+                updateConversationObject(convId, convTitle, userAction)
             }
             return dispatch(setConversationTitleEditingActiveState({isEditing:false, conversationId: ''}))
         }

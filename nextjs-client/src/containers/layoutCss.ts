@@ -14,9 +14,9 @@ export const layoutCss = {
         height: 'fit-content'
     },
     footerLayout: {
-        padding: '10px 20px 20px 20px',
+        padding: '10px 20px 15px 20px',
         margin: '0 auto',
-        maxheight: '10dvh',
+        maxHeight: '10dvh',
         height: 'fit-content',
         width: '100%'
     },
