@@ -8,7 +8,7 @@ const instance: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin' : 'http://locahost:3000',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH' },
+    'Access-Control-Allow-Methods': 'PATCH, GET, POST, PUT, DELETE, OPTIONS' },
 });
 
 // const accessOrigin = !isNull(String(process.env.NEXT_PUBLIC_AZURE_REDIRECT_URI)) && !isUndefined(String(process.env.NEXT_PUBLIC_AZURE_REDIRECT_URI))
@@ -45,10 +45,11 @@ export interface CustomAxiosOptions<T = unknown> {
   url: string;
   method: 'get' | 'post' | 'put' | 'delete' | 'patch';
   body?: T;
+  data?: T;
   config?: AxiosRequestConfig;
 }
 
-export async function customAxios<T = unknown>({ url, method, body, config }: CustomAxiosOptions): Promise<AxiosResponse<T>> {
+export async function customAxios<T = unknown>({ url, method, body, data, config }: CustomAxiosOptions): Promise<AxiosResponse<T>> {
   switch (method) {
     case 'get':
       return instance.get<T>(url, config);
@@ -59,7 +60,7 @@ export async function customAxios<T = unknown>({ url, method, body, config }: Cu
     case 'delete':
       return instance.delete<T>(url, config);
     case 'patch':
-      return instance.patch<T>(url, config);
+      return instance.patch<T>(url, data, config);
     default:
       throw new Error(`Unsupported method: ${method}`);
   }

@@ -79,6 +79,14 @@ async def create_conversation(user_id: str, conversation: Conversations):
     return created_conversation
 
 
+from pydantic import BaseModel
+from typing import Optional
+
+class UpdateFields(BaseModel):
+    conversationTitle: Optional[str]
+    # isActive: Optional[bool]
+    # isPinned: Optional[bool]
+    
 @conv_router.patch(
     path="/{conversation_id}/",
     response_model=Conversations,
@@ -104,12 +112,12 @@ async def create_conversation(user_id: str, conversation: Conversations):
         },
     }
 )
-async def patch_conversation_object(user_id: str, conversation_id: str, update_fields: dict):
+async def patch_conversation_object(user_id: str, conversation_id: str, update_fields: UpdateFields):
     db.conversations.update_one(
-        filter={'_id': ObjectId(conversation_id), 'userId': user_id},
-        update={'$set': update_fields}
+        filter={'conversationId': conversation_id, 'userId': user_id},
+        update={'$set': update_fields.dict()}
     )
-    updated_conversation = db.conversations.find_one({"_id": ObjectId(conversation_id), "userId": user_id})
+    updated_conversation = db.conversations.find_one({"conversationId": conversation_id, "userId": user_id})
     return updated_conversation
 
 

@@ -45,14 +45,16 @@ export const updateConversationObject = (
         apiBody = { isActive: false };
     }
     try {
-        await customAxios({
+        const response = await customAxios({
             url: Endpoints.conversations
                 .replace(/userId/, String(userId))
                 .replace(/conversationId/, convId),
             method: "patch",
-            body: apiBody,
+            data: apiBody,
         });
-        return getConversationsList(String(userId))
+        if(response){
+            return dispatch(getConversationsList(String(userId)))
+        }
     } catch (error) {
         console.log(error);
         return false;
