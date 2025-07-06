@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface UsersState {
-    userId: string;
+    userId: string | '';
 }
 
 const initialState: UsersState = {
-    userId: '67d1c4e768fd6d29d3043c98',
+    userId: '68696b3e9708aaa3e94aa3ee',
 };
 
 export const usersSlicer = createSlice({

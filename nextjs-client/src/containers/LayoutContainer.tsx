@@ -9,9 +9,11 @@ import { ConversationsState, setConversationsList } from "../store/conversations
 import { BaseState, setSidebarCollapsedState } from "../store/base/slice";
 import { conversationsListSampleData, messagesList2SampleData } from "../sample_data";
 import { MessagesState, setMessagesList } from "../store/messages/slice";
+import { UsersState } from "../store/users/slice";
 import { ButtonComponent } from "../components/Button";
 import LeftOutlinedSVG from '../assets/svg/LeftOutlinedSVG';
 import RightOutlinedSVG from '../assets/svg/RightOutlinedSVG';
+import { getConversationsList } from "@/service/conversation-list";
 
 interface LayoutContainerProps {
     headerChildren?: ReactNode;
@@ -30,23 +32,30 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
 }) => {
     const [siderWidth, setSiderWidth] = useState(320);
     const dispatch = useDispatch();
+    const userId = useSelector((state: {users: UsersState}) => state.users.userId)
     const selectedConversationMessages = useSelector((state: {messages: MessagesState}) => state.messages.selectedConversationMessages);
     const isSidebarCollapsed = useSelector((state: {base: BaseState}) => state.base.isSidebarCollapsed ? state.base.isSidebarCollapsed : false);
     const contentCSS: React.CSSProperties = size(selectedConversationMessages) === 0
         ? { display: 'flex', alignItems: 'center', justifyContent: 'center' }
         : { padding: '10px', height: 'fit-content', overflowY: 'auto' };
+    
+    // Retrieve ConversationList 
     const conversationsList = useSelector((state: {conversations: ConversationsState}) => state.conversations.conversationsList);
     useEffect(() => {
         if (isArray(conversationsList) && size(conversationsList) === 0) {
-            dispatch(setConversationsList(conversationsListSampleData));
+            dispatch(getConversationsList(userId))
         }
-    }, [conversationsList, dispatch]);
+    }, [userId, conversationsList, dispatch]);
+
+    // Retrieve MessagesList 
     const messagesList = useSelector((state:  {messages: MessagesState}) => state.messages.messagesList);
     useEffect(() => {
         if (isArray(messagesList) && size(messagesList) === 0) {
             dispatch(setMessagesList(messagesList2SampleData));
         }
     }, [conversationsList, dispatch, messagesList]);
+
+
     return (
         <Layout style={layoutCss.containerLayout} hasSider={true}>
             <Sider width={siderWidth} style={isSidebarCollapsed ? undefined : layoutCss.siderLayout}

@@ -64,7 +64,7 @@ export const messageSlicer = createSlice({
     name: 'messages',
     initialState,
     reducers: {
-        setMessagesList: (state: MessagesState, action: PayloadAction<{ conversationId: string | number; messages: Message[] }[]>) => {
+        setMessagesList: (state: MessagesState, action: PayloadAction<MessageWithConvId[]>) => {
             state.messagesList = action.payload;
         },
         setSelectedMessagesList: (state, action: PayloadAction<Message[]>) => {

@@ -1,20 +1,24 @@
 import { cloneDeep } from "lodash";
-import { AxiosResponse } from "axios";
 import { Endpoints } from "../helper/endPoints";
-import { setMessagesList, Message, MessageWithConvId } from "../store/messages/slice";
+import { setMessagesList, Message, MessageWithConvId, setSelectedMessagesList } from "../store/messages/slice";
 import { customAxios } from "./axios-service";
 import { Dispatch } from "redux";
 import type { RootState } from "../store/store";
+import { isKeyInObject } from "@/utility/utility";
 
 
-export const getMessagesList = async (
+export const getMessagesList = (
     conversationId: string
-): Promise<Message[]> => {
-    const response: AxiosResponse<Message[]> = await customAxios({
+) =>  async (dispatch: Dispatch) => {
+    const response = await customAxios<MessageWithConvId[]>({
         url: `/conversations/${conversationId}/messages`,
         method: "get",
-    });
-    return response.data;
+    })
+    dispatch(setMessagesList(response.data))
+    if(response.data && isKeyInObject(response.data, 'messages')){
+      dispatch(setSelectedMessagesList(response.data[0]['messages']))
+    }
+    return true;
 };
 
 export const getSelectedConvMessages =

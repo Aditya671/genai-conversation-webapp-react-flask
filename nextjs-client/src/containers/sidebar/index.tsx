@@ -8,7 +8,6 @@ import { MessagesState, MessageWithConvId, setSelectedMessagesList } from "../..
 import ItemsListCard from "../../components/ItemsListCard";
 import { warningMessage } from "../../components/MessageModal";
 import SelectDropdown from "../../components/SelectDropdown";
-import { conversationsListSampleData } from "./../../sample_data";
 import { BaseState, CollapsedDataContainerType, setShowCollapsedData } from "@/store/base/slice";
 import DropdownMenuFilledSVG from '../../assets/svg/DropdownMenuFilledSVG';
 import LLMFilledSVG from '../../assets/svg/LLMFilledSVG';
@@ -16,6 +15,7 @@ import Image from "next/image";
 import { ButtonComponent } from "@/components/Button";
 import PushpinFilledSVG from "@/assets/svg/PushpinFilledSVG";
 import './index.css';
+import { getMessagesList } from "@/service/messages-list";
 
 
 const { Title } = Typography;
@@ -24,7 +24,7 @@ export const SidebarComponent: React.FC = () => {
     const [warningModalApiComponent, contextHolder] = message.useMessage();
     
     const dispatch = useDispatch();
-    const conversationsList = cloneDeep(conversationsListSampleData);
+    const conversationsList = cloneDeep(useSelector((state: {conversations: ConversationsState}) => state.conversations.conversationsList ? state.conversations.conversationsList : []));
     const selectedConversationId = useSelector((state: {conversations: ConversationsState}) => state.conversations.selectedConversation ? state.conversations.selectedConversation.conversationId : '');
     const messagesList = useSelector((state: {messages: MessagesState}) => state.messages.messagesList);
     
@@ -41,7 +41,7 @@ export const SidebarComponent: React.FC = () => {
             dispatch(setShowCollapsedData(collapseDataProp));
         }
     }
-const SelectModelComponent = () => (
+    const SelectModelComponent = () => (
         <SelectDropdown
             componentName={'modalSelector'}
             placeholder={'Select Modal'}
@@ -87,12 +87,13 @@ const SelectModelComponent = () => (
             return warningMessage(warningModalApiComponent, 'Please save/send the prompt message before selecting another conversation');
         }
         dispatch(setSelectedConversation(convObject));
-        const convMessage = messagesList.find((msg: MessageWithConvId) => msg.conversationId === convObject.conversationId);
-        if (convObject && (size(messagesList) > 0) && (!isUndefined(convMessage) && !isNull(convMessage))) {
-            dispatch(setSelectedMessagesList(convMessage['messages']));
-        }else {
-            dispatch(setSelectedMessagesList([]))
-        }
+        dispatch(getMessagesList(convObject.conversationId))
+        // const convMessage = messagesList.find((msg: MessageWithConvId) => msg.conversationId === convObject.conversationId);
+        // if (convObject && (size(messagesList) > 0) && (!isUndefined(convMessage) && !isNull(convMessage))) {
+        //     dispatch(setSelectedMessagesList(convMessage['messages']));
+        // }else {
+        //     dispatch(setSelectedMessagesList([]))
+        // }
     };
     
     const CollapsedDataContainer: React.FC<{ containerName: CollapsedDataContainerType }> = ({ containerName }) => (

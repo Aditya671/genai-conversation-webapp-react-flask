@@ -13,6 +13,8 @@ import { Message, MessagesState, setUserMessagesPrompt } from "../../store/messa
 import CopyFilledSVG from '../../assets/svg/CopyFilledSVG';
 import EditFilledSVG from '../../assets/svg/EditFilledSVG';
 import SaveFilledSVG from '../../assets/svg/SaveFilledSVG';
+import { LikeFilledSVG } from "@/assets/svg/LikeFilledSVG";
+import { DisLikeFilledSVG } from "@/assets/svg/DisLikeFilledSVG";
 
 const { Content } = Layout;
 
@@ -99,13 +101,13 @@ export const ContentComponent: React.FC<ContentComponentProps> = ({ children }) 
                                     <ButtonComponent
                                         key={`copy-prompt-${msg.messageId}`}
                                         id={`copy-prompt-${msg.messageId}`}
-                                        tooltipText="Copy Prompt"
+                                        tooltipText={msg.messageType === messageTypes['user'] ? "Copy Prompt": "Copy Response"}
                                         themeType="IconButton"
                                         icon={<CopyFilledSVG />}
                                         onClickHandle={() => handleCopySelectedPrompt(msg.messageDescription)}
                                         style={{ background: 'transparent', border: 'none' }}
                                     />,
-                                    <ButtonComponent
+                                    ...msg.messageType === messageTypes['user'] ? [<ButtonComponent
                                         key={`edit-prompt-${msg.messageId}`}
                                         id={`edit-prompt-${msg.messageId}`}
                                         tooltipText="Edit Prompt"
@@ -122,7 +124,26 @@ export const ContentComponent: React.FC<ContentComponentProps> = ({ children }) 
                                         icon={<SaveFilledSVG />}
                                         onClickHandle={() => handleSaveSelectedPrompt(String(msg.messageId))}
                                         style={{ background: 'transparent', border: 'none' }}
+                                    />] : [
+                                        <ButtonComponent
+                                        key={`good-response-${msg.messageId}`}
+                                        id={`good-response-${msg.messageId}`}
+                                        tooltipText="Good Response"
+                                        themeType="IconButton"
+                                        icon={<LikeFilledSVG />}
+                                        onClickHandle={() => handleEditSelectedPrompt(String(msg.messageId), String(msg.conversationId))}
+                                        style={{ background: 'transparent', border: 'none' }}
                                     />,
+                                    <ButtonComponent
+                                        key={`bad-response-${msg.messageId}`}
+                                        id={`bad-response-${msg.messageId}`}
+                                        tooltipText="Bad Response"
+                                        themeType="IconButton"
+                                        icon={<DisLikeFilledSVG />}
+                                        onClickHandle={() => handleEditSelectedPrompt(String(msg.messageId), String(msg.conversationId))}
+                                        style={{ background: 'transparent', border: 'none' }}
+                                    />
+                                    ],
                                 ]}
                             />
                         </Flex>

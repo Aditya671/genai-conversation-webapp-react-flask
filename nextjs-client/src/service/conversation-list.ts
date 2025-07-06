@@ -14,7 +14,7 @@ import { UsersState } from "@/store/users/slice";
 // };
 
 export const getConversationsList = (
-    userId : string = ""
+    userId: string = ''
 ) => async (dispatch: Dispatch) => {
     if (!userId) {
         return "Unauthorized User";
