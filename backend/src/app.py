@@ -3,11 +3,17 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import run
+from os import path
 
 # Load environment variables
 from dotenv import load_dotenv
-load_dotenv()
-
+current_dir = path.dirname(__file__)
+# Step 2: Move up one level to reach backend/
+backend_root = path.abspath(path.join(current_dir, ".."))
+# Step 3: Join the path to .env file inside backend/
+env_path = path.join(backend_root, ".env")
+# Load the .env file
+load_dotenv(dotenv_path=env_path)
 
 app = FastAPI()
 
@@ -95,3 +101,4 @@ app.include_router(message_router, prefix="/api/{user_id}/{conversation_id}", ta
 from uvicorn import run
 if __name__ == "__main__":
     run(app)
+# uvicorn src.app:app --host 0.0.0.0 --port 8000 --reload

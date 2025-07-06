@@ -9,11 +9,12 @@ class Conversations(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     conversationId: str
     conversationTitle: str
+    selectedModal : str
     dateTimeCreated: Union[str,datetime]
     userId: str
     isNew: bool
     isActive: bool
-    dateTimePinned: Union[str,datetime]
+    isArchieved: bool
     isPinned: bool
 
     class Config:

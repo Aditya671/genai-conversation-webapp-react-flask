@@ -5,7 +5,10 @@ let numberOfAjaxCAllPending = 0;
 const instance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   timeout: 10000,
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin' : 'http://locahost:3000',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH' },
 });
 
 // const accessOrigin = !isNull(String(process.env.NEXT_PUBLIC_AZURE_REDIRECT_URI)) && !isUndefined(String(process.env.NEXT_PUBLIC_AZURE_REDIRECT_URI))
@@ -40,7 +43,7 @@ instance.interceptors.response.use(
 
 export interface CustomAxiosOptions<T = unknown> {
   url: string;
-  method: 'get' | 'post' | 'put' | 'delete';
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch';
   body?: T;
   config?: AxiosRequestConfig;
 }
@@ -55,6 +58,8 @@ export async function customAxios<T = unknown>({ url, method, body, config }: Cu
       return instance.put<T>(url, body, config);
     case 'delete':
       return instance.delete<T>(url, config);
+    case 'patch':
+      return instance.patch<T>(url, config);
     default:
       throw new Error(`Unsupported method: ${method}`);
   }

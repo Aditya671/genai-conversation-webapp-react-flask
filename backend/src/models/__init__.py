@@ -17,7 +17,7 @@ db = client.genai_app
 # Send a ping to confirm a successful connection
 try:
     db.command('ping')
-    print("Pinged your deployment.a You successfully connected to MongoDB!")
+    print("Pinged your deployment, successfully connected to MongoDB!")
 except Exception as e:
     print(e)
 

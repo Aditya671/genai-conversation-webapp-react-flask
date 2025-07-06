@@ -6,12 +6,7 @@ import {
 } from "../store/conversations/slice";
 import { customAxios } from "./axios-service";
 import { Dispatch } from "redux";
-import { UsersState } from "@/store/users/slice";
 
-// export const getConversation = async (): Promise<Conversation[]> => {
-//   const response = await customAxios<Conversation[]>({ url: '/conversations', method: 'get' });
-//   return response.data;
-// };
 
 export const getConversationsList = (
     userId: string = ''
@@ -35,14 +30,13 @@ export const getConversationsList = (
 export const updateConversationObject = (
     convId: string,
     convTitle: string,
-    updateType: string = conversationObjectUpdateTypes["DEFAULT"]
-) => async (getState: () => UsersState) => {
+    updateType: string = conversationObjectUpdateTypes["DEFAULT"],
+    userId: string = 'local_user'
+) => async (dispatch: Dispatch) => {
     if (updateType === conversationObjectUpdateTypes["DEFAULT"]) {
         console.log("No update type provided");
         return;
     }
-    const userId: UsersState | string = getState().userId || "";
-
     let apiBody: Record<string, string | boolean> = { conversationTitle: convTitle };
     if (updateType === conversationObjectUpdateTypes["PIN"]) {
         apiBody = { isPinned: true };
@@ -55,7 +49,7 @@ export const updateConversationObject = (
             url: Endpoints.conversations
                 .replace(/userId/, String(userId))
                 .replace(/conversationId/, convId),
-            method: "post",
+            method: "patch",
             body: apiBody,
         });
         return getConversationsList(String(userId))

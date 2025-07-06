@@ -32,17 +32,16 @@ const ItemsListCard: React.FC<ItemsListCardProps> = (
 ) => {
     const dispatch = useDispatch();
     const [convNewTitle, setConvNewTitle] = useState('');
-    const userId = useSelector((state: UsersState) => state.userId);
+    const userId = useSelector((state: {users: UsersState}) => state.users.userId);
     const isConversationTitleEditingActive = useSelector((state: {base: BaseState}) => state.base.isConversationTitleEditingActive);
 
     const handleMenuItemClick = async (convId: string, convTitle: string, action: string) => {
         const userAction = action || conversationObjectUpdateTypes['DEFAULT'];
-        // updateConversationObject( convId, '', userAction );
         if (action === conversationObjectUpdateTypes['TITLE']) {
             const convClone = cloneDeep(conversations);
             const convObjId = convClone.findIndex((c: Conversation) => c.conversationId === convId);
             if (convObjId > -1) {
-                updateConversationObject(convId, convTitle, userAction)
+                dispatch(updateConversationObject(convId, convTitle, userAction, userId))
             }
             return dispatch(setConversationTitleEditingActiveState({isEditing:false, conversationId: ''}))
         }

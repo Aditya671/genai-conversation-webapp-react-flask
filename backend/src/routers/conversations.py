@@ -41,10 +41,8 @@ async def get_all_conversations(user_id: str):
         raise HTTPException(status_code=404, detail="Conversation not found")
     conversations = DataFrame(conversations)
     if 'dateTimeCreated' in conversations.columns:
-        conversations['dateTimeCreated'] = conversations['dateTimeCreated'].dt.strftime('%Y-%m-%d %H:%M:%S')
-    if 'dateTimePinned' in conversations.columns:
-        conversations['dateTimePinned'] = conversations['dateTimePinned'].dt.strftime('%Y-%m-%d %H:%M:%S')
-    
+        if conversations["dateTimeCreated"].dtype != str:
+            conversations['dateTimeCreated'] = to_datetime(conversations['dateTimeCreated']).dt.strftime('%Y-%m-%d %H:%M:%S')
     conversations.fillna('', inplace=True)
     conversations = conversations.to_dict(orient="records")
     return conversations
@@ -81,8 +79,8 @@ async def create_conversation(user_id: str, conversation: Conversations):
     return created_conversation
 
 
-@conv_router.post(
-    path="/{conversation_id}",
+@conv_router.patch(
+    path="/{conversation_id}/",
     response_model=Conversations,
     status_code=status.HTTP_202_ACCEPTED,  # default status code
     description="Update Conversation Object fields",
