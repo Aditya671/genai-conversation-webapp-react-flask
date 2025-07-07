@@ -63,6 +63,11 @@ export const ContentComponent: React.FC<ContentComponentProps> = ({ children }) 
                         headingLevel={5}
                         headingText="Your go to place for every conversation!!"
                     />
+                    <PageHeading
+                        style={{ color: '#1f1f1f', fontWeight: 700, marginTop: 0, marginBottom: 2, padding: '0 10px' }}
+                        headingLevel={5}
+                        headingText="Please Select a conversation history to start querying...."
+                    />
                 </Space>
             ) : (
                 <>

@@ -44,6 +44,9 @@ export const updateConversationObject = (
     if (updateType === conversationObjectUpdateTypes["DELETE"]) {
         apiBody = { isActive: false };
     }
+    if (updateType === conversationObjectUpdateTypes["MODEL_CHANGE"]) {
+        apiBody = { selectedModel: convTitle };
+    }
     try {
         const response = await customAxios({
             url: Endpoints.conversations

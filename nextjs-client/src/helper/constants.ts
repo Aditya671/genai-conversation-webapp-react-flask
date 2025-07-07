@@ -76,5 +76,6 @@ export const conversationObjectUpdateTypes = {
     'EXPORT': 'EXPORT',
     'PIN': 'PIN',
     'DELETE': 'DELETE',
-    'DEFAULT': 'DEFAULT'
+    'DEFAULT': 'DEFAULT',
+    'MODEL_CHANGE': 'MODEL_CHANGE'
 }

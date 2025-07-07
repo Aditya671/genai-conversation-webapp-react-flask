@@ -15,6 +15,8 @@ import { ButtonComponent } from "@/components/Button";
 import PushpinFilledSVG from "@/assets/svg/PushpinFilledSVG";
 import './index.css';
 import { getMessagesList } from "@/service/messages-service";
+import { conversationObjectUpdateTypes } from "@/helper/constants";
+import { updateConversationObject } from "@/service/conversations-service";
 
 
 const { Title } = Typography;
@@ -26,9 +28,10 @@ export const SidebarComponent: React.FC = () => {
     const {
         conversationsList, selectedConversation
     } = cloneDeep(useAppSelector((state) => state.conversations));
-    const selectedConversationId = selectedConversation;
     const llmModels = useAppSelector((state) => state.base.llmModels);
     const messagesList = useAppSelector((state) => state.messages.messagesList);
+    const userId = useAppSelector((state) => state.users.userId);
+
 
     const {
         isUserPromptFieldInActiveState,
@@ -43,6 +46,13 @@ export const SidebarComponent: React.FC = () => {
             dispatch(setShowCollapsedData(collapseDataProp));
         }
     }
+
+    const handalModalSelectorChange = (selectedModal: string[] | string) => {
+        // Implement modal selector change logic
+        console.log('Selected Modal:', selectedModal);
+        const userAction = conversationObjectUpdateTypes['MODEL_CHANGE'];
+        return dispatch(updateConversationObject(String(selectedConversation.conversationId), String(selectedModal), userAction, userId))
+    };
     const SelectModelComponent = () => (
         <SelectDropdown
             componentName={'modalSelector'}
@@ -64,7 +74,7 @@ export const SidebarComponent: React.FC = () => {
     const ItemsListContainer = () => (
         <ItemsListCard
             cardTitle="Conversations List"
-            selectedConversationId={String(selectedConversationId) || ''}
+            selectedConversationId={String(selectedConversation.conversationId) || ''}
             conversations={conversationsList.filter((conv: Conversation) => conv.isActive && !conv.isPinned)}
             onConversationClick={handleConversationNameClick}
         />
@@ -73,17 +83,12 @@ export const SidebarComponent: React.FC = () => {
     const PinnerItemsListContainer = () => (
         <ItemsListCard
             cardTitle='Pinned Conversations'
-            selectedConversationId={String(selectedConversationId) || ''}
+            selectedConversationId={String(selectedConversation.conversationId) || ''}
             conversations={conversationsList.filter((conv: Conversation) => conv.isPinned && conv.isActive)}
             onConversationClick={handleConversationNameClick}
         />
     )
 
-    const handalModalSelectorChange = (selectedModal: string[] | string) => {
-        // Implement modal selector change logic
-        console.log('Selected Modal:', selectedModal);
-    };
-    
     const handleConversationNameClick = (convObject: Conversation) => {
         if (isUserPromptFieldInActiveState) {
             return warningMessage(warningModalApiComponent, 'Please save/send the prompt message before selecting another conversation');

@@ -84,8 +84,9 @@ from typing import Optional
 
 class UpdateFields(BaseModel):
     conversationTitle: Optional[str]
-    # isActive: Optional[bool]
-    # isPinned: Optional[bool]
+    isActive: Optional[bool]
+    isPinned: Optional[bool]
+    selectedModel : Optional[str]
     
 @conv_router.patch(
     path="/{conversation_id}/",
