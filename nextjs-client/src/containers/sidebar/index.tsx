@@ -91,7 +91,7 @@ export const SidebarComponent: React.FC = () => {
         const conversationsListClonedIds = cloneDeep(messagesList).map(c => c.conversationId)
         dispatch(setSelectedConversation(convObject));
         if(!conversationsListClonedIds.includes(convObject.conversationId)){
-            dispatch(getMessagesList(String(convObject.conversationId)))
+            dispatch(getMessagesList(String(convObject.conversationId), false))
         }else{
             const convMessage = messagesList.find((msg: MessageWithConvId) => msg.conversationId === convObject.conversationId);
             if (convObject && (size(messagesList) > 0) && (!isUndefined(convMessage) && !isNull(convMessage))) {

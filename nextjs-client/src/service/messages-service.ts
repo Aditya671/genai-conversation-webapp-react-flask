@@ -1,6 +1,11 @@
 import { cloneDeep } from "lodash";
 import { Endpoints } from "../helper/endPoints";
-import { setMessagesList, Message, MessageWithConvId, setSelectedMessagesList } from "../store/messages/slice";
+import {
+    setMessagesList,
+    Message,
+    MessageWithConvId,
+    setSelectedMessagesList,
+} from "../store/messages/slice";
 import { customAxios } from "./axios-service";
 import { Dispatch } from "redux";
 import type { RootState } from "../store/store";
@@ -8,79 +13,81 @@ import { isKeyInObject } from "@/utility/utility";
 
 
 export const getMessagesList = (
-    conversationId: string
-) =>  async (dispatch: Dispatch, getState : () => RootState) => {
+    conversationId: string, isRefreshed: boolean = false
+) => async (dispatch: Dispatch, getState: () => RootState) => {
     const response = await customAxios<MessageWithConvId[]>({
         url: `/conversations/${conversationId}/messages`,
         method: "get",
-    })
-    const messagesListClone = cloneDeep(getState().messages.messagesList)
-    if(response.data.length > 0){
-      dispatch(setMessagesList([...messagesListClone, response.data[0]]))
+    });
+    const messagesListClone = cloneDeep(getState().messages.messagesList);
+    if (response.data.length > 0) {
+        if (!isRefreshed) {
+            const convMessageIndex = messagesListClone.findIndex(
+                (msg) => msg.conversationId === conversationId
+            );
+            messagesListClone[convMessageIndex] = response.data[0];
+            dispatch(setMessagesList([...messagesListClone]));
+        } else {
+            dispatch(setMessagesList([...messagesListClone, response.data[0]]));
+        }
     }
-    if(Array.isArray(response.data) && isKeyInObject(response.data, 'messages')){
-      dispatch(setSelectedMessagesList(response.data[0]['messages']))
+    if (Array.isArray(response.data) && isKeyInObject(response.data, "messages")) {
+        dispatch(setSelectedMessagesList(response.data[0]["messages"]));
     }
-    if(Array.isArray(response.data) && response.data.length === 0){
+    if (Array.isArray(response.data) && response.data.length === 0) {
       dispatch(setSelectedMessagesList([]));
     }
     return true;
 };
 
-export const getSelectedConvMessages =
-    (conversationId = "") =>
-    async (dispatch: Dispatch, getState: () => RootState) =>
-{
+export const getSelectedConvMessages = (
+    conversationId = ""
+) => async (dispatch: Dispatch, getState: () => RootState) => {
     const userId = getState().users.userId;
-    const messagesList: MessageWithConvId[] = cloneDeep(getState().messages.messagesList);
+    const messagesList: MessageWithConvId[] = cloneDeep(
+      getState().messages.messagesList
+    );
     try {
-      const response = await customAxios<Message[]>({
-        url: Endpoints.getMessages
-          .replace(/userId/, userId)
-          .replace(/conversationId/, conversationId),
-        method: "get",
-      });
-      const convMessage = messagesList.find(
-        (msg: MessageWithConvId) => msg.conversationId === conversationId
-      );
-      if (conversationId && !convMessage) {
-        dispatch(
-          setMessagesList([
-            ...messagesList,
-            { conversationId, messages: response.data }
-          ])
+        const response = await customAxios<Message[]>({
+            url: Endpoints.getMessages
+                .replace(/userId/, userId)
+            .replace(/conversationId/, conversationId),
+            method: "get",
+        });
+        const convMessage = messagesList.find(
+            (msg: MessageWithConvId) => msg.conversationId === conversationId
         );
-      }
-      return response.data;
+        if (conversationId && !convMessage) {
+            dispatch(
+                setMessagesList([ ...messagesList, { conversationId, messages: response.data }])
+            );
+        }
+        return response.data;
     } catch (error) {
-      console.log(error);
-      return null;
+        console.log(error);
+        return null;
     }
 };
 
-export const postUserPrompt =
-  () => async (dispatch: Dispatch, getState: () => RootState) => {
+export const postUserPrompt = (
+    messageObject: Message
+) => async (dispatch: Dispatch, getState: () => RootState) => {
     const userId = getState().users.userId;
-    const messagesList: Message[] = cloneDeep(
-      getState().messages.selectedConversationMessages
-    );
-    const conversationId =
-      getState().conversations.selectedConversation.conversationId;
-    if (messagesList.length === 0) {
-      return "No messages to send";
-    }
-    const postMessage = messagesList.map((msg) => msg.messageDescription);
+    const conversationId = getState().conversations.selectedConversation.conversationId;
     try {
-      const response = await customAxios<string[]>({
-        url: Endpoints.postUserPrompt
-          .replace(/userId/, userId)
-          .replace(/conversationId/, String(conversationId)),
-        method: "post",
-        body: postMessage,
-      });
-      return response.data;
+        const response = await customAxios<string[]>({
+            url: Endpoints.postUserPrompt
+                .replace(/userId/, userId)
+                .replace(/conversationId/, String(conversationId)),
+            method: "put",
+            body: messageObject,
+        });
+        if (response.data) {
+            dispatch(getMessagesList(String(conversationId), true));
+        }
+        return true;
     } catch (error) {
-      console.log(error);
-      return null;
+        console.log(error);
+        return null;
     }
-  };
+};

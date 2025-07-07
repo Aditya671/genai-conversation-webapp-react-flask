@@ -6,14 +6,13 @@ import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { GetInputField, InputFieldValueType, RecordType } from "../../components/InputField";
 import { ButtonComponent } from "../../components/Button";
 import { errorModal } from "../../components/MessageModal";
-import { createNewMessage, newConversationObject } from "../../helper/constants";
+import { createNewMessage } from "../../helper/constants";
 import {
-    Message, MessageWithConvId,
-    setMessagesList, setSelectedMessagesList, setUserMessagesPrompt
+    Message,  setUserMessagesPrompt
 } from "../../store/messages/slice";
 import {
     Conversation, 
-    setConversationsList, setSelectedConversation
+    // setConversationsList, setSelectedConversation
 } from "../../store/conversations/slice";
 import {
     setUploadedFilesTempLocation,
@@ -34,12 +33,12 @@ import './footer.css'
 export const FooterComponent: React.FC = () => {
     
     const {
-        selectedConversationMessages,
+        // selectedConversationMessages,
         userPrompt,
-        messagesList : globalMessagesList 
+        // messagesList : globalMessagesList 
     } = cloneDeep(useAppSelector((state) => state.messages));
     // const globalMessagesList = cloneDeep(useAppSelector((state) => state.messages.messagesList));
-    const conversationsList = useAppSelector((state) => state.conversations.conversationsList);
+    // const conversationsList = useAppSelector((state) => state.conversations.conversationsList);
     const selectedConversation = useAppSelector((state) => state.conversations.selectedConversation);
 
     const {
@@ -66,51 +65,13 @@ export const FooterComponent: React.FC = () => {
         if (!userPrompt) {
             return errorModal('User Prompt', 'Please enter prompt message');
         }
-        const ongoingConvMessages = cloneDeep(selectedConversationMessages);
-        const originalMessagesList = cloneDeep(globalMessagesList);
         const newMsgObj = createNewMessage(userPrompt);
-        const newConvMessagesList: MessageWithConvId = {
-            conversationId: '',
-            messages: []
-        };
         if (selectedConversation && selectedConversation.conversationId) {
             newMsgObj['conversationId'] = selectedConversation['conversationId'];
-            ongoingConvMessages.push(newMsgObj);
-
-            const originalMessagesListIndex = originalMessagesList.findIndex((convMsg: MessageWithConvId) => convMsg.conversationId === selectedConversation['conversationId']);
-            
-            if (originalMessagesListIndex >= 0) {
-                const originalConvMessageObjClone = cloneDeep(originalMessagesList[originalMessagesListIndex]);
-                // delete ongoingConvMessages[originalMessagesListIndex];
-                // ongoingConvMessages[originalMessagesListIndex] = ongoingConvMessages;
-                // ongoingConvMessages[originalMessagesListIndex] = ongoingConvMessagesCloned;
-                originalConvMessageObjClone['messages'] = ongoingConvMessages;
-                originalMessagesList.push(originalConvMessageObjClone);
-                dispatch(setMessagesList(originalMessagesList));
-                dispatch(setSelectedMessagesList(ongoingConvMessages));
-            } 
-            else {
-                newConvMessagesList['messages'] = ongoingConvMessages;
-                newConvMessagesList['conversationId'] = selectedConversation['conversationId'];
-                dispatch(setSelectedMessagesList(ongoingConvMessages));
-                const globalConvMessagesWithNewConv = cloneDeep([...globalMessagesList, newConvMessagesList]);
-                dispatch(setMessagesList(globalConvMessagesWithNewConv));
-            }
+        }else{
+            newMsgObj['conversationId'] = uuidv4()
         }
-        const conversationObjClone = cloneDeep(conversationsList);
-        const convIndexToUpdate = conversationObjClone.findIndex((conv: Conversation) => conv.conversationId === selectedConversation['conversationId']);
-        if (convIndexToUpdate >= 0) {
-            const convObj = cloneDeep(conversationObjClone[convIndexToUpdate]);
-            convObj['isNew'] = false;
-            conversationObjClone[convIndexToUpdate] = convObj;
-            dispatch(setConversationsList(cloneDeep(conversationObjClone)));
-        } else{
-            const newConvObj = newConversationObject(uuidv4(), `Conversation-${new Date().toISOString()}`, false);
-            const convListClone = cloneDeep([...conversationObjClone, newConvObj]);
-            dispatch(setConversationsList(convListClone));
-            dispatch(setSelectedConversation(newConvObj));
-        }
-        postUserPrompt();
+        dispatch(postUserPrompt(newMsgObj));
         dispatch(setUserMessagesPrompt(''));
         return dispatch(setUserPromptFieldActiveState(false));
     };

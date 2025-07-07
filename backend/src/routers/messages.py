@@ -4,12 +4,18 @@ from backend.src.models import db
 from pandas import DataFrame
 message_router = APIRouter()
 
-@message_router.post("/messages", response_model=Message)
+@message_router.put("/messages", response_model=int)
 async def create_message(user_id: str, conversation_id: str, message: Message):
     message_dict = message.dict(by_alias=True)
-    new_message = await db.messages.insert_one(message_dict)
-    created_message = await db.messages.find_one({"_id": new_message.inserted_id})
-    return created_message
+    new_message  = db.messages.update_one(
+    {'conversationId': conversation_id},
+    {
+        '$setOnInsert': { 'conversationId': conversation_id },
+        '$push': { 'messages': message_dict }
+    },
+    upsert=True
+    )
+    return new_message.modified_count
 
 @message_router.get("/messages", response_model=list[MessagesList])
 async def get_message(user_id: str, conversation_id: str):
