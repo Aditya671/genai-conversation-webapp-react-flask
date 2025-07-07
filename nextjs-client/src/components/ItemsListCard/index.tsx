@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, Dropdown, Empty, List, Tooltip, Space, Flex } from "antd";
 import { cloneDeep } from "lodash";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ButtonComponent } from "../Button";
 import './ItemsListCard.css';
 import { PageHeading } from "../PageHeading";
@@ -9,7 +9,7 @@ import { GetInputField } from "../InputField";
 import { Conversation } from "../../store/conversations/slice";
 import {
     getConversationsList, updateConversationObject
-} from "../../service/conversation-list";
+} from "../../service/conversations-service";
 import { conversationObjectUpdateTypes } from "../../helper/constants";
 import PushpinFilledSVG from '../../assets/svg/PushpinFilledSVG';
 import EditFilledSVG from '../../assets/svg/EditFilledSVG';
@@ -17,7 +17,6 @@ import DeleteOutlinedSVG from '../../assets/svg/DeleteOutlinedSVG';
 import DownloadOutlinedSVG from '../../assets/svg/DownloadOutlinedSVG';
 import EllipsisOutlinedSVG from '../../assets/svg/EllipseOutlinedSVG';
 import TickSVG from '../../assets/svg/TickSVG';
-import { UsersState } from "@/store/users/slice";
 import { BaseState, setConversationTitleEditingActiveState } from "@/store/base/slice";
 
 interface ItemsListCardProps {
@@ -30,10 +29,10 @@ interface ItemsListCardProps {
 const ItemsListCard: React.FC<ItemsListCardProps> = (
     { cardTitle, selectedConversationId, conversations, onConversationClick }
 ) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [convNewTitle, setConvNewTitle] = useState('');
-    const userId = useSelector((state: {users: UsersState}) => state.users.userId);
-    const isConversationTitleEditingActive = useSelector((state: {base: BaseState}) => state.base.isConversationTitleEditingActive);
+    const userId = useAppSelector((state) => state.users.userId);
+    const isConversationTitleEditingActive = useAppSelector((state: {base: BaseState}) => state.base.isConversationTitleEditingActive);
 
     const handleMenuItemClick = async (convId: string, convTitle: string, action: string) => {
         const userAction = action || conversationObjectUpdateTypes['DEFAULT'];

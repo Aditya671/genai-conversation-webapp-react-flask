@@ -98,6 +98,9 @@ app.include_router(conv_router, prefix="/api/{user_id}/conversations", tags=["co
 from backend.src.routers.messages import message_router
 app.include_router(message_router, prefix="/api/{user_id}/{conversation_id}", tags=["messages"])
 
+from backend.src.routers.llm_models import models_router
+app.include_router(models_router, prefix="/api/models", tags=["LLM-Models"])
+
 from uvicorn import run
 if __name__ == "__main__":
     run(app)

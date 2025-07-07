@@ -1,6 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UploadFile } from 'antd';
 
+
+export interface LlmModels{
+    id: string | number;
+    modelValue: string;
+    ModelName: string
+    dateTimeCreated: string | Date;
+    isActive: boolean
+}
+
 export type CollapsedDataContainerType = 'llm-selector' | 'items-list-selector' | 'pin-items-list-selector' | '' ;
 export interface BaseState {
     isUserPromptFieldInActiveState: boolean;
@@ -9,7 +18,8 @@ export interface BaseState {
     isConversationTitleEditingActive: {isEditing:boolean, conversationId: string}; // Optional field for conversation title editing state
     showCollapsedData: CollapsedDataContainerType; // Restrict to CollapsedDataContainerType
     uploadedFilesTempLocation?: UploadFile[] | []; // Optional field for uploaded files
-    uploadedFilesDisplayList? : collapseItemsInterface[] | []
+    uploadedFilesDisplayList? : collapseItemsInterface[] | [],
+    llmModels: LlmModels[] | []
 }
 
 export interface collapseItemsInterface {
@@ -26,7 +36,8 @@ const initialState: BaseState = {
     isConversationTitleEditingActive: {isEditing: false, conversationId: ''}, // Default state for conversation title editing
     showCollapsedData: '', // Default value
     uploadedFilesTempLocation: [],
-    uploadedFilesDisplayList: []
+    uploadedFilesDisplayList: [],
+    llmModels : []
 };
 
 export const baseSlicer = createSlice({
@@ -53,6 +64,9 @@ export const baseSlicer = createSlice({
         },
         setUploadedFilesDisplayList: (state, action: PayloadAction<collapseItemsInterface[] | []>) => {
             state.uploadedFilesDisplayList = action.payload;
+        },
+        setLlmModelsList: (state, action: PayloadAction<LlmModels[] | []>) => {
+            state.llmModels = action.payload;
         }
         
     },
@@ -65,7 +79,8 @@ export const {
     setConversationTitleEditingActiveState,
     setShowCollapsedData,
     setUploadedFilesTempLocation,
-    setUploadedFilesDisplayList
+    setUploadedFilesDisplayList,
+    setLlmModelsList
 } = baseSlicer.actions;
 
 export default baseSlicer.reducer;

@@ -19,7 +19,7 @@ async def get_message(user_id: str, conversation_id: str):
         raise HTTPException(status_code=404, detail="Empty Conversation")
 
     if 'messageDateTimeCreated' in messages_list.columns and messages_list['messageDateTimeCreated'].dtype != str:
-        messages_list['messageDateTimeCreated'] = messages_list['dateTimeCreated'].dt.strftime('%Y-%m-%d %H:%M:%S')
+        messages_list['messageDateTimeCreated'] = messages_list['messageDateTimeCreated'].dt.strftime('%Y-%m-%d %H:%M:%S')
 
     messages_list.fillna('', inplace=True)
     messages_list = messages_list.to_dict('records')

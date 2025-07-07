@@ -2,27 +2,26 @@ import React, { useState } from 'react';
 import { cloneDeep } from 'lodash';
 import { v4 as uuidv4 } from "uuid";
 import { Flex, List, Upload, UploadFile, Space, Collapse } from "antd";
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { GetInputField, InputFieldValueType, RecordType } from "../../components/InputField";
 import { ButtonComponent } from "../../components/Button";
 import { errorModal } from "../../components/MessageModal";
 import { createNewMessage, newConversationObject } from "../../helper/constants";
 import {
-    Message, MessagesState, MessageWithConvId,
+    Message, MessageWithConvId,
     setMessagesList, setSelectedMessagesList, setUserMessagesPrompt
 } from "../../store/messages/slice";
 import {
-    Conversation, ConversationsState,
+    Conversation, 
     setConversationsList, setSelectedConversation
 } from "../../store/conversations/slice";
 import {
-    collapseItemsInterface,
     setUploadedFilesTempLocation,
     setUserPromptFieldActiveState,
     setVoiceRecordingActiveState,
     setUploadedFilesDisplayList
 } from '../../store/base/slice';
-import { postUserPrompt } from '../../service/messages-list';
+import { postUserPrompt } from '../../service/messages-service';
 import { useSpeechRecognizer } from '../../hooks/useSpeechRecognizer';
 import VoiceTypingFilledSVG from '../../assets/svg/VoiceTypingFilledSVG';
 import ClipFilledSVG from '../../assets/svg/ClipFilledSVG';
@@ -34,20 +33,26 @@ import './footer.css'
 
 export const FooterComponent: React.FC = () => {
     
-    const selectedConversationMessages = cloneDeep(useSelector((state: {messages : MessagesState}) => state.messages.selectedConversationMessages));
-    const globalMessagesList = cloneDeep(useSelector((state: {messages: MessagesState}) => state.messages.messagesList));
-    const userPrompt = cloneDeep(useSelector((state: {messages : MessagesState}) => state.messages.userPrompt));
-    const conversationsList = useSelector((state: {conversations: ConversationsState}) => state.conversations.conversationsList);
-    const selectedConversation = useSelector((state: {conversations: ConversationsState}) => state.conversations.selectedConversation);
-    const isVoiceRecordingActive = useSelector((state: {base: {isVoiceRecordingActive: boolean}}) => state.base.isVoiceRecordingActive);
-    const uploadedFilesTempLocation = useSelector((state: {base: {uploadedFilesTempLocation: FileList[] | []}}) => state.base.uploadedFilesTempLocation);
-    const uploadedFilesDisplayList = useSelector((state: {base: {uploadedFilesDisplayList: collapseItemsInterface[] | []}}) => state.base.uploadedFilesDisplayList);
+    const {
+        selectedConversationMessages,
+        userPrompt,
+        messageList : globalMessagesList 
+    } = cloneDeep(useAppSelector((state) => state.messages));
+    // const globalMessagesList = cloneDeep(useAppSelector((state) => state.messages.messagesList));
+    const conversationsList = useAppSelector((state) => state.conversations.conversationsList);
+    const selectedConversation = useAppSelector((state) => state.conversations.selectedConversation);
+
+    const {
+        uploadedFilesTempLocation,
+        uploadedFilesDisplayList,
+        isVoiceRecordingActive
+    } = useAppSelector((state) => state.base);
     const { isListening, startRecognition, stopRecognition } = useSpeechRecognizer();
 
     const [uploadFilesCardPosition, setUploadFilesCardPosition] = useState<{inset: string}>({
         inset: '-40px 0 0 0',
     }); 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const handleUserPrompt = (colomnName: string, row: Message | Conversation | RecordType, rowIndex: number, promptMessage: InputFieldValueType) => {
         dispatch(setUserMessagesPrompt(String(promptMessage)));
         if (!promptMessage) {
@@ -186,7 +191,7 @@ export const FooterComponent: React.FC = () => {
                     width: '100%',
                     borderRadius: '0 0 8px 8px',
                 }}>
-                {uploadedFilesTempLocation.length > 0 && 
+                {uploadedFilesTempLocation && uploadedFilesTempLocation.length > 0 && 
                     <Collapse
                         onChange={(arr) => (
                             Array.isArray(arr) && arr.length > 0 ?

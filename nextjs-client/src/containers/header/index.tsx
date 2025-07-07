@@ -1,7 +1,7 @@
 import { Col, message, Row } from "antd";
 import { ButtonComponent } from "../../components/Button";
-import { useSelector, useDispatch } from 'react-redux';
-import { ConversationsState, setConversationsList, setSelectedConversation } from "../../store/conversations/slice";
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { setConversationsList, setSelectedConversation } from "../../store/conversations/slice";
 import { cloneDeep, isArray, size } from "lodash";
 import { newConversationObject } from "../../helper/constants";
 import { v4 as uuidv4 } from "uuid";
@@ -9,18 +9,17 @@ import { setSelectedMessagesList } from "../../store/messages/slice";
 import { PageHeading } from "../../components/PageHeading";
 import { useEffect, useState } from "react";
 import { warningMessage } from "../../components/MessageModal";
-import { BaseState } from "@/store/base/slice";
 import DotMenuSVG from "@/assets/svg/DotMenuSVG";
 import EditChatSVG from "@/assets/svg/EditChatSVG";
 
 export const HeaderComponent: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [warningModalApiComponent, contextHolder] = message.useMessage();
 
-    const conversationsList = cloneDeep(useSelector((state: {conversations: ConversationsState}) => state.conversations.conversationsList));
-    const selectedConversation = cloneDeep(useSelector((state: {conversations: ConversationsState}) => state.conversations.selectedConversation));
+    const conversationsList = cloneDeep(useAppSelector((state) => state.conversations.conversationsList));
+    const selectedConversation = cloneDeep(useAppSelector((state) => state.conversations.selectedConversation));
     const [displayedConvName, setDisplayedConversationName] = useState(selectedConversation['conversationTitle']);
-    const isUserPromptFieldInActiveState = useSelector((state: {base: BaseState}) => state.base.isUserPromptFieldInActiveState);
+    const isUserPromptFieldInActiveState = useAppSelector((state) => state.base.isUserPromptFieldInActiveState);
 
     useEffect(() => {
         if(selectedConversation){

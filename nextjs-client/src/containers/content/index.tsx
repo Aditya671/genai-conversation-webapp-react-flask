@@ -1,5 +1,5 @@
 import { Flex, Space, Layout } from "antd";
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { MessageCard } from "../../components/MessageCard";
 import { useEffect, useState } from "react";
 import { cloneDeep, isArray, size } from "lodash";
@@ -9,7 +9,7 @@ import { ButtonComponent } from "../../components/Button";
 import TextToSpeech from "../../components/TextToSpeech";
 import React from "react";
 import markdownToTxt from 'markdown-to-txt';
-import { Message, MessagesState, setUserMessagesPrompt } from "../../store/messages/slice";
+import { Message, setUserMessagesPrompt } from "../../store/messages/slice";
 import CopyFilledSVG from '../../assets/svg/CopyFilledSVG';
 import EditFilledSVG from '../../assets/svg/EditFilledSVG';
 import SaveFilledSVG from '../../assets/svg/SaveFilledSVG';
@@ -23,9 +23,9 @@ interface ContentComponentProps {
 }
 
 export const ContentComponent: React.FC<ContentComponentProps> = ({ children }) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const selectedConversationMessages: Message[] = cloneDeep(
-        useSelector((state: { messages: MessagesState }) => state.messages.selectedConversationMessages)
+        useAppSelector((state) => state.messages.selectedConversationMessages)
     );
     const [isMessageListEmpty, setIsMessageListEmpty] = useState(true);
 
