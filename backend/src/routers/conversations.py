@@ -40,9 +40,9 @@ async def get_all_conversations(user_id: str):
     if not conversations:
         raise HTTPException(status_code=404, detail="Conversation not found")
     conversations = DataFrame(conversations)
-    if 'dateTimeCreated' in conversations.columns:
-        if conversations["dateTimeCreated"].dtype != str:
-            conversations['dateTimeCreated'] = to_datetime(conversations['dateTimeCreated']).dt.strftime('%Y-%m-%d %H:%M:%S')
+    conversations['dateTimeCreated'] = to_datetime(conversations['dateTimeCreated'], errors='coerce')
+    if 'dateTimeCreated' in conversations.columns and conversations["dateTimeCreated"].dtype != str:
+        conversations['dateTimeCreated'] = to_datetime(conversations['dateTimeCreated']).dt.strftime('%Y-%m-%d %H:%M:%S')
     conversations.fillna('', inplace=True)
     conversations = conversations.to_dict(orient="records")
     return conversations

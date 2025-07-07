@@ -36,7 +36,7 @@ export const FooterComponent: React.FC = () => {
     const {
         selectedConversationMessages,
         userPrompt,
-        messageList : globalMessagesList 
+        messagesList : globalMessagesList 
     } = cloneDeep(useAppSelector((state) => state.messages));
     // const globalMessagesList = cloneDeep(useAppSelector((state) => state.messages.messagesList));
     const conversationsList = useAppSelector((state) => state.conversations.conversationsList);

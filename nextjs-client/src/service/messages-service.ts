@@ -9,14 +9,20 @@ import { isKeyInObject } from "@/utility/utility";
 
 export const getMessagesList = (
     conversationId: string
-) =>  async (dispatch: Dispatch) => {
+) =>  async (dispatch: Dispatch, getState : () => RootState) => {
     const response = await customAxios<MessageWithConvId[]>({
         url: `/conversations/${conversationId}/messages`,
         method: "get",
     })
-    dispatch(setMessagesList(response.data))
-    if(response.data && isKeyInObject(response.data, 'messages')){
+    const messagesListClone = cloneDeep(getState().messages.messagesList)
+    if(response.data.length > 0){
+      dispatch(setMessagesList([...messagesListClone, response.data[0]]))
+    }
+    if(Array.isArray(response.data) && isKeyInObject(response.data, 'messages')){
       dispatch(setSelectedMessagesList(response.data[0]['messages']))
+    }
+    if(Array.isArray(response.data) && response.data.length === 0){
+      dispatch(setSelectedMessagesList([]));
     }
     return true;
 };

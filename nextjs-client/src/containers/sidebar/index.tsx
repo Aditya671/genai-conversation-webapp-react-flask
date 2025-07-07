@@ -1,9 +1,9 @@
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isNull, isUndefined, size } from "lodash";
 import { Flex, Layout, message, Row, Space, Typography } from "antd";
 import { Conversation, setSelectedConversation } from "../../store/conversations/slice";
-// import { MessagesState } from "../../store/messages/slice";
+import { MessageWithConvId, setSelectedMessagesList } from "../../store/messages/slice";
 import ItemsListCard from "../../components/ItemsListCard";
 import { warningMessage } from "../../components/MessageModal";
 import SelectDropdown from "../../components/SelectDropdown";
@@ -23,10 +23,13 @@ export const SidebarComponent: React.FC = () => {
     const [warningModalApiComponent, contextHolder] = message.useMessage();
     
     const dispatch = useAppDispatch();
-    const conversationsList = cloneDeep(useAppSelector((state) => state.conversations.conversationsList ? state.conversations.conversationsList : []));
-    const selectedConversationId = useAppSelector((state) => state.conversations.selectedConversation ? state.conversations.selectedConversation.conversationId : '');
-    // const messagesList = useAppSelector((state: {messages: MessagesState}) => state.messages.messagesList);
-    
+    const {
+        conversationsList, selectedConversation
+    } = cloneDeep(useAppSelector((state) => state.conversations));
+    const selectedConversationId = selectedConversation;
+    const llmModels = useAppSelector((state) => state.base.llmModels);
+    const messagesList = useAppSelector((state) => state.messages.messagesList);
+
     const {
         isUserPromptFieldInActiveState,
         isSidebarCollapsed,
@@ -44,7 +47,7 @@ export const SidebarComponent: React.FC = () => {
         <SelectDropdown
             componentName={'modalSelector'}
             placeholder={'Select Modal'}
-            filterOptions={[{label: 'GPT-3.5', key: 'gpt-3.5', value: 'gpt-3.5'}, {label: 'GPT-4', key: 'gpt-4', value: 'gpt-4'}, {label: 'Claude', key: 'claude', value: 'claude'  }]}
+            filterOptions={llmModels.map(llm => ({label: llm.ModelName, key: llm.modelValue, value: llm.modelValue}))}
             sortOptions={true}
             defaultValue={null}
             onChange={handalModalSelectorChange}
@@ -85,14 +88,21 @@ export const SidebarComponent: React.FC = () => {
         if (isUserPromptFieldInActiveState) {
             return warningMessage(warningModalApiComponent, 'Please save/send the prompt message before selecting another conversation');
         }
+        const conversationsListClonedIds = cloneDeep(messagesList).map(c => c.conversationId)
         dispatch(setSelectedConversation(convObject));
-        dispatch(getMessagesList(String(convObject.conversationId)))
-        // const convMessage = messagesList.find((msg: MessageWithConvId) => msg.conversationId === convObject.conversationId);
-        // if (convObject && (size(messagesList) > 0) && (!isUndefined(convMessage) && !isNull(convMessage))) {
-        //     dispatch(setSelectedMessagesList(convMessage['messages']));
-        // }else {
-        //     dispatch(setSelectedMessagesList([]))
-        // }
+        if(!conversationsListClonedIds.includes(convObject.conversationId)){
+            dispatch(getMessagesList(String(convObject.conversationId)))
+        }else{
+            const convMessage = messagesList.find((msg: MessageWithConvId) => msg.conversationId === convObject.conversationId);
+            if (convObject && (size(messagesList) > 0) && (!isUndefined(convMessage) && !isNull(convMessage))) {
+                dispatch(setSelectedMessagesList(convMessage['messages']));
+            }else{
+                dispatch(setSelectedMessagesList([]));
+
+            }
+        }
+
+
     };
     
     const CollapsedDataContainer: React.FC<{ containerName: CollapsedDataContainerType }> = ({ containerName }) => (
