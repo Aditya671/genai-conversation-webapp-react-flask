@@ -66,6 +66,7 @@ export const SidebarComponent: React.FC = () => {
             onChange={handalModalSelectorChange}
             selectionType={undefined}
             onBeforeChange={undefined}
+            disabled={selectedConversation.conversationId === '0' ? true : false}
             showSelectAllOption={false}
             includeParentFilters={false}
             pageName={''}

@@ -28,3 +28,4 @@ yarn-error.log*
 */genai_env/
 client/src/App_old.js
 .vscode/
+.hintrc

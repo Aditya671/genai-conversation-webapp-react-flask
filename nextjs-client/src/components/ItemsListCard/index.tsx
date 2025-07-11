@@ -91,7 +91,8 @@ const ItemsListCard: React.FC<ItemsListCardProps> = (
                     type="Button"
                     icon={<DeleteOutlinedSVG />}
                     style={{ border: 'none', boxShadow: 'none', minWidth: 120 }}
-                    onClickHandle={() => handleMenuItemClick(String(itemObj.conversationId), '', conversationObjectUpdateTypes['DELETE'])}
+                    onClickHandle={() => handleMenuItemClick(String(itemObj.conversationId),
+                        itemObj.isActive, conversationObjectUpdateTypes['DELETE'])}
                 />
             ), key: 3
         },
@@ -103,7 +104,8 @@ const ItemsListCard: React.FC<ItemsListCardProps> = (
                     type="Button"
                     icon={<DownloadOutlinedSVG />}
                     style={{ border: 'none', boxShadow: 'none', minWidth: 120 }}
-                    onClickHandle={() => handleMenuItemClick(String(itemObj.conversationId), String(itemObj.conversationId), conversationObjectUpdateTypes['EXPORT'])}
+                    onClickHandle={() => handleMenuItemClick(String(itemObj.conversationId),
+                        itemObj.isArchieved, conversationObjectUpdateTypes['EXPORT'])}
                 />
             ), key: 4
         },
