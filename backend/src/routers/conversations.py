@@ -1,14 +1,13 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
+from bson import ObjectId
+from pandas import DataFrame, to_datetime
+
 from backend.src.models.Conversations import Conversations
 from backend.src.models import db
-from bson import ObjectId
-from fastapi import status
-from pandas import DataFrame, to_datetime
 from backend.src.models.HttpModels import OkResponse, CreatedResponse, AcceptedResponse
-conv_router = APIRouter()
 
-# Routes
-# userId = '67d1c4e768fd6d29d3043c98'
+
+conv_router = APIRouter()
 
 @conv_router.get(
     path="/",

@@ -25,6 +25,7 @@ export interface Message {
     messageDateTimeCreated: string;
     uploadedFiles?: UploadProps[] | null;
     isEdited: boolean;
+    isSaved: boolean;
     referenceMessageId: string | null;
 }
 export interface MessageWithConvId{
@@ -53,6 +54,7 @@ const initialState: MessagesState = {
         },
         messageDateTimeCreated : new Date().toISOString(),
         isEdited: false,
+        isSaved: false,
         referenceMessageId: null
     },
     messagesList: [],

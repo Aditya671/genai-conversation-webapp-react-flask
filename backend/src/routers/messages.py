@@ -1,8 +1,13 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, status
+from pandas import DataFrame, to_datetime, Timestamp
+
 from backend.src.routers.conversations import create_conversation
 from backend.src.models.Messages import Message, MessagesList
 from backend.src.models import db
-from pandas import DataFrame, to_datetime, Timestamp
+from backend.src.models.HttpModels import OkResponse, CreatedResponse, AcceptedResponse
+
+
+
 message_router = APIRouter()
 
 @message_router.put("/messages", response_model=int)
@@ -50,3 +55,46 @@ async def get_message(user_id: str, conversation_id: str):
     messages_list.fillna('', inplace=True)
     messages_list = messages_list.to_dict('records')
     return messages_list
+
+from pydantic import BaseModel
+from typing import Optional
+class UpdateFields(BaseModel):
+    isSaved: Optional[bool] = None
+    isEdited: Optional[bool] = None
+    
+@message_router.patch(
+    path="/{message_id}/",
+    response_model=list[MessagesList],
+    status_code=status.HTTP_202_ACCEPTED,  # default status code
+    description="Update Message Object",
+    tags=["ROOT"],
+    summary="""
+        Update Message Object fields such as
+        isSaved, isEdited,etc. provided in the request by the user
+    """,
+    responses={
+        status.HTTP_200_OK: {
+            "model": OkResponse, # custom pydantic model for 200 response
+            "description": "Ok Response",
+        },
+        status.HTTP_201_CREATED: {
+            "model": CreatedResponse,  # custom pydantic model for 201 response
+            "description": "Creates something from user request ",
+        },
+        status.HTTP_202_ACCEPTED: {
+            "model": AcceptedResponse,  # custom pydantic model for 202 response
+            "description": "Accepts request and handles it later",
+        },
+    }
+)
+async def patch_message_object(user_id: str, conversation_id: str, message_id: str, update_fields: UpdateFields):
+    db.messages.update_one({
+            "conversationId": conversation_id,
+            "messages.messageId": message_id
+        }, {
+            "$set": {update_fields.model_dump(exclude_none=True)}
+        }
+    )
+    updated_messages = db.messages.find_one({"conversationId": conversation_id, "userId": user_id})
+    return updated_messages
+

@@ -53,6 +53,7 @@ export const messageObject : Message = {
     messageDateTimeCreated: new Date().toISOString(),
     uploadedFiles: [],
     isEdited : false,
+    isSaved: false,
     referenceMessageId: null
 }
 
