@@ -17,13 +17,14 @@ import './index.css';
 import { getMessagesList } from "@/service/messages-service";
 import { conversationObjectUpdateTypes } from "@/helper/constants";
 import { updateConversationObject } from "@/service/conversations-service";
+import { useState } from "react";
 
 
 const { Title } = Typography;
 const { Content } = Layout;
 export const SidebarComponent: React.FC = () => {
     const [warningModalApiComponent, contextHolder] = message.useMessage();
-    
+    const [selectedModel, setSelectedModel] = useState<string[]>([]);
     const dispatch = useAppDispatch();
     const {
         conversationsList, selectedConversation
@@ -47,11 +48,12 @@ export const SidebarComponent: React.FC = () => {
         }
     }
 
-    const handalModalSelectorChange = (selectedModal: string[] | string) => {
+    const handalModalSelectorChange = (selectedModel: string[] | string) => {
         // Implement modal selector change logic
-        console.log('Selected Modal:', selectedModal);
+        console.log('Selected Modal:', selectedModel);
         const userAction = conversationObjectUpdateTypes['MODEL_CHANGE'];
-        return dispatch(updateConversationObject(String(selectedConversation.conversationId), String(selectedModal), userAction, userId))
+        setSelectedModel([String(selectedModel)])
+        return dispatch(updateConversationObject(String(selectedConversation.conversationId), String(selectedModel), userAction, userId))
     };
     const SelectModelComponent = () => (
         <SelectDropdown
@@ -59,7 +61,8 @@ export const SidebarComponent: React.FC = () => {
             placeholder={'Select Modal'}
             filterOptions={llmModels.map(llm => ({label: llm.ModelName, key: llm.modelValue, value: llm.modelValue}))}
             sortOptions={true}
-            defaultValue={null}
+            // defaultValue={[selectedConversation.selectedModel]}
+            value={selectedModel}
             onChange={handalModalSelectorChange}
             selectionType={undefined}
             onBeforeChange={undefined}

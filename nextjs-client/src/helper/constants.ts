@@ -23,11 +23,13 @@ export const messageAvatarSrcDefault = 'https://api.dicebear.com/7.x/miniavs/svg
 const dateTime = new Date().toISOString()
 
 export const newConversationObject = (
-    convId = v4(), convTitle = `Conversation-${dateTime}`, isNew = true, userId = 0
+    convId = String(v4()),
+    convTitle = `Conversation-${dateTime}`, isNew = true, userId = 0
 ) : Conversation => {
     return {
         conversationId: convId,
         conversationTitle: convTitle,
+        selectedModel: '',
         dateTimeCreated: dateTime,
         isNew : isNew,
         isActive: true,

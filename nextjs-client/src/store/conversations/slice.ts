@@ -1,8 +1,10 @@
+import { newConversationObject } from '@/helper/constants';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface Conversation {
     conversationId: string | number;
     conversationTitle: string;
+    selectedModel: string;
     dateTimeCreated?: string;
     isNew?: boolean;
     isActive?: boolean;
@@ -18,7 +20,7 @@ export interface ConversationsState {
 }
 
 const initialState: ConversationsState = {
-    selectedConversation: { conversationId: 0, conversationTitle: '' },
+    selectedConversation: newConversationObject('0', ''),
     conversationsList: [],
     pinnedConversations: [],
 };

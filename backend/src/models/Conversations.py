@@ -9,7 +9,7 @@ class Conversations(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     conversationId: str
     conversationTitle: str
-    selectedModal : str
+    selectedModel : str
     dateTimeCreated: Union[str,datetime]
     userId: str
     isNew: bool

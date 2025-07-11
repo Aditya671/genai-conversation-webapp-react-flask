@@ -1,6 +1,6 @@
 import os
 import json
-from typing import Optional
+from typing import Optional, List
 from llama_index.core import (
     SimpleDirectoryReader, VectorStoreIndex,
     StorageContext, load_index_from_storage, Settings
@@ -54,7 +54,8 @@ class LocalOnlyFileIndexer:
     def _init_llm(self):
         model = AiModel.O4_MINI_HIGH
         return load_llm(model=model.value, index_name=self.index_name)
-    
+
+
     def _get_storage_context(self, load_existing = False) -> StorageContext:
         index_dir = os.path.join(self.index_data_dir, self.index_name)
         os.makedirs(index_dir, exist_ok=True)
@@ -99,51 +100,86 @@ class LocalOnlyFileIndexer:
             json.dump(graph_store_dict, f, indent=2)
         return True
 
-
-    def index_uploaded_file(self, uploaded_file, index_name: Optional[str] = None) -> str:
-        """
-        Saves and indexes an uploaded file to local storage.
-        """
+    def _index_documents_from_files(self, file_paths: List[str], index_name: Optional[str]) -> str:
         index_name = index_name or self.index_name
         index_dir = os.path.join(self.index_data_dir, index_name)
         os.makedirs(index_dir, exist_ok=True)
 
-        file_path = os.path.join(self.root_dir, uploaded_file.name)
-        with open(file_path, "wb") as f:
-            f.write(uploaded_file.read())
+        required_exts = list(set(os.path.splitext(f)[1] for f in file_paths))
+        reader = SimpleDirectoryReader(input_files=file_paths, recursive=False, required_exts=required_exts)
+        documents = reader.load_data(show_progress=True)
 
-        documents = SimpleDirectoryReader(input_files=[file_path]).load_data()
-        
         storage_context = self._get_storage_context()
-
         index = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
+
         try:
             index.storage_context.vector_store.persist(fs=index_dir, persist_path=index_dir)
-        except:
+        except Exception as e:
+            print(f"[WARN] Persisting with vector_store failed: {e}. Falling back to context persist.")
             index.storage_context.persist(persist_dir=index_dir)
         else:
-            self._dump_debug_files(documents, storage_context, index_dir) # Dump chunk metadata if LLamaIndex persiting fails
+            self._dump_debug_files(documents, storage_context, index_dir)
 
         print(f"[INFO] Index created at: {index_dir}")
         return index_dir
 
 
-    def index_files(self, input_dir: str, num_files_limit: Optional[int] = None):
+    def index_uploaded_file(self, uploaded_file, index_name: Optional[str] = None) -> str:
         """
-        Index all files in a directory, chunk, embed, and store locally as a LlamaIndex index.
+        Saves and indexes an uploaded file to local storage.
         """
-        files = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]
-        if num_files_limit:
-            files = files[:num_files_limit]
-        file_paths = [os.path.join(input_dir, fname) for fname in files]
+        file_path = os.path.join(self.root_dir, uploaded_file.name)
+        with open(file_path, "wb") as f:
+            f.write(uploaded_file.read())
+
+        return self._index_documents_from_files([file_path], index_name)
+
+
+    def index_uploaded_files(
+        self,
+        input_dir: Optional[str] = None,
+        file_list: Optional[List[str]] = None,
+        num_files_limit: Optional[int] = None,
+        index_name: Optional[str] = None
+    ) -> str:
+        """
+        Index files from either a list of uploaded file objects or a directory path.
+
+        Args:
+            input_dir (str): Path to directory containing files.
+            file_list (List): List of uploaded file objects (with .name and .read()).
+            num_files_limit (int): Max number of files to index.
+            index_name (str): Optional custom index name.
+
+        Returns:
+            str: Path to the index directory.
+        """
+        file_paths = []
+
+        if file_list:
+            for uploaded_file in file_list[:num_files_limit] if num_files_limit else file_list:
+                saved_path = os.path.join(self.root_dir, uploaded_file.name)
+                with open(saved_path, "wb") as f:
+                    f.write(uploaded_file.read())
+                file_paths.append(saved_path)
+
+        elif input_dir:
+            all_files = [
+                f for f in os.listdir(input_dir)
+                if os.path.isfile(os.path.join(input_dir, f))
+            ]
+            if num_files_limit:
+                all_files = all_files[:num_files_limit]
+            file_paths = [os.path.join(input_dir, fname) for fname in all_files]
+
+        else:
+            raise ValueError("Either 'file_list' or 'input_dir' must be provided.")
+
         if not file_paths:
-            return
-        reader = SimpleDirectoryReader(input_files=file_paths, recursive=False, required_exts=[os.path.splitext(f)[1] for f in file_paths])
-        documents = reader.load_data(show_progress=False)
-        storage_context = self._get_storage_context()
-        index = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
-        index.storage_context.vector_store.persist()
-        return os.path.join(self.index_data_dir, self.index_name)
+            raise ValueError("No valid files found to index.")
+
+        return self._index_documents_from_files(file_paths, index_name)
+
     
     def create_local_citation_chat_engine(
         self,

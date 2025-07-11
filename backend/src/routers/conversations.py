@@ -83,10 +83,10 @@ from pydantic import BaseModel
 from typing import Optional
 
 class UpdateFields(BaseModel):
-    conversationTitle: Optional[str]
-    isActive: Optional[bool]
-    isPinned: Optional[bool]
-    selectedModel : Optional[str]
+    conversationTitle: Optional[str] = None
+    isActive: Optional[bool] = None
+    isPinned: Optional[bool] = None
+    selectedModel: Optional[str] = None
     
 @conv_router.patch(
     path="/{conversation_id}/",
@@ -116,7 +116,7 @@ class UpdateFields(BaseModel):
 async def patch_conversation_object(user_id: str, conversation_id: str, update_fields: UpdateFields):
     db.conversations.update_one(
         filter={'conversationId': conversation_id, 'userId': user_id},
-        update={'$set': update_fields.dict()}
+        update={'$set': update_fields.model_dump(exclude_none=True)}
     )
     updated_conversation = db.conversations.find_one({"conversationId": conversation_id, "userId": user_id})
     return updated_conversation
