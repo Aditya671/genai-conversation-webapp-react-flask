@@ -34,32 +34,35 @@ const ItemsListCard: React.FC<ItemsListCardProps> = (
     const userId = useAppSelector((state) => state.users.userId);
     const isConversationTitleEditingActive = useAppSelector((state: {base: BaseState}) => state.base.isConversationTitleEditingActive);
 
-    const handleMenuItemClick = async (convId: string, convTitle: string, action: string) => {
+    const handleMenuItemClick = async (convId: string, userValue: string | boolean, action: string) => {
         const userAction = action || conversationObjectUpdateTypes['DEFAULT'];
+        const convClone = cloneDeep(conversations);
+        const convObjId = convClone.findIndex((c: Conversation) => c.conversationId === convId);
+        let updatedValue = typeof(userValue) === "boolean" ? !userValue : userValue
         if (action === conversationObjectUpdateTypes['TITLE']) {
-            const convClone = cloneDeep(conversations);
-            const convObjId = convClone.findIndex((c: Conversation) => c.conversationId === convId);
-            if (convObjId > -1) {
-                dispatch(updateConversationObject(convId, convTitle, userAction, userId))
-            }
-            return dispatch(setConversationTitleEditingActiveState({isEditing:false, conversationId: ''}))
+            updatedValue = isConversationTitleEditingActive.conversationTitle
+            return dispatch(setConversationTitleEditingActiveState({isEditing:false, conversationId: '', conversationTitle: ''}))
         }
         if (action === conversationObjectUpdateTypes['EXPORT']) {
             // Export logic here
         }
-        return getConversationsList(userId);
+        if (convObjId > -1) {
+            dispatch(updateConversationObject(convId, updatedValue, userAction, userId))
+        }
+        return dispatch(getConversationsList(userId));
         // return true;
     };
 
-    const menuOptions = (convId: string | '' = '', convTitle: string | '' = '') => ([
+    const menuOptions = (itemObj: Conversation) => ([
         {
             label: (
                 <ButtonComponent
-                    id={`pin-${convId}`}
-                    title="Pin"
+                    id={`pin-${itemObj.conversationId}`}
+                    title={itemObj.isPinned ? "UnPin" : "Pin"}
                     type="Button"
                     icon={<PushpinFilledSVG />}
-                    onClickHandle={() => handleMenuItemClick(String(convId), convTitle, conversationObjectUpdateTypes['PIN'])}
+                    onClickHandle={() => handleMenuItemClick(String(itemObj.conversationId),
+                        itemObj.isPinned, conversationObjectUpdateTypes['PIN'])}
                     style={{ border: 'none', boxShadow: 'none', minWidth: 120 }}
                 />
             ), key: 1
@@ -67,14 +70,15 @@ const ItemsListCard: React.FC<ItemsListCardProps> = (
         {
             label: (
                 <ButtonComponent
-                    id={`rename-${convId}`}
+                    id={`rename-${itemObj.conversationId}`}
                     title="Rename"
                     type="Button"
                     icon={<EditFilledSVG />}
                     style={{ border: 'none', boxShadow: 'none', minWidth: 120 }}
                     onClickHandle={() => {
-                        dispatch(setConversationTitleEditingActiveState({isEditing:true, conversationId: String(convId)}));
-                        setConvNewTitle(convTitle);
+                        dispatch(setConversationTitleEditingActiveState(
+                            {isEditing:true, conversationId: String(itemObj.conversationId), conversationTitle: convNewTitle}));
+                        // setConvNewTitle(convTitle);
                     }}
                 />
             ), key: 2
@@ -82,24 +86,24 @@ const ItemsListCard: React.FC<ItemsListCardProps> = (
         {
             label: (
                 <ButtonComponent
-                    id={`delete-${convId}`}
+                    id={`delete-${itemObj.conversationId}`}
                     title="Delete"
                     type="Button"
                     icon={<DeleteOutlinedSVG />}
                     style={{ border: 'none', boxShadow: 'none', minWidth: 120 }}
-                    onClickHandle={() => handleMenuItemClick(String(convId), '', conversationObjectUpdateTypes['DELETE'])}
+                    onClickHandle={() => handleMenuItemClick(String(itemObj.conversationId), '', conversationObjectUpdateTypes['DELETE'])}
                 />
             ), key: 3
         },
         {
             label: (
                 <ButtonComponent
-                    id={`export-${convId}`}
+                    id={`export-${itemObj.conversationId}`}
                     title="Export"
                     type="Button"
                     icon={<DownloadOutlinedSVG />}
                     style={{ border: 'none', boxShadow: 'none', minWidth: 120 }}
-                    onClickHandle={() => handleMenuItemClick(String(convId), '', conversationObjectUpdateTypes['EXPORT'])}
+                    onClickHandle={() => handleMenuItemClick(String(itemObj.conversationId), String(itemObj.conversationId), conversationObjectUpdateTypes['EXPORT'])}
                 />
             ), key: 4
         },
@@ -130,7 +134,7 @@ const ItemsListCard: React.FC<ItemsListCardProps> = (
                             actions={[
                                 <Dropdown
                                     key={item.conversationId}
-                                    menu={{ items: menuOptions(String(item.conversationId), item.conversationTitle) }}>
+                                    menu={{ items: menuOptions(item) }}>
                                     <ButtonComponent
                                         style={{ background: 'transparent', border: 'none', color: "#fff" }}
                                         icon={<EllipsisOutlinedSVG />} type="text" onClickHandle={() => {}} />
@@ -152,7 +156,7 @@ const ItemsListCard: React.FC<ItemsListCardProps> = (
                                         selectedValue={item.conversationTitle}
                                         userValue={convNewTitle}
                                         allowClear
-                                        onClear={() => dispatch(setConversationTitleEditingActiveState({isEditing: false, conversationId: ''}))}
+                                        onClear={() => dispatch(setConversationTitleEditingActiveState({isEditing: false, conversationId: '', conversationTitle: ''}))}
                                     />
                                     <ButtonComponent
                                         id={`rename-conversation-button-${item.conversationId}`}

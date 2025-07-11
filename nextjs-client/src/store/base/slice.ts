@@ -15,7 +15,7 @@ export interface BaseState {
     isUserPromptFieldInActiveState: boolean;
     isSidebarCollapsed: boolean;
     isVoiceRecordingActive: boolean; // Optional field for voice recording state,
-    isConversationTitleEditingActive: {isEditing:boolean, conversationId: string}; // Optional field for conversation title editing state
+    isConversationTitleEditingActive: {isEditing:boolean, conversationId: string, conversationTitle: string}; // Optional field for conversation title editing state
     showCollapsedData: CollapsedDataContainerType; // Restrict to CollapsedDataContainerType
     uploadedFilesTempLocation?: UploadFile[] | []; // Optional field for uploaded files
     uploadedFilesDisplayList? : collapseItemsInterface[] | [],
@@ -33,7 +33,7 @@ const initialState: BaseState = {
     isUserPromptFieldInActiveState: false,
     isSidebarCollapsed: false,
     isVoiceRecordingActive: false,
-    isConversationTitleEditingActive: {isEditing: false, conversationId: ''}, // Default state for conversation title editing
+    isConversationTitleEditingActive: {isEditing: false, conversationId: '', conversationTitle: ''}, // Default state for conversation title editing
     showCollapsedData: '', // Default value
     uploadedFilesTempLocation: [],
     uploadedFilesDisplayList: [],
@@ -53,7 +53,7 @@ export const baseSlicer = createSlice({
         setVoiceRecordingActiveState: (state, action: PayloadAction<boolean>) => {
             state.isVoiceRecordingActive = action.payload;
         },
-        setConversationTitleEditingActiveState: (state, action: PayloadAction<{isEditing:boolean, conversationId: string}>) => {
+        setConversationTitleEditingActiveState: (state, action: PayloadAction<{isEditing:boolean, conversationId: string, conversationTitle: string}>) => {
             state.isConversationTitleEditingActive = action.payload;
         },
         setShowCollapsedData: (state, action: PayloadAction<CollapsedDataContainerType>) => {

@@ -1,11 +1,29 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
+from backend.src.routers.conversations import create_conversation
 from backend.src.models.Messages import Message, MessagesList
 from backend.src.models import db
-from pandas import DataFrame
+from pandas import DataFrame, to_datetime, Timestamp
 message_router = APIRouter()
 
 @message_router.put("/messages", response_model=int)
 async def create_message(user_id: str, conversation_id: str, message: Message):
+    conversation_existence = db.conversations.find_one({'conversation_id': conversation_id})
+    if(conversation_existence == None):
+        date_time_formatted = to_datetime(Timestamp.now())
+        date_time_formatted = date_time_formatted.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        conv_obj = {
+            'conversationId': conversation_id,
+            'conversationTitle': f"Conversation-{date_time_formatted}",
+            'selectedModel' : '',
+            'dateTimeCreated': date_time_formatted,
+            'userId': user_id,
+            'isNew': False,
+            'isActive': True,
+            'isArchieved': False,
+            'isPinned': False,
+        }
+        create_conversation(user_id, conv_obj)
+
     message_dict = message.dict(by_alias=True)
     new_message  = db.messages.update_one(
     {'conversationId': conversation_id},

@@ -29,7 +29,7 @@ export const getConversationsList = (
 
 export const updateConversationObject = (
     convId: string,
-    convTitle: string,
+    userValue: string | boolean,
     updateType: string = conversationObjectUpdateTypes["DEFAULT"],
     userId: string = 'local_user'
 ) => async (dispatch: Dispatch) => {
@@ -37,15 +37,15 @@ export const updateConversationObject = (
         console.log("No update type provided");
         return;
     }
-    let apiBody: Record<string, string | boolean> = { conversationTitle: convTitle };
+    let apiBody: Record<string, string | boolean> = { conversationTitle: userValue };
     if (updateType === conversationObjectUpdateTypes["PIN"]) {
-        apiBody = { isPinned: true };
+        apiBody = { isPinned: userValue };
     }
     if (updateType === conversationObjectUpdateTypes["DELETE"]) {
-        apiBody = { isActive: false };
+        apiBody = { isActive: userValue };
     }
     if (updateType === conversationObjectUpdateTypes["MODEL_CHANGE"]) {
-        apiBody = { selectedModel: convTitle };
+        apiBody = { selectedModel: userValue };
     }
     try {
         const response = await customAxios({

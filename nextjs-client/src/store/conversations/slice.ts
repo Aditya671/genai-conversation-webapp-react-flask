@@ -6,11 +6,12 @@ export interface Conversation {
     conversationTitle: string;
     selectedModel: string;
     dateTimeCreated?: string;
-    isNew?: boolean;
-    isActive?: boolean;
-    isPinned?: boolean;
-    dateTimePinned?: string;
-    userId?: string | number;
+    isNew: boolean;
+    isActive: boolean;
+    isPinned: boolean;
+    isArchieved: boolean;
+    dateTimePinned: string;
+    userId: string | number;
 }
 
 export interface ConversationsState {

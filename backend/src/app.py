@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, status, Response
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from uvicorn import run
 from os import path
 
@@ -26,9 +27,9 @@ app.add_middleware(
     # allow_methods=constants.allowed_methods,
     allow_methods=['*'],
     allow_headers=["*"],
-    max_age=constants.allowed_max_age
+    max_age=constants.allowed_max_age,
 )
-
+app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
 # Configure Cache (Using aiocache)
 from aiocache import caches
 from backend.src.config.cache_config import cache_config

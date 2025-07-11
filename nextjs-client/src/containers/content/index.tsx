@@ -37,9 +37,12 @@ export const ContentComponent: React.FC<ContentComponentProps> = ({ children }) 
         }
     }, [selectedConversationMessages]);
 
-    const handleCopySelectedPrompt = (msg: string) => {
-        navigator.clipboard.writeText(msg);
-        dispatch(setUserMessagesPrompt(msg));
+    const handleCopySelectedPrompt = (msg: string, msgType: string) => {
+        if (msgType === messageTypes['user']){
+            dispatch(setUserMessagesPrompt(msg));
+        }
+        return navigator.clipboard.writeText(msg);
+   
     };
     const handleEditSelectedPrompt = (msgId: string, convId?: string) => {
         // Implement edit logic
@@ -109,7 +112,7 @@ export const ContentComponent: React.FC<ContentComponentProps> = ({ children }) 
                                         tooltipText={msg.messageType === messageTypes['user'] ? "Copy Prompt": "Copy Response"}
                                         themeType="IconButton"
                                         icon={<CopyFilledSVG />}
-                                        onClickHandle={() => handleCopySelectedPrompt(msg.messageDescription)}
+                                        onClickHandle={() => handleCopySelectedPrompt(msg.messageDescription, msg.messageType)}
                                         style={{ background: 'transparent', border: 'none' }}
                                     />,
                                     ...msg.messageType === messageTypes['user'] ? [<ButtonComponent
