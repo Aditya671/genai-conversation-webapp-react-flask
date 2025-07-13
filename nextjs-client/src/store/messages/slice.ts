@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { messageTypes, messageAvatarSrcDefault } from '../../helper/constants';
-import type { UploadProps } from "antd";
+import { UploadFile } from 'antd';
+import { RcFile } from 'antd/es/upload';
 
 export interface TableDataItem {
     [key: string]: unknown;
@@ -23,7 +24,7 @@ export interface Message {
     messageSubDescription: string;
     messageAdditionalInfo: MessageAdditionalInfo;
     messageDateTimeCreated: string;
-    uploadedFiles?: UploadProps[] | null;
+    uploadedFiles: UploadFile[] & RcFile[];
     isEdited: boolean;
     isSaved: boolean;
     referenceMessageId: string | null;
@@ -53,6 +54,7 @@ const initialState: MessagesState = {
             extra: {},
         },
         messageDateTimeCreated : new Date().toISOString(),
+        uploadedFiles: [],
         isEdited: false,
         isSaved: false,
         referenceMessageId: null

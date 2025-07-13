@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UploadFile } from 'antd';
-
+import { RcFile } from 'antd/es/upload';
 
 export interface LlmModels{
     id: string | number;
@@ -17,7 +17,7 @@ export interface BaseState {
     isVoiceRecordingActive: boolean; // Optional field for voice recording state,
     isConversationTitleEditingActive: {isEditing:boolean, conversationId: string, conversationTitle: string}; // Optional field for conversation title editing state
     showCollapsedData: CollapsedDataContainerType; // Restrict to CollapsedDataContainerType
-    uploadedFilesTempLocation?: UploadFile[] | []; // Optional field for uploaded files
+    uploadedFilesTempLocation: UploadFile[] & RcFile[]; // Optional field for uploaded files
     uploadedFilesDisplayList? : collapseItemsInterface[] | [],
     llmModels: LlmModels[] | []
 }
@@ -59,7 +59,7 @@ export const baseSlicer = createSlice({
         setShowCollapsedData: (state, action: PayloadAction<CollapsedDataContainerType>) => {
             state.showCollapsedData = action.payload;
         },
-        setUploadedFilesTempLocation: (state, action: PayloadAction<UploadFile[] | []>) => {
+        setUploadedFilesTempLocation: (state, action: PayloadAction<UploadFile[] & RcFile[]>) => {
             state.uploadedFilesTempLocation = action.payload;
         },
         setUploadedFilesDisplayList: (state, action: PayloadAction<collapseItemsInterface[] | []>) => {

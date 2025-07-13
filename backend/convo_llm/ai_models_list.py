@@ -59,7 +59,6 @@ class AiModel(str, Enum):
     REDPAJAMA_INCITE_7B = "redpajama-incite-7b" # Free, open-source, Together. Good for chat and general tasks.
     STARLING_LM_7B = "starling-lm-7b" # Free, open-source, HuggingFace. Good for reasoning and chat.
     NOUS_HERMES_2_MIXTRAL_8X7B = "nous-hermes-2-mixtral-8x7b" # Free, open-source, Nous Research. Strong at reasoning and following instructions.
-    VICUNA_7B = "vicuna-7b"
     OPENHERMES_2_5_MISTRAL_7B = "openhermes-2.5-mistral-7b" # Free, open-source, Mistral-based. Good for chat and reasoning.
     OLLAMA_VICUNA_7B = "ollama-vicuna-7b" # Free, open-source, Llama-based, Ollama format. Good for chat and local inference.
     CODELLAMA_7B = "codellama-7b"                # Meta's open-source code LLM. Excellent for code generation and reasoning.
@@ -69,7 +68,7 @@ class AiModel(str, Enum):
     QWEN_7B = "qwen-7b"                          # Alibaba's open-source model. Good for reasoning, chat, and code.
 
 
-class AiModelHosted(Enum):
+class AiModelHosted(str, Enum):
     """
     Free and open-source models available via HuggingFace Inference API (cloud, no local download required).
     Usage: These models do not require local download or GPU, but do require a HuggingFace API key for hosted inference.

@@ -1,12 +1,14 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, UploadFile, File, Path, Query
 from pandas import DataFrame, to_datetime, Timestamp
-
+from typing import List, Union
+from backend.convo_llm.ai_models_list import AiModel, AiModelHosted
+from backend.convo_llm.index_locally import LocalOnlyFileIndexer
 from backend.src.routers.conversations import create_conversation
 from backend.src.models.Messages import Message, MessagesList
 from backend.src.models import db
 from backend.src.models.HttpModels import OkResponse, CreatedResponse, AcceptedResponse
-
-
+from os import makedirs, path
+from fastapi.responses import JSONResponse
 
 message_router = APIRouter()
 
@@ -29,7 +31,8 @@ async def create_message(user_id: str, conversation_id: str, message: Message):
         }
         create_conversation(user_id, conv_obj)
 
-    message_dict = message.dict(by_alias=True)
+    message_dict = message.model_dump(by_alias=True)
+    # message_dict['uploadedFiles'] = uploaded_files_metadata
     new_message  = db.messages.update_one(
     {'conversationId': conversation_id},
     {
@@ -98,3 +101,84 @@ async def patch_message_object(user_id: str, conversation_id: str, message_id: s
     updated_messages = db.messages.find_one({"conversationId": conversation_id, "userId": user_id})
     return updated_messages
 
+@message_router.patch(
+    path="/{message_id}/upload_file",
+    response_model=List[MessagesList],
+    status_code=status.HTTP_202_ACCEPTED,
+    description="Update Message Object",
+    tags=["ROOT"],
+    summary="""
+        Update Message Object fields such as
+        isSaved, isEdited, etc. provided in the request by the user
+    """,
+    responses={
+        status.HTTP_200_OK: {
+            "model": OkResponse,
+            "description": "Ok Response",
+        },
+        status.HTTP_201_CREATED: {
+            "model": CreatedResponse,
+            "description": "Creates something from user request",
+        },
+        status.HTTP_202_ACCEPTED: {
+            "model": AcceptedResponse,
+            "description": "Accepts request and handles it later",
+        },
+    }
+)
+async def patch_message_object(
+    message_id: str,
+    user_id: str,
+    conversation_id: str,
+    upload_files: List[UploadFile] = File(...),
+):
+    upload_dir = "uploaded_files/"
+    makedirs(upload_dir, exist_ok=True)
+
+    uploaded_files_metadata = []
+
+    for file in upload_files:
+        file_location = path.join(upload_dir, file.filename)
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
+
+        uploaded_files_metadata.append({
+            "filename": file.filename,
+            "content_type": file.content_type,
+            "size": path.getsize(file_location),
+            "storage_url": f"/uploaded_files/{file.filename}"
+        })
+    user_model = db.conversations.find_one({'conversationId': conversation_id})
+    
+    def resolve_model(model_str: str) -> Union[AiModel, AiModelHosted]:
+        if model_str in AiModel._value2member_map_:
+            return AiModel(model_str)
+        elif model_str in AiModelHosted._value2member_map_:
+            return AiModelHosted(model_str)
+        else:
+            raise ValueError(f"Invalid model: {model_str}")
+    model_obj = None
+    if user_model['selectedModel']:
+        model_obj = resolve_model(user_model['selectedModel'])
+        
+    indexer = LocalOnlyFileIndexer(root_dir='./uploaded_files', index_name='test', model=model_obj)
+    # Simulate update (uncomment when implementing real DB logic)
+    db.messages.update_one(
+        {
+            "conversationId": conversation_id,
+            "messages.messageId": message_id
+        },
+        {
+            "$set": {
+                "messages.$.uploadedFiles": uploaded_files_metadata
+            }
+        }
+    )
+
+    updated_doc = db.messages.find_one({
+        "conversationId": conversation_id
+    })
+
+    if not updated_doc:
+        return JSONResponse(status_code=404, content={"detail": "Message not found"})
+    return updated_doc

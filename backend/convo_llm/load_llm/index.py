@@ -4,7 +4,7 @@ from typing import Any, Optional, Union
 from llama_index.llms.openai import OpenAI
 from llama_index.llms.ollama import Ollama
 from llama_index.llms.huggingface import HuggingFaceLLM
-from backend.convo_llm.ai_models_list import AiModel
+from backend.convo_llm.ai_models_list import AiModel, AiModelHosted
 
 DEFAULT_TEMPERATURE = 0.1
 DEFAULT_TIMEOUT = 10.0
@@ -27,7 +27,7 @@ OLLAMA_MODELS = {
 }
 
 def load_llm(
-    model: AiModel,
+    model: Union[AiModel, AiModelHosted],
     index_name: str = None,
     temperature: Optional[float] = DEFAULT_TEMPERATURE,
     timeout: Optional[float] = DEFAULT_TIMEOUT,
@@ -146,7 +146,7 @@ def load_llm(
 
 
 def load_embed(
-    model: AiModel,
+    model: Union[AiModel, AiModelHosted],
     temperature: Optional[float] = 0.1,
     timeout: Optional[float] = 10.0,
     context_window: int = 2048,
@@ -228,11 +228,11 @@ def load_embed(
             context_window=context_window,
             max_new_tokens=max_new_tokens,
             tokenizer_name=tokenizer_name or model.value,
-            model_kwargs=model_kwargs or {},
+            model_kwargs={**(model_kwargs or {}), "token": os.getenv("HUGGINGFACE_API_KEY")},
             generate_kwargs=generate_kwargs or {},
             device_map=device_map,
             callback_manager=callback_manager,
-            **kwargs
+            # **kwargs
         )
         logger.info(f"Embedding model loaded successfully: {model} (HuggingFace)")
         return embed_model

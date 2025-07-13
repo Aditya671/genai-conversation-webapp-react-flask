@@ -1,6 +1,6 @@
 import os
 import json
-from typing import Optional, List
+from typing import Optional, List, Union
 from llama_index.core import (
     SimpleDirectoryReader, VectorStoreIndex,
     StorageContext, load_index_from_storage, Settings
@@ -10,26 +10,9 @@ from llama_index.core.chat_engine import CondensePlusContextChatEngine
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.vector_stores.types import VectorStoreQueryMode
 from backend.convo_llm.load_llm.index import load_embed, load_llm
-# from aiim.config import config
-from backend.convo_llm.ai_models_list import AiModel
+from backend.convo_llm.ai_models_list import AiModel, AiModelHosted
+from backend.convo_llm.prompt import CITATION_QA_TEMPLATE_CONCISE, CITATION_QA_TEMPLATE_DETAILED
 from llama_index.core import Settings
-# from aiim.credential_manager import CredentialManager
-# from llama_index.llms.azure_openai import AzureOpenAI
-# from azure.core.credentials import AzureKeyCredential
-# from azure.identity import DefaultAzureCredential, get_bearer_token_provider
-
-
-        
-        
-
-# from aiim.config import config
-# from aiim.aiim_types import AIIMModel, AIIMResponseMode
-# from aiim.credential_manager import CredentialManager
-# from llama_index.llms.azure_openai import AzureOpenAI
-# from azure.core.credentials import AzureKeyCredential
-# from azure.identity import DefaultAzureCredential, get_bearer_token_provider
-from aiim.prompts import CITATION_QA_TEMPLATE_CONCISE, CITATION_QA_TEMPLATE_DETAILED
-
 
 class LocalOnlyFileIndexer:
     """
@@ -41,13 +24,14 @@ class LocalOnlyFileIndexer:
         root_dir: str = "user_uploads",
         index_data_dir: Optional[str] = None,
         index_name: str = "default",
-        model: Optional[AiModel] = None
+        model: Optional[Union[AiModel, AiModelHosted]] = None
     ):
         self.root_dir = root_dir
         self.index_data_dir = index_data_dir or os.path.join(self.root_dir, "index_data")
         self.index_name = index_name
+        self.model = model
         os.makedirs(self.index_data_dir, exist_ok=True)
-        self.embed_model = load_embed(index_name=index_name)
+        self.embed_model = load_embed(index_name=index_name, model=self.model)
         Settings.embed_model = self.embed_model
         Settings.llm = self._init_llm()
 

@@ -34,6 +34,7 @@ export const newConversationObject = (
         isNew : isNew,
         isActive: true,
         isPinned: false,
+        isArchieved: false,
         dateTimePinned: '',
         userId: userId,
     }
@@ -66,11 +67,6 @@ export const createNewMessage = (prompt : string, convId? : string | number) => 
         messageType: messageTypes.user,
         messageId: v4(),
         messageAvatarSrc: messageAvatarSrcDefault,
-        messageAdditionalInfo:{
-            tableData:[],
-            chartData:[],
-            extra:{}
-        }
     };
 };
 

@@ -20,7 +20,7 @@ import {
     setVoiceRecordingActiveState,
     setUploadedFilesDisplayList
 } from '../../store/base/slice';
-import { postUserPrompt } from '../../service/messages-service';
+import { postUserPrompt, uploadFilesThunk } from '../../service/messages-service';
 import { useSpeechRecognizer } from '../../hooks/useSpeechRecognizer';
 import VoiceTypingFilledSVG from '../../assets/svg/VoiceTypingFilledSVG';
 import ClipFilledSVG from '../../assets/svg/ClipFilledSVG';
@@ -28,17 +28,15 @@ import SendOutlinedSVG from '../../assets/svg/SendOutlinedSVG';
 import { PageHeading } from '@/components/PageHeading';
 import DeleteOutlinedSVG from '@/assets/svg/DeleteOutlinedSVG';
 import './footer.css'
+import { RcFile, UploadChangeParam } from 'antd/es/upload';
 
 
 export const FooterComponent: React.FC = () => {
-    
+
+    const dispatch = useAppDispatch();    
     const {
-        // selectedConversationMessages,
         userPrompt,
-        // messagesList : globalMessagesList 
     } = cloneDeep(useAppSelector((state) => state.messages));
-    // const globalMessagesList = cloneDeep(useAppSelector((state) => state.messages.messagesList));
-    // const conversationsList = useAppSelector((state) => state.conversations.conversationsList);
     const selectedConversation = useAppSelector((state) => state.conversations.selectedConversation);
 
     const {
@@ -48,10 +46,12 @@ export const FooterComponent: React.FC = () => {
     } = useAppSelector((state) => state.base);
     const { isListening, startRecognition, stopRecognition } = useSpeechRecognizer();
 
+    
     const [uploadFilesCardPosition, setUploadFilesCardPosition] = useState<{inset: string}>({
         inset: '-40px 0 0 0',
     }); 
-    const dispatch = useAppDispatch();
+    
+    
     const handleUserPrompt = (colomnName: string, row: Message | Conversation | RecordType, rowIndex: number, promptMessage: InputFieldValueType) => {
         dispatch(setUserMessagesPrompt(String(promptMessage)));
         if (!promptMessage) {
@@ -71,15 +71,32 @@ export const FooterComponent: React.FC = () => {
         }else{
             newMsgObj['conversationId'] = uuidv4()
         }
+        if(Array.isArray(uploadedFilesTempLocation) && uploadedFilesTempLocation.length > 0){
+            newMsgObj['uploadedFiles'] = uploadedFilesTempLocation
+        }
         dispatch(postUserPrompt(newMsgObj));
         dispatch(setUserMessagesPrompt(''));
         return dispatch(setUserPromptFieldActiveState(false));
     };
 
-    const handleUploadPromptClick = () => {
-        // Implement upload logic
-    };
-    const handleUploadChange = async (info: { fileList: UploadFile[] }) => {
+    // const handleUploadPromptClick = () => {
+    //     // Implement upload logic
+    //     uploadedFilesTempLocation.forEach(file => {
+    //         formData.append('files', file.originFileObj);
+    //     });
+    // };
+    const handleUploadChange = async (info: UploadChangeParam<UploadFile<unknown>>) => {
+        const fileList = info.fileList.slice(0, 5);
+        const rcFiles: RcFile[] = fileList.map(f => f.originFileObj as RcFile);
+
+        // Dispatch upload thunk
+        const uploadedMetadata = await dispatch(uploadFilesThunk(rcFiles));
+
+        // Optionally use metadata
+        if (uploadedMetadata) {
+            console.log("Uploaded metadata:", uploadedMetadata);
+            // Save in redux or process further
+        }
         const items = [{
             key: '1',
             label: <PageHeading headingLevel={5} headingText='Uploaded Files'
@@ -96,7 +113,7 @@ export const FooterComponent: React.FC = () => {
                     id='uploaded-files-list'
                     dataSource={uploadedFilesTempLocation}
                     renderItem={() => 
-                        info.fileList.slice(-5).map((file) => (
+                        fileList.slice(-5).map((file) => (
                         <List.Item
                             actions={[
                                 <ButtonComponent key={file.uid}
@@ -114,7 +131,7 @@ export const FooterComponent: React.FC = () => {
             )
             }]
         await dispatch(setUploadedFilesDisplayList(items))
-        await dispatch(setUploadedFilesTempLocation(info.fileList));
+        dispatch(setUploadedFilesTempLocation(fileList));
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -199,10 +216,10 @@ export const FooterComponent: React.FC = () => {
                             tooltipText='Upload File (text|pdf|doc|excel)'
                             themeType='IconButton'
                             icon={<ClipFilledSVG />} 
-                            onClickHandle={handleUploadPromptClick}
+                            onClickHandle={() => true}
                             style={{ background: 'transparent', border: 'none' }}
                         />
-                    </Upload>               
+                    </Upload>
                     <ButtonComponent
                         id='send-prompt-button'
                         tooltipText='Send Prompt'

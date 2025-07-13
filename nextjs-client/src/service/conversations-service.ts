@@ -1,3 +1,4 @@
+import { AppDispatch } from "@/store/store";
 import { conversationObjectUpdateTypes } from "../helper/constants";
 import { Endpoints } from "../helper/endPoints";
 import {
@@ -5,12 +6,11 @@ import {
   setConversationsList,
 } from "../store/conversations/slice";
 import { customAxios } from "./axios-service";
-import { Dispatch } from "redux";
 
 
 export const getConversationsList = (
     userId: string = ''
-) => async (dispatch: Dispatch) => {
+) => async (dispatch: AppDispatch) => {
     if (!userId) {
         return "Unauthorized User";
     }
@@ -33,7 +33,7 @@ export const updateConversationObject = (
     updateType: string = conversationObjectUpdateTypes["DEFAULT"],
     userId: string = 'local_user'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-) => async (dispatch: Dispatch) => {
+) => async (dispatch: AppDispatch) => {
     if (updateType === conversationObjectUpdateTypes["DEFAULT"]) {
         console.log("No update type provided");
         return;
