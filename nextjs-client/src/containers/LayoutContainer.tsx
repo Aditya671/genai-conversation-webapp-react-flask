@@ -51,7 +51,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
         if (isArray(llmModelsList) && size(llmModelsList) === 0) {
             dispatch(getLlmModelsList())
         }
-    }, [dispatch]);
+    }, [dispatch, llmModelsList]);
     
     return (
         <Layout style={layoutCss.containerLayout} hasSider={true}>

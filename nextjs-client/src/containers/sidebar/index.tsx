@@ -17,14 +17,12 @@ import './index.css';
 import { getMessagesList } from "@/service/messages-service";
 import { conversationObjectUpdateTypes } from "@/helper/constants";
 import { updateConversationObject } from "@/service/conversations-service";
-import { useState } from "react";
 
 
 const { Title } = Typography;
 const { Content } = Layout;
 export const SidebarComponent: React.FC = () => {
     const [warningModalApiComponent, contextHolder] = message.useMessage();
-    const [selectedModel, setSelectedModel] = useState<string[]>([]);
     const dispatch = useAppDispatch();
     const {
         conversationsList, selectedConversation
@@ -47,12 +45,10 @@ export const SidebarComponent: React.FC = () => {
             dispatch(setShowCollapsedData(collapseDataProp));
         }
     }
-
+    
     const handalModalSelectorChange = (selectedModel: string[] | string) => {
         // Implement modal selector change logic
-        console.log('Selected Modal:', selectedModel);
         const userAction = conversationObjectUpdateTypes['MODEL_CHANGE'];
-        setSelectedModel([String(selectedModel)])
         return dispatch(updateConversationObject(String(selectedConversation.conversationId), String(selectedModel), userAction, userId))
     };
     const SelectModelComponent = () => (
@@ -61,8 +57,8 @@ export const SidebarComponent: React.FC = () => {
             placeholder={'Select Modal'}
             filterOptions={llmModels.map(llm => ({label: llm.ModelName, key: llm.modelValue, value: llm.modelValue}))}
             sortOptions={true}
-            // defaultValue={[selectedConversation.selectedModel]}
-            value={selectedModel}
+            defaultValue={[selectedConversation.selectedModel]}
+            value={[selectedConversation.selectedModel]}
             onChange={handalModalSelectorChange}
             selectionType={undefined}
             onBeforeChange={undefined}

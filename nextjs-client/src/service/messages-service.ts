@@ -21,11 +21,15 @@ export const getMessagesList = (
     });
     const messagesListClone = cloneDeep(getState().messages.messagesList);
     if (response.data.length > 0) {
-        if (!isRefreshed) {
+        if (isRefreshed === true) {
             const convMessageIndex = messagesListClone.findIndex(
                 (msg) => msg.conversationId === conversationId
             );
-            messagesListClone[convMessageIndex] = response.data[0];
+            if(convMessageIndex === -1){
+                messagesListClone.push(response.data[0]);
+            }else{
+                messagesListClone[convMessageIndex] = response.data[0];
+            }
             dispatch(setMessagesList([...messagesListClone]));
         } else {
             dispatch(setMessagesList([...messagesListClone, response.data[0]]));

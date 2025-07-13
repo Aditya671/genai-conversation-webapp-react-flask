@@ -32,6 +32,7 @@ export const updateConversationObject = (
     userValue: string | boolean,
     updateType: string = conversationObjectUpdateTypes["DEFAULT"],
     userId: string = 'local_user'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 ) => async (dispatch: Dispatch) => {
     if (updateType === conversationObjectUpdateTypes["DEFAULT"]) {
         console.log("No update type provided");
