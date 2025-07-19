@@ -6,7 +6,7 @@ from backend.convo_llm.index_locally import LocalOnlyFileIndexer
 from backend.src.routers.conversations import create_conversation
 from backend.src.models.Messages import Message, MessagesList
 from backend.src.models import db
-from backend.celery_redis.tasks import index_user_uploaded_files
+from backend.celery_worker.tasks import index_user_uploaded_files
 from backend.src.models.HttpModels import OkResponse, CreatedResponse, AcceptedResponse
 from os import makedirs, path
 from fastapi.responses import JSONResponse
