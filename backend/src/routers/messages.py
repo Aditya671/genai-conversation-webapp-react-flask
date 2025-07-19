@@ -146,7 +146,7 @@ async def patch_message_object(
             "filename": file.filename,
             "content_type": file.content_type,
             "size": path.getsize(file_location),
-            "storage_url": f"/uploaded_files/{file.filename}"
+            "storage_url": f"/{upload_dir}/{file.filename}"
         })
     user_model = db.conversations.find_one({'conversationId': conversation_id})
     
