@@ -225,7 +225,7 @@ def load_embed(
         # Default to HuggingFace for any other model
         embed_model = HuggingFaceEmbedding(
             model_name=model.value,
-            device=device_map,
+            # device=device_map,
             model_kwargs={**(model_kwargs or {}), "token": os.getenv("HUGGINGFACE_API_KEY")},
             callback_manager=callback_manager,
             # **kwargs
