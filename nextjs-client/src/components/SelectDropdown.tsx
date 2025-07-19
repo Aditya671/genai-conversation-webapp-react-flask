@@ -42,7 +42,7 @@ interface SelectDropdownProps {
     sortOptions?: boolean;
     defaultValue?: string[] | null | string;
     onChange?: (value: string[] | string, componentName: string, form?: FormProps) => void;
-    selectionType?: 'multiple' | 'tags' | undefined | '';
+    selectionType?: 'multiple' | 'tags' ;
     onBeforeChange?: () => void;
     onClearFilter?: () => void;
     filterLabel?: string | null;
@@ -58,7 +58,7 @@ interface SelectDropdownProps {
 const SelectDropdown : React.FC<SelectDropdownProps>= (props) => {
     const {
         componentName = 'dropdown-button', filterOptions = [], sortOptions = true,
-        defaultValue = null, onChange = null, selectionType = '',
+        defaultValue = null, onChange = null, selectionType = 'tags',
         onBeforeChange = null, onClearFilter = null, filterLabel = null, showSelectAllOption = true,
         includeParentFilters = null, pageName = '', form = null, onScroll = null,
         sendDataToParent = null, ...rest
@@ -189,7 +189,10 @@ const SelectDropdown : React.FC<SelectDropdownProps>= (props) => {
                 popupMatchSelectWidth={false}
                 optionLabelProp="label"
                 open={isOpen}
-                defaultValue={defaultValue !== null && Array.isArray(defaultValue) && !isEmpty(defaultValue) ? defaultValue.map(key => key.toString()) : []}
+                defaultValue={(defaultValue !== undefined && defaultValue !== null) &&
+                    (Array.isArray(defaultValue) && !isEmpty(defaultValue)) ?
+                    defaultValue.map(key => key.toString()) : []
+                }
                 allowClear={true}
                 onOpenChange ={handleBeforeChange}
                 onChange={(values) => handleChange(values, componentName)}

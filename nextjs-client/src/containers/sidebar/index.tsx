@@ -53,6 +53,7 @@ export const SidebarComponent: React.FC = () => {
     };
     const SelectModelComponent = () => (
         <SelectDropdown
+            mode={''}
             componentName={'modalSelector'}
             placeholder={'Select Modal'}
             filterOptions={llmModels.map(llm => ({label: llm.ModelName, key: llm.modelValue, value: llm.modelValue}))}

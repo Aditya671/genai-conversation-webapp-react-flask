@@ -29,3 +29,4 @@ yarn-error.log*
 client/src/App_old.js
 .vscode/
 .hintrc
+uploaded_files/
