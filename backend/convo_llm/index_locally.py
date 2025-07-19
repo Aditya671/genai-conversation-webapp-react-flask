@@ -10,9 +10,10 @@ from llama_index.core.chat_engine import CondensePlusContextChatEngine
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.vector_stores.types import VectorStoreQueryMode
 from backend.convo_llm.load_llm.index import load_embed, load_llm
-from backend.convo_llm.ai_models_list import AiModel, AiModelHosted
+from backend.convo_llm.ai_models_list import AiModel, AiModelHosted, resolve_model
 from backend.convo_llm.prompt import CITATION_QA_TEMPLATE_CONCISE, CITATION_QA_TEMPLATE_DETAILED
 from llama_index.core import Settings
+import tracemalloc
 
 class LocalOnlyFileIndexer:
     """
@@ -34,12 +35,13 @@ class LocalOnlyFileIndexer:
         self.embed_model = load_embed(index_name=index_name, model=self.model)
         Settings.embed_model = self.embed_model
         Settings.llm = self._init_llm()
+        tracemalloc.start()
 
     def _init_llm(self):
-        model = AiModel.O4_MINI_HIGH
-        return load_llm(model=model.value, index_name=self.index_name)
+        llm_model = resolve_model(self.model)
+        return load_llm(model=llm_model, index_name=self.index_name)
 
-
+    
     def _get_storage_context(self, load_existing = False) -> StorageContext:
         index_dir = os.path.join(self.index_data_dir, self.index_name)
         os.makedirs(index_dir, exist_ok=True)
@@ -101,6 +103,7 @@ class LocalOnlyFileIndexer:
         except Exception as e:
             print(f"[WARN] Persisting with vector_store failed: {e}. Falling back to context persist.")
             index.storage_context.persist(persist_dir=index_dir)
+            print(f"[DONE] Persisting with context completed")
         else:
             self._dump_debug_files(documents, storage_context, index_dir)
 
@@ -108,18 +111,21 @@ class LocalOnlyFileIndexer:
         return index_dir
 
 
-    def index_uploaded_file(self, uploaded_file, index_name: Optional[str] = None) -> str:
+    async def index_uploaded_file(self, uploaded_file, index_name: Optional[str] = None) -> str:
         """
         Saves and indexes an uploaded file to local storage.
         """
-        file_path = os.path.join(self.root_dir, uploaded_file.name)
+        file_path = os.path.join(self.root_dir, uploaded_file.filename)
+        uploaded_file.file.seek(0)
+        read_obj = await uploaded_file.read()
+                
         with open(file_path, "wb") as f:
-            f.write(uploaded_file.read())
+            f.write(read_obj)
 
         return self._index_documents_from_files([file_path], index_name)
 
 
-    def index_uploaded_files(
+    async def index_uploaded_files(
         self,
         input_dir: Optional[str] = None,
         file_list: Optional[List[str]] = None,
@@ -142,9 +148,11 @@ class LocalOnlyFileIndexer:
 
         if file_list:
             for uploaded_file in file_list[:num_files_limit] if num_files_limit else file_list:
-                saved_path = os.path.join(self.root_dir, uploaded_file.name)
+                uploaded_file.file.seek(0)
+                read_obj = await uploaded_file.read()
+                saved_path = os.path.join(self.root_dir, uploaded_file.filename)
                 with open(saved_path, "wb") as f:
-                    f.write(uploaded_file.read())
+                    f.write(read_obj)
                 file_paths.append(saved_path)
 
         elif input_dir:

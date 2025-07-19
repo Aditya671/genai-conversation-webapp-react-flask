@@ -51,6 +51,7 @@ async def add_security_headers(request: Request, call_next):
 # Custom Exception Handler
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
+    print(str(exec))
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={"message": "An unexpected error occurred. Please try again later."}

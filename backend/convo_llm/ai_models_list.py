@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Union
 
 class AiModelResponseMode(str, Enum):
     """Mode determining the detail level of engine responses."""
@@ -45,7 +46,7 @@ class AiModel(str, Enum):
     GPT4O = "gpt-4o"
     GPT41 = "gpt-4.1"
     GPT41_MINI = "gpt-4.1-mini"
-    DEEPSEEK_R1 = "deepseek-r1"
+    DEEPSEEK_R1 = "deepseek-ai/DeepSeek-R1"
     LLAMA2_7B = "llama2-7b"           # Free, open-source. General-purpose, good for reasoning and chat.
     LLAMA3_8B = "llama3-8b"           # Free, open-source. Improved reasoning, chat, and instruction following.
     MISTRAL_7B = "mistral-7b"         # Free, open-source. Fast, efficient, strong at summarization and QA.
@@ -79,6 +80,7 @@ class AiModelHosted(str, Enum):
     PHI3_MINI_4K_INSTRUCT = "microsoft/Phi-3-mini-4k-instruct"
     TINYLLAMA_1_1B_CHAT = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
     QWEN1_5_7B_CHAT = "Qwen/Qwen1.5-7B-Chat"
+    QWEN3_EMBEDDING = "Qwen/Qwen3-Embedding-0.6B"
     GEMMA_2B_IT = "google/gemma-2b-it"
     MISTRAL_7B_INSTRUCT_V01 = "mistralai/Mistral-7B-Instruct-v0.1"
     LLAMA2_7B_CHAT = "meta-llama/Llama-2-7b-chat-hf"
@@ -93,3 +95,12 @@ class AiModelHosted(str, Enum):
     STARLING_LM_7B_ALPHA = "TheBloke/Starling-LM-7B-alpha-GGUF"
     MPT_7B_INSTRUCT = "TheBloke/MPT-7B-Instruct-GGUF"
     FALCON_7B_INSTRUCT = "TheBloke/Falcon-7B-Instruct-GGUF"
+    
+
+def resolve_model(model_str: str) -> Union[AiModel, AiModelHosted]:
+        if model_str in AiModel._value2member_map_:
+            return AiModel(model_str)
+        elif model_str in AiModelHosted._value2member_map_:
+            return AiModelHosted(model_str)
+        else:
+            raise ValueError(f"Invalid model: {model_str}")

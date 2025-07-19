@@ -4,8 +4,8 @@ from typing import Any, Optional, Union
 from llama_index.llms.openai import OpenAI
 from llama_index.llms.ollama import Ollama
 from llama_index.llms.huggingface import HuggingFaceLLM
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from backend.convo_llm.ai_models_list import AiModel, AiModelHosted
-
 DEFAULT_TEMPERATURE = 0.1
 DEFAULT_TIMEOUT = 10.0
 
@@ -133,7 +133,7 @@ def load_llm(
             max_new_tokens=max_new_tokens,
             query_wrapper_prompt=query_wrapper_prompt,
             tokenizer_name=tokenizer_name or model.value,
-            model_kwargs=model_kwargs or {},
+            model_kwargs={**(model_kwargs or {}), "token": os.getenv("HUGGINGFACE_API_KEY")},
             generate_kwargs=generate_kwargs or {},
             device_map=device_map,
             is_chat_model=is_chat_model,
@@ -223,14 +223,9 @@ def load_embed(
         return embed_model
     else:
         # Default to HuggingFace for any other model
-        embed_model = HuggingFaceLLM(
+        embed_model = HuggingFaceEmbedding(
             model_name=model.value,
-            context_window=context_window,
-            max_new_tokens=max_new_tokens,
-            tokenizer_name=tokenizer_name or model.value,
             model_kwargs={**(model_kwargs or {}), "token": os.getenv("HUGGINGFACE_API_KEY")},
-            generate_kwargs=generate_kwargs or {},
-            device_map=device_map,
             callback_manager=callback_manager,
             # **kwargs
         )

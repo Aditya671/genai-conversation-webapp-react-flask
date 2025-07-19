@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, UploadFile, File, Path, Query
 from pandas import DataFrame, to_datetime, Timestamp
-from typing import List, Union
-from backend.convo_llm.ai_models_list import AiModel, AiModelHosted
+from typing import List
+from backend.convo_llm.ai_models_list import resolve_model
 from backend.convo_llm.index_locally import LocalOnlyFileIndexer
 from backend.src.routers.conversations import create_conversation
 from backend.src.models.Messages import Message, MessagesList
@@ -150,18 +150,13 @@ async def patch_message_object(
         })
     user_model = db.conversations.find_one({'conversationId': conversation_id})
     
-    def resolve_model(model_str: str) -> Union[AiModel, AiModelHosted]:
-        if model_str in AiModel._value2member_map_:
-            return AiModel(model_str)
-        elif model_str in AiModelHosted._value2member_map_:
-            return AiModelHosted(model_str)
-        else:
-            raise ValueError(f"Invalid model: {model_str}")
     model_obj = None
     if user_model['selectedModel']:
         model_obj = resolve_model(user_model['selectedModel'])
         
     indexer = LocalOnlyFileIndexer(root_dir='./uploaded_files', index_name='test', model=model_obj)
+    await indexer.index_uploaded_files(file_list=upload_files)
+
     # Simulate update (uncomment when implementing real DB logic)
     db.messages.update_one(
         {
