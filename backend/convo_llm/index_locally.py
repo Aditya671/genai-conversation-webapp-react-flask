@@ -9,11 +9,14 @@ from llama_index.core.vector_stores.simple import SimpleVectorStore
 from llama_index.core.chat_engine import CondensePlusContextChatEngine
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.vector_stores.types import VectorStoreQueryMode
+from llama_index.core import Settings
+import tracemalloc
+from datetime import datetime, timedelta
+
 from backend.convo_llm.load_llm.index import load_embed, load_llm
 from backend.convo_llm.ai_models_list import AiModel, AiModelHosted, resolve_model
 from backend.convo_llm.prompt import CITATION_QA_TEMPLATE_CONCISE, CITATION_QA_TEMPLATE_DETAILED
-from llama_index.core import Settings
-import tracemalloc
+from backend.convo_llm.utility import compute_file_hash
 
 class LocalOnlyFileIndexer:
     """
@@ -32,6 +35,9 @@ class LocalOnlyFileIndexer:
         self.index_name = index_name
         self.model = model
         os.makedirs(self.index_data_dir, exist_ok=True)
+        self.upload_files_dir = os.path.join(self.root_dir, "files")
+        os.makedirs(self.upload_files_dir, exist_ok=True)
+        
         self.embed_model = load_embed(index_name=index_name, model=self.model)
         Settings.embed_model = self.embed_model
         Settings.llm = self._init_llm()
@@ -42,6 +48,50 @@ class LocalOnlyFileIndexer:
         return load_llm(model=llm_model, index_name=self.index_name)
 
     
+    def _should_reindex(self, file_path: str, index_name: str, reindex_after_days: int = 30) -> bool:
+        metadata_path = os.path.join(self.index_data_dir, index_name, "index_metadata.json")
+        if not os.path.exists(metadata_path):
+            return True  # No metadata? Reindex
+
+        with open(metadata_path, "r") as f:
+            metadata = json.load(f)
+
+        file_name = os.path.basename(file_path)
+        file_meta = metadata.get(file_name)
+        if not file_meta:
+            return True  # File not indexed yet
+
+        # Compare hash
+        current_hash = compute_file_hash(file_path)
+        if file_meta["hash"] != current_hash:
+            return True  # File changed
+
+        # Check if one month has passed
+        last_indexed = datetime.fromisoformat(file_meta["indexed_at"])
+        if datetime.now() - last_indexed > timedelta(days=reindex_after_days):
+            return True
+
+        return False  # Skip reindexing
+
+
+    def _update_index_metadata(self, file_paths: List[str], index_name: str):
+        metadata_path = os.path.join(self.index_data_dir, index_name, "index_metadata.json")
+        metadata = {}
+        if os.path.exists(metadata_path):
+            with open(metadata_path, "r") as f:
+                metadata = json.load(f)
+
+        for file_path in file_paths:
+            file_name = os.path.basename(file_path)
+            metadata[file_name] = {
+                "hash": compute_file_hash(file_path),
+                "indexed_at": datetime.now().isoformat()
+            }
+
+        with open(metadata_path, "w") as f:
+            json.dump(metadata, f, indent=2)
+
+
     def _get_storage_context(self, load_existing = False) -> StorageContext:
         index_dir = os.path.join(self.index_data_dir, self.index_name)
         os.makedirs(index_dir, exist_ok=True)
@@ -86,12 +136,22 @@ class LocalOnlyFileIndexer:
             json.dump(graph_store_dict, f, indent=2)
         return True
 
+    
     def _index_documents_from_files(self, file_paths: List[str], index_name: Optional[str]) -> str:
         index_name = index_name or self.index_name
         index_dir = os.path.join(self.index_data_dir, index_name)
         os.makedirs(index_dir, exist_ok=True)
 
-        required_exts = list(set(os.path.splitext(f)[1] for f in file_paths))
+        files_to_index = [fp for fp in file_paths if self._should_reindex(fp, index_name)]
+        if not files_to_index:
+            print("[INFO] All files are up-to-date. Skipping reindexing.")
+            return index_dir
+        
+        required_exts = list(set(os.path.splitext(f)[1] for f in files_to_index))
+        # reader = SimpleDirectoryReader(input_files=files_to_index, recursive=False, required_exts=required_exts)
+        # documents = reader.load_data(show_progress=True)
+        
+        # required_exts = list(set(os.path.splitext(f)[1] for f in file_paths))
         reader = SimpleDirectoryReader(input_files=file_paths, recursive=False, required_exts=required_exts)
         documents = reader.load_data(show_progress=True)
 
@@ -107,6 +167,7 @@ class LocalOnlyFileIndexer:
         else:
             self._dump_debug_files(documents, storage_context, index_dir)
 
+        self._update_index_metadata(files_to_index, index_name)
         print(f"[INFO] Index created at: {index_dir}")
         return index_dir
 
@@ -115,7 +176,9 @@ class LocalOnlyFileIndexer:
         """
         Saves and indexes an uploaded file to local storage.
         """
-        file_path = os.path.join(self.root_dir, uploaded_file.filename)
+        file_path = os.path.join(self.upload_files_dir, uploaded_file.filename)
+        
+        # file_path = os.path.join(self.root_dir, uploaded_file.filename)
         uploaded_file.file.seek(0)
         read_obj = await uploaded_file.read()
                 
@@ -145,12 +208,13 @@ class LocalOnlyFileIndexer:
             str: Path to the index directory.
         """
         file_paths = []
-
+        # file_path = os.path.join(upload_dir, uploaded_file.filename)
+        
         if file_list:
             for uploaded_file in file_list[:num_files_limit] if num_files_limit else file_list:
                 uploaded_file.file.seek(0)
                 read_obj = await uploaded_file.read()
-                saved_path = os.path.join(self.root_dir, uploaded_file.filename)
+                saved_path = os.path.join(self.upload_files_dir, uploaded_file.filename)
                 with open(saved_path, "wb") as f:
                     f.write(read_obj)
                 file_paths.append(saved_path)
