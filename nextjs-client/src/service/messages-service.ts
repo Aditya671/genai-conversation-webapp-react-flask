@@ -118,6 +118,7 @@ export const uploadFilesThunk = (
             method: "patch",
             config: {
                 headers: { "Content-Type": "multipart/form-data" },
+                timeout: 30000
             },
             data: formData,
         });

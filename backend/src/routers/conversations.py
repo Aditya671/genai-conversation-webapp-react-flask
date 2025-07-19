@@ -71,7 +71,10 @@ async def create_conversation(user_id: str, conversation: Conversations):
     user = db.users.find_one({"_id": ObjectId(user_id)})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    conversation_dict = conversation.model_dump(mode='json',by_alias=True)
+    if not isinstance(conversation, dict): 
+        conversation_dict = conversation.model_dump(mode='json',by_alias=True)
+    else:
+        conversation_dict = conversation
     conversation_dict["userId"] = user_id
     new_conversation = db.conversations.insert_one(conversation_dict)
     created_conversation = db.conversations.find_one({"_id": new_conversation.inserted_id})

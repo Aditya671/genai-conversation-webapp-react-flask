@@ -58,7 +58,7 @@ export const SidebarComponent: React.FC = () => {
             placeholder={'Select Modal'}
             filterOptions={llmModels.map(llm => ({label: llm.ModelName, key: llm.modelValue, value: llm.modelValue}))}
             sortOptions={true}
-            defaultValue={[selectedConversation.selectedModel]}
+            defaultValue={selectedConversation.isNew ? [] : [selectedConversation.selectedModel]}
             value={[selectedConversation.selectedModel]}
             onChange={handalModalSelectorChange}
             selectionType={undefined}

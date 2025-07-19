@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, UploadFile, File, Path, Query
+from fastapi import APIRouter, status, UploadFile, File
 from pandas import DataFrame, to_datetime, Timestamp
 from typing import List
 from backend.convo_llm.ai_models_list import resolve_model
@@ -29,7 +29,7 @@ async def create_message(user_id: str, conversation_id: str, message: Message):
             'isArchieved': False,
             'isPinned': False,
         }
-        create_conversation(user_id, conv_obj)
+        await create_conversation(user_id, conv_obj)
 
     message_dict = message.model_dump(by_alias=True)
     # message_dict['uploadedFiles'] = uploaded_files_metadata
@@ -67,7 +67,7 @@ class UpdateFields(BaseModel):
     
 @message_router.patch(
     path="/{message_id}/",
-    response_model=list[MessagesList],
+    response_model=MessagesList,
     status_code=status.HTTP_202_ACCEPTED,  # default status code
     description="Update Message Object",
     tags=["ROOT"],
@@ -103,7 +103,7 @@ async def patch_message_object(user_id: str, conversation_id: str, message_id: s
 
 @message_router.patch(
     path="/{message_id}/upload_file",
-    response_model=List[MessagesList],
+    response_model=MessagesList,
     status_code=status.HTTP_202_ACCEPTED,
     description="Update Message Object",
     tags=["ROOT"],
@@ -132,15 +132,15 @@ async def patch_message_object(
     conversation_id: str,
     upload_files: List[UploadFile] = File(...),
 ):
-    upload_dir = "uploaded_files/"
+    upload_dir = "uploaded_files/files"
     makedirs(upload_dir, exist_ok=True)
 
     uploaded_files_metadata = []
 
     for file in upload_files:
         file_location = path.join(upload_dir, file.filename)
-        with open(file_location, "wb") as f:
-            f.write(await file.read())
+        # with open(file_location, "wb") as f:
+        #     f.write(await file.read())
 
         uploaded_files_metadata.append({
             "filename": file.filename,

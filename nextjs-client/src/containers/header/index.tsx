@@ -37,9 +37,7 @@ export const HeaderComponent: React.FC = () => {
             const lastConv = conversationsList[convSize - 1];
             const isConvNew = lastConv['isNew'];
             if(isConvNew){
-                return dispatch(setSelectedConversation(
-                    {conversationId: lastConv['conversationId'], conversationTitle: lastConv['conversationTitle']}
-                ));
+                return dispatch(setSelectedConversation(lastConv));
             }
         }
         const convObj = newConversationObject(uuidv4(), `Conversation-${new Date().toISOString()}`);
@@ -47,9 +45,7 @@ export const HeaderComponent: React.FC = () => {
             [...conversationsList, convObj]
         ));
         dispatch(setSelectedMessagesList([]));
-        return dispatch(setSelectedConversation(
-            {conversationId: convObj.conversationId, conversationTitle: convObj.conversationTitle}
-        ));
+        return dispatch(setSelectedConversation(convObj));
     };
     return (
     <>

@@ -1,6 +1,7 @@
 import os
 import json
 from typing import Optional, List, Union
+from fastapi import BackgroundTasks
 from llama_index.core import (
     SimpleDirectoryReader, VectorStoreIndex,
     StorageContext, load_index_from_storage, Settings
@@ -29,7 +30,8 @@ class LocalOnlyFileIndexer:
         index_data_dir: Optional[str] = None,
         index_name: str = "default",
         model: Optional[Union[AiModel, AiModelHosted]] = None
-    ):
+        ):
+        self.background_task = BackgroundTasks()
         self.root_dir = root_dir
         self.index_data_dir = index_data_dir or os.path.join(self.root_dir, "index_data")
         self.index_name = index_name
@@ -185,7 +187,7 @@ class LocalOnlyFileIndexer:
         with open(file_path, "wb") as f:
             f.write(read_obj)
 
-        return self._index_documents_from_files([file_path], index_name)
+        return self.background_task.add_task(self._index_documents_from_files,[file_path], index_name)
 
 
     async def index_uploaded_files(
@@ -234,7 +236,7 @@ class LocalOnlyFileIndexer:
         if not file_paths:
             raise ValueError("No valid files found to index.")
 
-        return self._index_documents_from_files(file_paths, index_name)
+        return self.background_task.add_task(self._index_documents_from_files, file_paths, index_name)
 
     
     def create_local_citation_chat_engine(
