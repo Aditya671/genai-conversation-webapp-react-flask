@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, UploadFile, File
+from fastapi import APIRouter, status, UploadFile, File, BackgroundTasks
 from pandas import DataFrame, to_datetime, Timestamp
 from typing import List
 from backend.convo_llm.ai_models_list import resolve_model
@@ -6,6 +6,7 @@ from backend.convo_llm.index_locally import LocalOnlyFileIndexer
 from backend.src.routers.conversations import create_conversation
 from backend.src.models.Messages import Message, MessagesList
 from backend.src.models import db
+from backend.celery_redis.tasks import index_user_uploaded_files
 from backend.src.models.HttpModels import OkResponse, CreatedResponse, AcceptedResponse
 from os import makedirs, path
 from fastapi.responses import JSONResponse
@@ -131,6 +132,7 @@ async def patch_message_object(
     user_id: str,
     conversation_id: str,
     upload_files: List[UploadFile] = File(...),
+    background_task: BackgroundTasks = None
 ):
     upload_dir = "uploaded_files/files"
     makedirs(upload_dir, exist_ok=True)
@@ -153,9 +155,13 @@ async def patch_message_object(
     model_obj = None
     if user_model['selectedModel']:
         model_obj = resolve_model(user_model['selectedModel'])
-        
-    indexer = LocalOnlyFileIndexer(root_dir='./uploaded_files', index_name='test', model=model_obj)
-    await indexer.index_uploaded_files(file_list=upload_files)
+    
+    index_user_uploaded_files(root_dir='./uploaded_files',\
+            index_name='test', model=user_model['selectedModel'], upload_files=upload_files)
+    # indexer = LocalOnlyFileIndexer(root_dir='./uploaded_files',\
+    #         index_name='test', model=model_obj, \
+    #         background_tasks= background_task)
+    # await indexer.index_uploaded_files(file_list=upload_files)
 
     # Simulate update (uncomment when implementing real DB logic)
     db.messages.update_one(
