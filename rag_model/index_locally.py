@@ -13,10 +13,10 @@ from llama_index.core import Settings
 import tracemalloc
 from datetime import datetime, timedelta
 
-from backend.convo_llm.load_llm.index import load_embed, load_llm
-from backend.convo_llm.ai_models_list import AiModel, AiModelHosted, resolve_model
-from backend.convo_llm.prompt import CITATION_QA_TEMPLATE_CONCISE, CITATION_QA_TEMPLATE_DETAILED
-from backend.convo_llm.utility import compute_file_hash
+from rag_model.load_llm.index import load_embed, load_llm
+from rag_model.ai_models_list import AiModel, AiModelHosted, resolve_model
+from rag_model.prompt import CITATION_QA_TEMPLATE_CONCISE, CITATION_QA_TEMPLATE_DETAILED
+from rag_model.utility import compute_file_hash
 
 class LocalOnlyFileIndexer:
     """
@@ -188,7 +188,7 @@ class LocalOnlyFileIndexer:
         return self._index_documents_from_files([file_path], index_name)
 
 
-    async def index_uploaded_files(
+    def index_uploaded_files(
         self,
         input_dir: Optional[str] = None,
         file_list: Optional[List[str]] = None,
@@ -211,13 +211,32 @@ class LocalOnlyFileIndexer:
         # file_path = os.path.join(upload_dir, uploaded_file.filename)
         
         if file_list:
-            for uploaded_file in file_list[:num_files_limit] if num_files_limit else file_list:
-                uploaded_file.file.seek(0)
-                read_obj = await uploaded_file.read()
-                saved_path = os.path.join(self.upload_files_dir, uploaded_file.filename)
-                with open(saved_path, "wb") as f:
-                    f.write(read_obj)
-                file_paths.append(saved_path)
+            # for uploaded_file in file_list[:num_files_limit] if num_files_limit else file_list:
+            #     filename = os.path.basename(uploaded_file)
+            #     uploaded_file.file.seek(0)
+            #     read_obj = uploaded_file.read()
+            #     saved_path = os.path.join(self.upload_files_dir, uploaded_file.filename)
+            #     with open(saved_path, "wb") as f:
+            #         f.write(read_obj)
+            #     file_paths.append(saved_path)
+            for file_path in file_list[:num_files_limit] if num_files_limit else file_list:
+                filename = os.path.basename(file_path)
+                saved_path = os.path.join(self.upload_files_dir, filename)
+
+
+                # Read from the source file and write to the destination
+                try:
+                    with open(file_path, "rb") as src_file:
+                        src_file.seek(0)  # Optional here, but included per your request
+                        content = src_file.read()
+
+                    with open(saved_path, "wb") as dest_file:
+                        dest_file.write(content)
+
+                    file_paths.append(saved_path)
+                except Exception as e:
+                    # Optional: handle error (e.g. log it, skip, etc.)
+                    print(f"Failed to copy {file_path}: {e}")
 
         elif input_dir:
             all_files = [
@@ -234,10 +253,10 @@ class LocalOnlyFileIndexer:
         if not file_paths:
             raise ValueError("No valid files found to index.")
 
-        return self._index_documents_from_files(file_paths, index_name)
+        return self._index_documents_from_files(file_list, index_name)
 
     
-    def create_local_citation_chat_engine(
+    async def create_local_citation_chat_engine(
         self,
         top_k: int = 5,
         mode: str = "concise",
@@ -249,7 +268,8 @@ class LocalOnlyFileIndexer:
         Create a local citation-style chat engine using a persisted index for streaming Q&A.
         Returns a CitationChatEngine instance (stream_chat() supported).
         """
-        llm = load_llm(model=model,\
+        selected_model = self.model or model
+        llm = load_llm(model=selected_model,\
             index_name=self.index_name, temperature=temperature)
         Settings.llm = llm
 

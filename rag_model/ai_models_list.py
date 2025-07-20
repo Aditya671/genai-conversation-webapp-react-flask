@@ -94,7 +94,8 @@ class AiModelHosted(str, Enum):
     MIXTRAL_8X7B_INSTRUCT = "TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF"
     STARLING_LM_7B_ALPHA = "TheBloke/Starling-LM-7B-alpha-GGUF"
     MPT_7B_INSTRUCT = "TheBloke/MPT-7B-Instruct-GGUF"
-    FALCON_7B_INSTRUCT = "TheBloke/Falcon-7B-Instruct-GGUF"
+    FALCON_7B_INSTRUCT = "TheBloke/Falcon-7B-Instruct-GGUF",
+    ALL_MINILM_L6_V2 = "sentence-transformers/all-MiniLM-L6-v2"
     
 
 def resolve_model(model_str: str) -> Union[AiModel, AiModelHosted]:

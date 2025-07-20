@@ -1,21 +1,24 @@
+from datetime import datetime
 from fastapi import APIRouter, status, UploadFile, File, BackgroundTasks
 from pandas import DataFrame, to_datetime, Timestamp
 from typing import List
-from backend.convo_llm.ai_models_list import resolve_model
-from backend.convo_llm.index_locally import LocalOnlyFileIndexer
+from backend.src.models.MessageTypes import TypesOfMessage
+from rag_model.ai_models_list import AiModelHosted, resolve_model
+from rag_model.index_locally import LocalOnlyFileIndexer
 from backend.src.routers.conversations import create_conversation
-from backend.src.models.Messages import Message, MessagesList
+from backend.src.models.Messages import Message, MessageAdditionalInfo, MessagesList
 from backend.src.models import db
-from backend.celery_worker.tasks import index_user_uploaded_files
+from celery_worker.tasks import index_user_uploaded_files
 from backend.src.models.HttpModels import OkResponse, CreatedResponse, AcceptedResponse
 from os import makedirs, path
 from fastapi.responses import JSONResponse
-
+import uuid
 message_router = APIRouter()
 
 @message_router.put("/messages", response_model=int)
 async def create_message(user_id: str, conversation_id: str, message: Message):
-    conversation_existence = db.conversations.find_one({'conversation_id': conversation_id})
+    conversation_existence = db.conversations.find_one({'conversationId': conversation_id})
+    selected_model = AiModelHosted.ALL_MINILM_L6_V2.value
     if(conversation_existence == None):
         date_time_formatted = to_datetime(Timestamp.now())
         date_time_formatted = date_time_formatted.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
@@ -31,9 +34,16 @@ async def create_message(user_id: str, conversation_id: str, message: Message):
             'isPinned': False,
         }
         await create_conversation(user_id, conv_obj)
+    else:
+        selected_model = conversation_existence['selectedModel']
 
-    message_dict = message.model_dump(by_alias=True)
-    # message_dict['uploadedFiles'] = uploaded_files_metadata
+
+    indexer = LocalOnlyFileIndexer(root_dir='./uploaded_files',\
+            index_name='test', model=resolve_model(selected_model)\
+                )
+    model_resp = await indexer.create_local_citation_chat_engine.stream_chat(message[['messageDescription']])
+
+    message_dict = message.model_dump(by_alias=True)    
     new_message  = db.messages.update_one(
     {'conversationId': conversation_id},
     {
@@ -42,7 +52,32 @@ async def create_message(user_id: str, conversation_id: str, message: Message):
     },
     upsert=True
     )
-    return new_message.modified_count
+    msg_id = new_message.upserted_id
+    date_time_formatted = to_datetime(Timestamp.now())
+    date_time_formatted = date_time_formatted.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    # msg_data
+    response_message = Message( \
+        conversationId = conversation_id, \
+        messageId = str(uuid.uuid4()), \
+        messageType = TypesOfMessage['MODEL'], \
+        messageAvatarSrc = '', \
+        messageDescription = model_resp, \
+        messageSubDescription = date_time_formatted, \
+        messageAdditionalInfo = MessageAdditionalInfo(), \
+        messageDateTimeCreated =  date_time_formatted, \
+        isEdited = False, \
+        referenceMessageId = None, \
+        uploadedFiles = [] \
+    )
+    db.messages.update_one(
+    {'conversationId': conversation_id},
+    {
+        '$setOnInsert': { 'conversationId': conversation_id },
+        '$push': { 'messages': response_message }
+    },
+    upsert=True
+    )
+    return response_message.modified_count
 
 @message_router.get("/messages", response_model=list[MessagesList])
 async def get_message(user_id: str, conversation_id: str):
@@ -138,11 +173,12 @@ async def patch_message_object(
     makedirs(upload_dir, exist_ok=True)
 
     uploaded_files_metadata = []
-
+    file_paths = []
     for file in upload_files:
         file_location = path.join(upload_dir, file.filename)
-        # with open(file_location, "wb") as f:
-        #     f.write(await file.read())
+        file_paths.append(file_location)
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
 
         uploaded_files_metadata.append({
             "filename": file.filename,
@@ -156,8 +192,8 @@ async def patch_message_object(
     if user_model['selectedModel']:
         model_obj = resolve_model(user_model['selectedModel'])
     
-    index_user_uploaded_files(root_dir='./uploaded_files',\
-            index_name='test', model=user_model['selectedModel'], upload_files=upload_files)
+    index_user_uploaded_files.delay(root_dir='./uploaded_files',\
+            index_name='test', model=user_model['selectedModel'], upload_files=file_paths)
     # indexer = LocalOnlyFileIndexer(root_dir='./uploaded_files',\
     #         index_name='test', model=model_obj, \
     #         background_tasks= background_task)

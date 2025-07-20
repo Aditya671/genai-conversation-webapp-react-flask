@@ -5,7 +5,7 @@ from llama_index.llms.openai import OpenAI
 from llama_index.llms.ollama import Ollama
 from llama_index.llms.huggingface import HuggingFaceLLM
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from backend.convo_llm.ai_models_list import AiModel, AiModelHosted
+from rag_model.ai_models_list import AiModel, AiModelHosted
 DEFAULT_TEMPERATURE = 0.1
 DEFAULT_TIMEOUT = 10.0
 

@@ -79,6 +79,9 @@ export const postUserPrompt =(
 ) => async (dispatch: AppDispatch, getState: () => RootState) => {
     const userId = getState().users.userId;
     const conversationId = getState().conversations.selectedConversation.conversationId;
+    if(messageObject){
+        messageObject['uploadedFiles'] = []
+    }
     try {
         const response = await customAxios<string[]>({
             url: Endpoints.postUserPrompt

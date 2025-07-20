@@ -12,9 +12,9 @@ class UploadedFile(BaseModel):
     storage_url: Optional[Union[str, HttpUrl ]]
 
 class MessageAdditionalInfo(BaseModel):
-    tableData: list
-    chartData: list
-    extra: dict
+    tableData: list = []
+    chartData: list = []
+    extra: dict = {}
     
     class Config:
         populate_by_name = True
@@ -28,11 +28,10 @@ class Message(BaseModel):
     messageAvatarSrc: str
     messageDescription: str
     messageSubDescription: str
-    messageAdditionalInfo: dict
+    messageAdditionalInfo: MessageAdditionalInfo
     messageDateTimeCreated: Union[str,datetime]
     isEdited: bool
     referenceMessageId: Union[str, None]
-    messageAdditionalInfo: MessageAdditionalInfo
     uploadedFiles: Optional[List[UploadedFile]] = []
     class Config:
         populate_by_name = True
