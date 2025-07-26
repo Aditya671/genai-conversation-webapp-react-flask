@@ -25,7 +25,7 @@ yarn-error.log*
 *.pyc
 */.env
 *__pycache__
-*/genai_env/
+/genai_env/
 client/src/App_old.js
 .vscode/
 .hintrc
