@@ -4,7 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from uvicorn import run
-from os import path
+from os import path, environ
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -15,7 +15,7 @@ backend_root = path.abspath(path.join(current_dir, ".."))
 env_path = path.join(backend_root, ".env")
 # Load the .env file
 load_dotenv(dotenv_path=env_path)
-
+environ["PYDEVD_WARN_EVALUATION_TIMEOUT"] = "10"
 app = FastAPI()
 
 # Configure CORS (Using fastapi.middleware.cors-CORSMiddleware)

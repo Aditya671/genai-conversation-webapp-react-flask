@@ -41,7 +41,8 @@ async def create_message(user_id: str, conversation_id: str, message: Message):
     indexer = LocalOnlyFileIndexer(root_dir='./uploaded_files',\
             index_name='test', model=resolve_model(selected_model)\
                 )
-    model_resp = await indexer.create_local_citation_chat_engine.stream_chat(message[['messageDescription']])
+    model_resp = await indexer.create_local_citation_chat_engine()
+    resp = model_resp.stream_chat(message.messageDescription)
 
     message_dict = message.model_dump(by_alias=True)    
     new_message  = db.messages.update_one(

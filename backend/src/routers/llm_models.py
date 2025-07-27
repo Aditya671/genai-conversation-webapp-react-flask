@@ -35,7 +35,7 @@ models_router = APIRouter()
     }
 )
 async def get_models():
-    models_result = db.models.find().to_list()
+    models_result = db.models.find({'isActive': True}).to_list()
     models_list = DataFrame(models_result)
     # Set dtypes
     models_list = models_list.astype({

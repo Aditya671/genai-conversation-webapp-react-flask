@@ -1,11 +1,14 @@
 import os
 import logging
 from typing import Any, Optional, Union
+from llama_index.core import MockEmbedding
+from llama_index.core.llms import MockLLM
 from llama_index.llms.openai import OpenAI
 from llama_index.llms.ollama import Ollama
 from llama_index.llms.huggingface import HuggingFaceLLM
+from transformers import AutoTokenizer, AutoModel
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from rag_model.ai_models_list import AiModel, AiModelHosted
+from rag_model.ai_models_list import AiModel, AiModelHosted, AiModelHostedEmbeddings
 DEFAULT_TEMPERATURE = 0.1
 DEFAULT_TIMEOUT = 10.0
 
@@ -103,50 +106,52 @@ def load_llm(
         ...and more, see Ollama class for all options.
     """
     logger.info(f"Loading LLM model: {model} with temperature: {temperature}")
-
-    if model in OPENAI_MODELS:
-        llm = OpenAI(
-            model=model.value,
-            temperature=temperature,
-            api_key=os.environ.get('OPENAI_API_KEY', None),
-            request_timeout=float(timeout)
-        )
-        logger.info(f"LLM model loaded successfully: {model} (OpenAI)")
-        return llm
-    elif model in OLLAMA_MODELS:
-        ollama_args = dict(
-            model=model.value,
-            base_url="http://localhost:11434",
-            temperature=temperature,
-            request_timeout=float(timeout)
-        )
-        if ollama_kwargs:
-            ollama_args.update(ollama_kwargs)
-        llm = Ollama(**ollama_args)
-        logger.info(f"LLM model loaded successfully: {model} (Ollama)")
-        return llm
-    else:
-        # Default to HuggingFace for any other model
-        llm = HuggingFaceLLM(
-            model_name=model.value,
-            context_window=context_window,
-            max_new_tokens=max_new_tokens,
-            query_wrapper_prompt=query_wrapper_prompt,
-            tokenizer_name=tokenizer_name or model.value,
-            model_kwargs={**(model_kwargs or {}), "token": os.getenv("HUGGINGFACE_API_KEY")},
-            generate_kwargs=generate_kwargs or {},
-            device_map=device_map,
-            is_chat_model=is_chat_model,
-            callback_manager=callback_manager,
-            system_prompt=system_prompt,
-            **kwargs
-        )
-        logger.info(f"LLM model loaded successfully: {model} (HuggingFace)")
-        return llm
-
+    try:
+        if model in OPENAI_MODELS:
+            llm = OpenAI(
+                model=model.value,
+                temperature=temperature,
+                api_key=os.environ.get('OPENAI_API_KEY', None),
+                request_timeout=float(timeout)
+            )
+            logger.info(f"LLM model loaded successfully: {model} (OpenAI)")
+            return llm
+        elif model in OLLAMA_MODELS:
+            ollama_args = dict(
+                model=model.value,
+                base_url="http://localhost:11434",
+                temperature=temperature,
+                request_timeout=float(timeout)
+            )
+            if ollama_kwargs:
+                ollama_args.update(ollama_kwargs)
+            llm = Ollama(**ollama_args)
+            logger.info(f"LLM model loaded successfully: {model} (Ollama)")
+            return llm
+        else:
+            # Default to HuggingFace for any other model
+            llm = HuggingFaceLLM(
+                model_name=model.value,
+                context_window=context_window,
+                max_new_tokens=max_new_tokens,
+                query_wrapper_prompt=query_wrapper_prompt,
+                tokenizer_name=tokenizer_name or model.value,
+                model_kwargs={**(model_kwargs or {}), "token": os.getenv("HUGGINGFACE_API_KEY"), "trust_remote_code":True},
+                generate_kwargs=generate_kwargs or {},
+                device_map=device_map,
+                is_chat_model=is_chat_model,
+                callback_manager=callback_manager,
+                system_prompt=system_prompt,
+                **kwargs
+            )
+            logger.info(f"LLM model loaded successfully: {model} (HuggingFace)")
+            return llm
+    except Exception as e:
+        print("Embedding init failed:", e)
+        return MockLLM(max_tokens=256)
 
 def load_embed(
-    model: Union[AiModel, AiModelHosted],
+    model: Union[AiModelHostedEmbeddings],
     temperature: Optional[float] = 0.1,
     timeout: Optional[float] = 10.0,
     context_window: int = 2048,
@@ -209,26 +214,40 @@ def load_embed(
             List of stop sequences.
         ...and more, see Ollama class for all options.
     """
-    if model in OLLAMA_MODELS:
-        ollama_args = dict(
-            model=model.value,
-            base_url="http://localhost:11434",
-            temperature=temperature,
-            request_timeout=float(timeout)
-        )
-        if ollama_kwargs:
-            ollama_args.update(ollama_kwargs)
-        embed_model = Ollama(**ollama_args)
-        logger.info(f"Embedding model loaded successfully: {model} (Ollama)")
-        return embed_model
-    else:
-        # Default to HuggingFace for any other model
-        embed_model = HuggingFaceEmbedding(
-            model_name=model.value,
-            # device=device_map,
-            model_kwargs={**(model_kwargs or {}), "token": os.getenv("HUGGINGFACE_API_KEY")},
-            callback_manager=callback_manager,
-            # **kwargs
-        )
-        logger.info(f"Embedding model loaded successfully: {model} (HuggingFace)")
-        return embed_model
+    try:
+        if model in OLLAMA_MODELS:
+            ollama_args = dict(
+                model=model.value,
+                base_url="http://localhost:11434",
+                temperature=temperature,
+                request_timeout=float(timeout)
+            )
+            if ollama_kwargs:
+                ollama_args.update(ollama_kwargs)
+            embed_model = Ollama(**ollama_args)
+            logger.info(f"Embedding model loaded successfully: {model} (Ollama)")
+            return embed_model
+        else:
+            model_kwargs = {
+                "token": os.getenv("HUGGINGFACE_API_KEY"),
+                "bos_token": "[CLS]",
+                "eos_token": "[SEP]",
+                "unk_token": "[UNK]"
+            }
+            # tokenizer = AutoTokenizer.from_pretrained('Qwen/Qwen3-Embedding-0.6B', trust_remote_code=True)
+            # model = AutoModel.from_pretrained('Qwen/Qwen3-Embedding-0.6B', trust_remote_code=True)
+
+            # Default to HuggingFace for any other model
+            embed_model = HuggingFaceEmbedding(
+                model_name=model.value,
+                normalize=True,
+                # device=device_map,
+                model_kwargs={**(model_kwargs or {})},
+                callback_manager=callback_manager,
+                # **kwargs
+            )
+            logger.info(f"Embedding model loaded successfully: {model} (HuggingFace)")
+            return embed_model
+    except Exception as e:
+        print("Embedding init failed:", e)
+        return MockEmbedding(embed_dim=1536)

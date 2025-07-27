@@ -5,6 +5,8 @@ from llama_index.core import (
     SimpleDirectoryReader, VectorStoreIndex,
     StorageContext, load_index_from_storage, Settings
 )
+from llama_index.core.embeddings import BaseEmbedding
+from llama_index.core.llms import LLM
 from llama_index.core.vector_stores.simple import SimpleVectorStore
 from llama_index.core.chat_engine import CondensePlusContextChatEngine
 from llama_index.core.memory import ChatMemoryBuffer
@@ -14,9 +16,14 @@ import tracemalloc
 from datetime import datetime, timedelta
 
 from rag_model.load_llm.index import load_embed, load_llm
-from rag_model.ai_models_list import AiModel, AiModelHosted, resolve_model
-from rag_model.prompt import CITATION_QA_TEMPLATE_CONCISE, CITATION_QA_TEMPLATE_DETAILED
+from rag_model.ai_models_list import AiModel, AiModelHosted, resolve_model, resolve_embedding_by_key
+from rag_model.prompt import (
+    CONTEXT_PROMPT,
+    SYSTEM_PROMPT,
+    QUERY_WRAPPER_PROMPT
+)
 from rag_model.utility import compute_file_hash
+
 
 class LocalOnlyFileIndexer:
     """
@@ -37,16 +44,20 @@ class LocalOnlyFileIndexer:
         os.makedirs(self.index_data_dir, exist_ok=True)
         self.upload_files_dir = os.path.join(self.root_dir, "files")
         os.makedirs(self.upload_files_dir, exist_ok=True)
-        
-        self.embed_model = load_embed(index_name=index_name, model=self.model)
-        Settings.embed_model = self.embed_model
         Settings.llm = self._init_llm()
         tracemalloc.start()
+        Settings.embed_model = self._init_embed()
+        
+        print(f" \n [LLM]", Settings.llm)
+        print(f"\n [Embed Model]", Settings.embed_model)
 
-    def _init_llm(self):
+    def _init_llm(self) -> LLM:
         llm_model = resolve_model(self.model)
-        return load_llm(model=llm_model, index_name=self.index_name)
+        return load_llm(model=llm_model, index_name=self.index_name, system_prompt=SYSTEM_PROMPT, query_wrapper_prompt=QUERY_WRAPPER_PROMPT)
 
+    def _init_embed(self) -> BaseEmbedding:
+        embed_model = resolve_embedding_by_key(self.model.name)
+        return load_embed(model=embed_model, index_name=self.index_name)
     
     def _should_reindex(self, file_path: str, index_name: str, reindex_after_days: int = 30) -> bool:
         metadata_path = os.path.join(self.index_data_dir, index_name, "index_metadata.json")
@@ -261,18 +272,11 @@ class LocalOnlyFileIndexer:
         top_k: int = 5,
         mode: str = "concise",
         streaming: bool = False,
-        model: AiModel = AiModel.MISTRAL_7B,
-        temperature: float = 0.1
     ):
         """
         Create a local citation-style chat engine using a persisted index for streaming Q&A.
         Returns a CitationChatEngine instance (stream_chat() supported).
         """
-        selected_model = self.model or model
-        llm = load_llm(model=selected_model,\
-            index_name=self.index_name, temperature=temperature)
-        Settings.llm = llm
-
         # Path to index
         index_dir = os.path.join(self.index_data_dir, self.index_name)
         index_file = os.path.join(index_dir, "index_store.json")
@@ -291,21 +295,22 @@ class LocalOnlyFileIndexer:
 
         # Select context template
         if mode == "concise":
-            context_prompt = CITATION_QA_TEMPLATE_CONCISE
+            context_prompt = CONTEXT_PROMPT
         elif mode == "detailed":
-            context_prompt = CITATION_QA_TEMPLATE_DETAILED
+            context_prompt = CONTEXT_PROMPT
         else:
             raise ValueError(f"Invalid mode: {mode}. Use 'concise' or 'detailed'.")
 
         # Memory buffer for keeping history within token window
         memory = ChatMemoryBuffer.from_defaults(
-            token_limit=llm.metadata.context_window - 256
+            token_limit=self._init_llm().metadata.context_window - 256
         )
 
         # Create and return streaming-compatible citation engine
         chat_engine = CondensePlusContextChatEngine(
             retriever=retriever,
-            llm=llm,
+            llm=self._init_llm(),
+            system_prompt=SYSTEM_PROMPT,
             memory=memory,
             context_prompt=context_prompt,
             verbose=streaming,

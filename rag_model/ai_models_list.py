@@ -53,7 +53,7 @@ class AiModel(str, Enum):
     GEMMA_7B = "gemma-7b"             # Free, open-source. Google, good for general tasks and chat.
     OLLAMA = "ollama"                 # Free, open-source, local inference framework (runs models locally).
     VICUNA_7B = "vicuna-7b"           # Free, open-source, Llama-based. Good for chat and instruction following.
-    PHI_2 = "phi-2"                   # Free, open-source, Microsoft. Small, efficient, good for reasoning and code.
+    PHI_2 = "phi-2"  # Active         # Free, open-source, Microsoft. Small, efficient, good for reasoning and code.
     STABLELM_2_1B = "stablelm-2-1b"   # Free, open-source, Stability AI. Good for general tasks, small footprint.
     FALCON_7B = "falcon-7b"           # Free, open-source, TII. Good for summarization, QA, and chat.
     DOLLY_V2_12B = "dolly-v2-12b"     # Free, open-source, Databricks. Fine-tuned for instruction following.
@@ -95,13 +95,50 @@ class AiModelHosted(str, Enum):
     STARLING_LM_7B_ALPHA = "TheBloke/Starling-LM-7B-alpha-GGUF"
     MPT_7B_INSTRUCT = "TheBloke/MPT-7B-Instruct-GGUF"
     FALCON_7B_INSTRUCT = "TheBloke/Falcon-7B-Instruct-GGUF",
+    ALL_MINILM_L6_V2 = "sentence-transformers/all-MiniLM-L6-v2", # Active
+    QWEN3_06B = "Qwen/Qwen3-0.6B"  # Active
+    ALL_MPNET_BASE_V2 = "sentence-transformers/all-mpnet-base-v2", #Active
+    INTFLOAT_E5_LARGE_V2 = "intfloat/e5-large-v2" #Active
+
+from enum import Enum
+
+class AiModelHostedEmbeddings(str, Enum):
+    LLAMA3_8B = "meta-embedding/llama3-8b"  # Hypothetical, fallback to MiniLM/mpnet
+    MISTRAL_7B_INSTRUCT_V02 = "intfloat/e5-large-v2"
+    GEMMA_7B_IT = "intfloat/e5-large-v2"
+    PHI3_MINI_4K_INSTRUCT = "microsoft/phi-2-embedding"
+    TINYLLAMA_1_1B_CHAT = "sentence-transformers/all-MiniLM-L6-v2"
+    QWEN1_5_7B_CHAT = "Qwen/Qwen3-Embedding-0.6B"
+    QWEN3_EMBEDDING = "Qwen/Qwen3-Embedding-0.6B"
+    GEMMA_2B_IT = "intfloat/e5-large-v2"
+    MISTRAL_7B_INSTRUCT_V01 = "intfloat/e5-large-v2"
+    LLAMA2_7B_CHAT = "sentence-transformers/all-MiniLM-L6-v2"
+    NOUS_HERMES_2_MISTRAL_7B_DPO = "intfloat/e5-large-v2"
+    OPENHERMES_2_5_MISTRAL_7B = "intfloat/e5-large-v2"
+    CODELLAMA_7B_INSTRUCT = "huggingface/CodeBERTa-embedding"  # For code tasks
+    MISTRAL_7B_INSTRUCT_V02_GGUF = "intfloat/e5-large-v2"
+    PHI_2_GGUF = "microsoft/phi-2-embedding"
+    ZEPHYR_7B_BETA_GGUF = "intfloat/e5-large-v2"
+    STABLELM_2_1B_GGUF = "TheBloke/StableLM-2-1B-GGUF"
+    MIXTRAL_8X7B_INSTRUCT = "intfloat/e5-large-v2"
+    STARLING_LM_7B_ALPHA = "intfloat/e5-large-v2"
+    MPT_7B_INSTRUCT = "sentence-transformers/all-mpnet-base-v2"
+    FALCON_7B_INSTRUCT = "intfloat/e5-large-v2"
     ALL_MINILM_L6_V2 = "sentence-transformers/all-MiniLM-L6-v2"
-    
+    QWEN3_06B = "Qwen/Qwen3-Embedding-0.6B"
+    ALL_MPNET_BASE_V2 = "sentence-transformers/all-mpnet-base-v2"
+    INTFLOAT_E5_LARGE_V2 = "intfloat/e5-large-v2"
 
 def resolve_model(model_str: str) -> Union[AiModel, AiModelHosted]:
-        if model_str in AiModel._value2member_map_:
-            return AiModel(model_str)
-        elif model_str in AiModelHosted._value2member_map_:
-            return AiModelHosted(model_str)
-        else:
-            raise ValueError(f"Invalid model: {model_str}")
+    if model_str in AiModel._value2member_map_:
+        return AiModel(model_str)
+    elif model_str in AiModelHosted._value2member_map_:
+        return AiModelHosted(model_str)
+    else:
+        raise ValueError(f"Invalid model: {model_str}")
+
+def resolve_embedding_by_key(model_key: str) -> AiModelHostedEmbeddings:
+    try:
+        return AiModelHostedEmbeddings[model_key]
+    except KeyError:
+        raise ValueError(f"Invalid embedding model key: {model_key}")
