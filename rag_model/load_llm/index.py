@@ -6,6 +6,7 @@ from llama_index.core.llms import MockLLM
 from llama_index.llms.openai import OpenAI
 from llama_index.llms.ollama import Ollama
 from llama_index.llms.huggingface import HuggingFaceLLM
+from sympy import print_fcode
 from transformers import AutoTokenizer, AutoModel
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from rag_model.ai_models_list import AiModel, AiModelHosted, AiModelHostedEmbeddings
@@ -30,7 +31,7 @@ OLLAMA_MODELS = {
 }
 
 def load_llm(
-    model: Union[AiModel, AiModelHosted],
+    model: str,
     index_name: str = None,
     temperature: Optional[float] = DEFAULT_TEMPERATURE,
     timeout: Optional[float] = DEFAULT_TIMEOUT,
@@ -109,7 +110,7 @@ def load_llm(
     try:
         if model in OPENAI_MODELS:
             llm = OpenAI(
-                model=model.value,
+                model=model,
                 temperature=temperature,
                 api_key=os.environ.get('OPENAI_API_KEY', None),
                 request_timeout=float(timeout)
@@ -118,7 +119,7 @@ def load_llm(
             return llm
         elif model in OLLAMA_MODELS:
             ollama_args = dict(
-                model=model.value,
+                model=model,
                 base_url="http://localhost:11434",
                 temperature=temperature,
                 request_timeout=float(timeout)
@@ -130,13 +131,18 @@ def load_llm(
             return llm
         else:
             # Default to HuggingFace for any other model
+            final_model_kwargs = {
+                **(model_kwargs or {}),
+                "token": os.getenv("HUGGINGFACE_API_KEY"),
+                "trust_remote_code": True  # Important for Qwen & others
+            }
             llm = HuggingFaceLLM(
-                model_name=model.value,
+                model_name=model,
                 context_window=context_window,
                 max_new_tokens=max_new_tokens,
                 query_wrapper_prompt=query_wrapper_prompt,
-                tokenizer_name=tokenizer_name or model.value,
-                model_kwargs={**(model_kwargs or {}), "token": os.getenv("HUGGINGFACE_API_KEY"), "trust_remote_code":True},
+                tokenizer_name=tokenizer_name or model,
+                model_kwargs=final_model_kwargs,
                 generate_kwargs=generate_kwargs or {},
                 device_map=device_map,
                 is_chat_model=is_chat_model,
@@ -151,7 +157,7 @@ def load_llm(
         return MockLLM(max_tokens=256)
 
 def load_embed(
-    model: Union[AiModelHostedEmbeddings],
+    model: str,
     temperature: Optional[float] = 0.1,
     timeout: Optional[float] = 10.0,
     context_window: int = 2048,
@@ -238,11 +244,16 @@ def load_embed(
             # model = AutoModel.from_pretrained('Qwen/Qwen3-Embedding-0.6B', trust_remote_code=True)
 
             # Default to HuggingFace for any other model
+            final_model_kwargs = {
+                **(model_kwargs or {}),
+                "token": os.getenv("HUGGINGFACE_API_KEY"),
+                "trust_remote_code": True  # Required for custom or Qwen embeddings 
+            }
             embed_model = HuggingFaceEmbedding(
-                model_name=model.value,
+                model_name=model,
                 normalize=True,
                 # device=device_map,
-                model_kwargs={**(model_kwargs or {})},
+                model_kwargs=final_model_kwargs,
                 callback_manager=callback_manager,
                 # **kwargs
             )

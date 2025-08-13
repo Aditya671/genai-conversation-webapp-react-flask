@@ -2,9 +2,10 @@ import os
 import json
 from typing import Optional, List, Union
 from llama_index.core import (
-    SimpleDirectoryReader, VectorStoreIndex,
+    SimpleDirectoryReader, VectorStoreIndex, DocumentSummaryIndex, get_response_synthesizer,
     StorageContext, load_index_from_storage, Settings
 )
+from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core.embeddings import BaseEmbedding
 from llama_index.core.llms import LLM
 from llama_index.core.vector_stores.simple import SimpleVectorStore
@@ -53,11 +54,11 @@ class LocalOnlyFileIndexer:
 
     def _init_llm(self) -> LLM:
         llm_model = resolve_model(self.model)
-        return load_llm(model=llm_model, index_name=self.index_name, system_prompt=SYSTEM_PROMPT, query_wrapper_prompt=QUERY_WRAPPER_PROMPT)
+        return load_llm(model=str(llm_model.value), index_name=self.index_name, system_prompt=SYSTEM_PROMPT, query_wrapper_prompt=QUERY_WRAPPER_PROMPT)
 
     def _init_embed(self) -> BaseEmbedding:
         embed_model = resolve_embedding_by_key(self.model.name)
-        return load_embed(model=embed_model, index_name=self.index_name)
+        return load_embed(model=str(embed_model.value), index_name=self.index_name)
     
     def _should_reindex(self, file_path: str, index_name: str, reindex_after_days: int = 30) -> bool:
         metadata_path = os.path.join(self.index_data_dir, index_name, "index_metadata.json")
@@ -168,7 +169,11 @@ class LocalOnlyFileIndexer:
 
         storage_context = self._get_storage_context()
         index = VectorStoreIndex.from_documents(documents, storage_context=storage_context)
-
+        summary_index = DocumentSummaryIndex.from_documents(
+            documents=documents,
+            storage_context=storage_context,
+            transformations=[SentenceSplitter(chunk_size=513, chunk_overlap=1024)]
+        )
         try:
             index.storage_context.vector_store.persist(fs=index_dir, persist_path=index_dir)
         except Exception as e:
